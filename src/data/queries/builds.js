@@ -7,16 +7,33 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { GraphQLList as List } from 'graphql';
+import { GraphQLList as List, GraphQLNonNull, GraphQLString } from 'graphql';
 import { Ship } from '../models';
 import BuildsItemType from '../types/BuildsItemType';
 
 const builds = {
   type: new List(BuildsItemType),
-  resolve() {
-    return Ship.findAll({ order: [['updatedAt', 'DESC']] }).then(
-      ships => ships
-    );
+  args: {
+    filter: {
+      type: GraphQLString
+    },
+    order: {
+      type: GraphQLString
+    }
+  },
+  resolve(source, args) {
+    if (args.filter) {
+    }
+    let field;
+    let order;
+    if (args.order) {
+      [field, order] = args.order.split(' ');
+      console.log(field);
+      console.log(order);
+    }
+    return Ship.findAll({
+      order: [[field || 'updatedAt', order || 'DESC']]
+    }).then(ships => ships);
   }
 };
 
