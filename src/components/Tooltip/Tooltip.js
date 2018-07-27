@@ -42,7 +42,8 @@ class Tooltip extends TranslatedComponent {
   _initialDimensions(props) {
     const { options, rect } = props;
     const orientation = options.orientation || 'n';
-    let top, left;
+    let top;
+    let left;
 
     switch (orientation) {
       case 's':
