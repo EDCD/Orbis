@@ -19,7 +19,7 @@ const Ship = Model.define(
       primaryKey: true
     },
     shortid: {
-      type: DataType.STRING(10),
+      type: DataType.STRING,
       defaultValue: shortid.generate,
       primaryKey: true
     },
