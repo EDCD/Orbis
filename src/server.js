@@ -35,6 +35,7 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import config from './config';
 import User from './data/models/User';
 import Ship from './data/models/Ship';
+import * as Sequelize from 'sequelize';
 
 const session = require('express-session');
 
@@ -119,13 +120,27 @@ passport.deserializeUser((user, done) => {
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+const { Op } = Sequelize;
 app.post('/register', async (req, res) => {
   if (!req.body) {
     return res.status(413).end();
   }
   console.table(req.body);
-  let user;
+  let user = await User.find({
+    where: {
+      [Op.or]: [
+        {
+          email: req.body.email
+        },
+        {
+          username: req.body.username
+        }
+      ]
+    }
+  });
+  if (user) {
+    return res.json({ success: false, error: 'User already exists.' });
+  }
   try {
     user = await User.create({
       email: req.body.email,

@@ -11,7 +11,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { Form, Text } from 'informed';
+
 import s from './Register.less';
+import Link from '../../Components/Link';
 
 const Label = props => {
   const { htmlFor, ...otherProps } = props;
@@ -36,7 +38,8 @@ class Register extends React.Component {
     super(props);
     this.state = {
       failed: false,
-      error: ''
+      error: '',
+      alreadyExists: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.setFormApi = this.setFormApi.bind(this);
@@ -73,7 +76,7 @@ class Register extends React.Component {
     if (text.success === true) {
       this.setState({ failed: false, message: 'Registered successfully' });
     } else {
-      this.setState({ failed: true, message: text.error });
+      this.setState({ failed: true, message: text.error, alreadyExists: text.error === 'User already exists.'});
     }
   }
 
@@ -129,6 +132,9 @@ class Register extends React.Component {
             </div>
           </Form>
           <p hidden={!this.state.message}>{this.state.message}</p>
+          <Link hidden={!this.state.alreadyExists} to="/login">
+            Did you mean to login?
+          </Link>
         </div>
       </div>
     );
