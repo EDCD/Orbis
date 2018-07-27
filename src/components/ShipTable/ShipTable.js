@@ -11,26 +11,19 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-
+import Tooltip from '../../components/Tooltip';
 import s from './ShipTable.less';
 
 import Link from '../Link';
-import { getLanguage } from '../../i18n/Language.jsx';
+import { getLanguage } from '../../i18n/Language';
 
 function sortShips() {}
 const SizeMap = ['', 'small', 'medium', 'large', 'capital'];
 
-const copyObjectFields = (originObject, fieldNamesArray) => {
-  const obj = {};
-
-  if (fieldNamesArray === null) return obj;
-
-  for (let i = 0; i < fieldNamesArray.length; i++) {
-    obj[fieldNamesArray[i]] = originObject[fieldNamesArray[i]];
-  }
-
-  return obj;
-};
+function countHp(slot) {
+  this.hp[slot.maxClass]++;
+  this.hpCount++;
+}
 
 function shipSummary(shipId, shipData, ship) {
   const summary = ship.coriolisShip;
@@ -55,9 +48,10 @@ function shipSummary(shipId, shipData, ship) {
   summary.cost = 0;
   summary.int = [0, 0, 0, 0, 0, 0, 0, 0];
   for (const i of summary.costList) {
-    summary.cost += i.discountedCost
+    summary.cost += i.discountedCost;
   }
   // Build Ship
+  summary.hardpoints.forEach(countHp.bind(summary)); // Count Hardpoints by class
   summary.retailCost = ship.totalCost; // Record Stock/Default/retail cost
   summary.maxJumpRange = ship.unladenRange; // Record Jump Range
   summary.standard = ship.coriolisShip.standard;
@@ -87,11 +81,45 @@ class ShipTable extends React.Component {
     };
   }
 
+  _termtip(term, opts, event, e2) {
+    if (opts && opts.nativeEvent) {
+      // Opts is the SyntheticEvent
+      event = opts;
+      opts = { cap: true };
+    }
+    if (e2 instanceof Object && e2.nativeEvent) {
+      // E2 is the SyntheticEvent
+      event = e2;
+    }
+
+    this._tooltip(
+      <div className={`cen${opts.cap ? ' cap' : ''}`}>
+        {this.state.language.translate(term)}
+      </div>,
+      event.currentTarget.getBoundingClientRect(),
+      opts
+    );
+  }
+
+  _tooltip(content, rect, opts) {
+    if (!content && this.state.tooltip) {
+      this.setState({ tooltip: null });
+    } else if (content) {
+      this.setState({
+        tooltip: (
+          <Tooltip rect={rect} options={opts}>
+            {content}
+          </Tooltip>
+        )
+      });
+    }
+  }
+
   _shipRowElement(ship, translate, u, fInt, fRound, highlight) {
     return (
       <tr
         key={ship.id}
-        style={{ height: '1.5em' }}
+        style={{ height: '4.5em' }}
         className={cx({
           alt: highlight
         })}
@@ -106,8 +134,8 @@ class ShipTable extends React.Component {
         <td className="ri">{fInt(ship.hullMass)}</td>
         <td className="ri">{fInt(ship.speed)}</td>
         <td className="ri">{fInt(ship.boost)}</td>
-        <td className="ri">{fInt(ship.baseArmour)}</td>
-        <td className="ri">{fInt(ship.baseShieldStrength)}</td>
+        <td className="ri">{fInt(ship.armour)}</td>
+        <td className="ri">{fInt(ship.shield)}</td>
         <td className="ri">{fInt(ship.topSpeed)}</td>
         <td className="ri">{fInt(ship.topBoost)}</td>
         <td className="ri">{fRound(ship.maxJumpRange)}</td>
@@ -146,7 +174,7 @@ class ShipTable extends React.Component {
     const shipRows = [];
     const shipSummaries = this.state.detailRows;
     const lastShipSortValue = null;
-    const termtip = val => val;
+    const termtip = this._termtip;
     const hide = val => val;
     const sizeRatio = 1;
     const translate = this.language.translate;
@@ -165,7 +193,7 @@ class ShipTable extends React.Component {
       shipRows[i] = (
         <tr
           key={i}
-          style={{ height: '1.5em' }}
+          style={{ height: '4.5em' }}
           className={cx({
             highlighted: this.state.shipId === shipSummary.id,
             alt: backgroundHighlight
@@ -181,6 +209,7 @@ class ShipTable extends React.Component {
 
     return (
       <div className={s.page} style={{ fontSize: `${sizeRatio}em` }}>
+        { this.state.tooltip }
         <div
           style={{
             whiteSpace: 'nowrap',

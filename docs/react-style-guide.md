@@ -22,22 +22,21 @@
   This will make your code more maintainable, easy to refactor.
 * Add `package.json` file into each component's folder.\
   This will allow to easily reference such components from other places in your code.\
-  Use `import Nav from '../Navigation'` instead of `import Nav from '../Navigation/Navigation.js'`
+  Use `import Nav from '../Tooltip'` instead of `import Nav from '../Tooltip/Tooltip'`
 
 ```
-/components/Navigation/icon.svg
-/components/Navigation/Navigation.css
-/components/Navigation/Navigation.js
-/components/Navigation/Navigation.test.js
-/components/Navigation/Navigation.ru-RU.css
-/components/Navigation/package.json
+/components/Tooltip/icon.svg
+/components/Tooltip/Tooltip.css
+/components/Tooltip/Tooltip.jsomponents/Tooltip/Tooltip.test.js
+/components/Tooltip/Tooltip.ru-RU.css
+/components/Tooltip/package.json
 ```
 
 ```
-// components/Navigation/package.json
+// components/Tooltip/package.json
 {
-  "name:": "Navigation",
-  "main": "./Navigation.js"
+  "name:": "Tooltip",
+  "main": "./Tooltip"
 }
 ```
 
@@ -51,7 +50,7 @@ For more information google for
 
 ```jsx
 // Bad
-class Navigation extends Component {
+class Tooltip extends Component {
   static propTypes = { items: PropTypes.array.isRequired };
   render() {
     return <nav><ul>{this.props.items.map(x => <li>{x.text}</li>)}</ul></nav>;
@@ -59,12 +58,12 @@ class Navigation extends Component {
 }
 
 // Better
-function Navigation({ items }) {
+function Tooltip({ items }) {
   return (
     <nav><ul>{items.map(x => <li>{x.text}</li>)}</ul></nav>;
   );
 }
-Navigation.propTypes = { items: PropTypes.array.isRequired };
+Tooltip.propTypes = { items: PropTypes.array.isRequired };
 ```
 
 ### Use CSS Modules
@@ -82,7 +81,7 @@ Navigation.propTypes = { items: PropTypes.array.isRequired };
   components
 
 ```scss
-// Navigation.scss
+// Tooltip.scss
 @import '../variables.scss';
 
 .root {
@@ -124,13 +123,13 @@ Navigation.propTypes = { items: PropTypes.array.isRequired };
 ```
 
 ```jsx
-// Navigation.js
+// Tooltip
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Navigation.scss';
+import s from './Tooltip.scss';
 
-function Navigation() {
+function Tooltip() {
   return (
     <nav className={`${s.root} ${this.props.className}`}>
       <ul className={s.items}>
@@ -149,9 +148,9 @@ function Navigation() {
   );
 }
 
-Navigation.propTypes = { className: PropTypes.string };
+Tooltip.propTypes = { className: PropTypes.string };
 
-export default withStyles(Navigation, s);
+export default withStyles(Tooltip, s);
 ```
 
 ### Use higher-order components

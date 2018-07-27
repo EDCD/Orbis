@@ -71,17 +71,17 @@ The example below example is a drop-in test for the RSK `ShipTable` component:
 import React from 'react';
 import ShipTable from './ShipTable';
 import IntlProvider from 'react-intl';
-import Navigation from '../../components/Navigation';
+import Tooltip from '../../components/Tooltip';
 
 describe('A test suite for <ShipTable />', () => {
-  it('should contain a <Navigation/> component', () => {
+  it('should contain a <Tooltip/> component', () => {
     it('rendering', () => {
       const wrapper = renderIntoDocument(
         <IntlProvider locale="en">
           <ShipTable />
         </IntlProvider>,
       );
-      expect(wrapper.find(Navigation)).to.have.length(1);
+      expect(wrapper.find(Tooltip)).to.have.length(1);
     });
   });
 });

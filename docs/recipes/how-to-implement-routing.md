@@ -1,4 +1,4 @@
-## How to Implement Routing and Navigation
+## How to Implement Routing and Tooltip
 
 Let's see how a custom routing solution under 100 lines of code may look like.
 
@@ -226,5 +226,5 @@ has a few examples how to use it.
 
 ### Related Discussions
 
-* [How to Implement Routing and Navigation](https://github.com/kriasoft/react-starter-kit/issues/748)
+* [How to Implement Routing and Tooltip](https://github.com/kriasoft/react-starter-kit/issues/748)
 * [How to Add a Route to RSK?](https://github.com/kriasoft/react-starter-kit/issues/754)
