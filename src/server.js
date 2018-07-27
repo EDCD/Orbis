@@ -155,7 +155,7 @@ app.post('/builds/add', async (req, res) => {
     success: true,
     id: ship.id,
     ship: 'created',
-    link: `http://localhost:3000/build/${ship.id}`
+    link: `http://localhost:3000/build/${ship.shortid}`
   });
 });
 
