@@ -35,6 +35,11 @@ class TranslatedComponent extends React.Component {
   constructor(props) {
     super(props);
     this.didContextChange = this.didContextChange.bind(this);
+    Object.getOwnPropertyNames(this.constructor.prototype).forEach(prop => {
+      if (prop.charAt(0) == '_' && typeof this[prop] === 'function') {
+        this[prop] = this[prop].bind(this);
+      }
+    });
   }
 
   /**

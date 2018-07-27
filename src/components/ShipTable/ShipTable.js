@@ -16,13 +16,19 @@ import s from './ShipTable.less';
 
 import Link from '../Link';
 import { getLanguage } from '../../i18n/Language';
+import TranslatedComponent from '../TranslatedComponent';
 
-function sortShips() {}
 const SizeMap = ['', 'small', 'medium', 'large', 'capital'];
 
 function countHp(slot) {
   this.hp[slot.maxClass]++;
   this.hpCount++;
+}
+
+function countInt(slot) {
+  this.int[slot.maxClass - 1]++; // Subtract 1 since there is no Class 0 Internal compartment
+  this.intCount++;
+  this.maxPassengers += slot.passengers ? slot.passengers : 0;
 }
 
 function shipSummary(shipId, shipData, ship) {
@@ -45,24 +51,26 @@ function shipSummary(shipId, shipData, ship) {
   //   standard: shipData.standard
   // };
   summary.hp = [0, 0, 0, 0, 0];
+  summary.maxPassengers = 0;
   summary.cost = 0;
   summary.int = [0, 0, 0, 0, 0, 0, 0, 0];
   for (const i of summary.costList) {
     summary.cost += i.discountedCost;
   }
   // Build Ship
+  ship.internal = ship.coriolisShip.internal;
+  ship.internal.forEach(countInt.bind(summary));
+  ship.hardpoints = ship.coriolisShip.hardpoints;
   summary.hardpoints.forEach(countHp.bind(summary)); // Count Hardpoints by class
   summary.retailCost = ship.totalCost; // Record Stock/Default/retail cost
   summary.maxJumpRange = ship.unladenRange; // Record Jump Range
   summary.standard = ship.coriolisShip.standard;
-  summary.topSpeed = ship.topSpeed;
-  summary.topBoost = ship.topBoost;
   summary.baseArmour = ship.armour;
 
   return summary;
 }
 
-class ShipTable extends React.Component {
+class ShipTable extends TranslatedComponent {
   static propTypes = {
     shipRows: PropTypes.any.isRequired
   };
@@ -70,7 +78,11 @@ class ShipTable extends React.Component {
   constructor(props) {
     super(props);
     const detailRows = [];
+    this.tooltip = this.tooltip.bind(this);
+    this._termtip = this._termtip.bind(this);
     this.language = getLanguage('en');
+    this.translate = this.language.translate.bind(this);
+
     this.formats = this.language.formats;
     this.units = this.language.units;
     for (const i in props.shipRows) {
@@ -81,27 +93,8 @@ class ShipTable extends React.Component {
     };
   }
 
-  _termtip(term, opts, event, e2) {
-    if (opts && opts.nativeEvent) {
-      // Opts is the SyntheticEvent
-      event = opts;
-      opts = { cap: true };
-    }
-    if (e2 instanceof Object && e2.nativeEvent) {
-      // E2 is the SyntheticEvent
-      event = e2;
-    }
-
-    this._tooltip(
-      <div className={`cen${opts.cap ? ' cap' : ''}`}>
-        {this.state.language.translate(term)}
-      </div>,
-      event.currentTarget.getBoundingClientRect(),
-      opts
-    );
-  }
-
-  _tooltip(content, rect, opts) {
+  tooltip(content, rect, opts) {
+    return;
     if (!content && this.state.tooltip) {
       this.setState({ tooltip: null });
     } else if (content) {
@@ -115,7 +108,34 @@ class ShipTable extends React.Component {
     }
   }
 
+  _termtip(term, opts, event, e2) {
+    return;
+    if (opts && opts.nativeEvent) {
+      // Opts is the SyntheticEvent
+      event = opts;
+      opts = { cap: true };
+    }
+    if (e2 instanceof Object && e2.nativeEvent) {
+      // E2 is the SyntheticEvent
+      event = e2;
+    }
+
+    this.tooltip(
+      <div className={`cen${opts.cap ? ' cap' : ''}`}>
+        {this.translate(term)}
+      </div>,
+      event.currentTarget.getBoundingClientRect(),
+      opts
+    );
+  }
+
   _shipRowElement(ship, translate, u, fInt, fRound, highlight) {
+    if (!ship) {
+      return;
+    }
+    if (!ship.standard) {
+      return;
+    }
     return (
       <tr
         key={ship.id}
@@ -129,7 +149,6 @@ class ShipTable extends React.Component {
         <td className="ri cap">{translate(SizeMap[ship.class])}</td>
         <td className="ri">{fInt(ship.crew)}</td>
         <td className="ri">{ship.masslock}</td>
-        <td className="ri">{fInt(ship.agility)}</td>
         <td className="ri">{fInt(ship.hardness)}</td>
         <td className="ri">{fInt(ship.hullMass)}</td>
         <td className="ri">{fInt(ship.speed)}</td>
@@ -138,16 +157,9 @@ class ShipTable extends React.Component {
         <td className="ri">{fInt(ship.shield)}</td>
         <td className="ri">{fInt(ship.topSpeed)}</td>
         <td className="ri">{fInt(ship.topBoost)}</td>
-        <td className="ri">{fRound(ship.maxJumpRange)}</td>
-        <td className="ri">{fInt(ship.maxCargo)}</td>
+        <td className="ri">{fRound(ship.unladenRange)}</td>
+        <td className="ri">{fInt(ship.cargoCapacity)}</td>
         <td className="ri">{fInt(ship.maxPassengers)}</td>
-        <td className="cx">{ship.standard[0].class}</td>
-        <td className="cx">{ship.standard[1].class}</td>
-        <td className="cx">{ship.standard[2].class}</td>
-        <td className="cx">{ship.standard[3].class}</td>
-        <td className="cx">{ship.standard[4].class}</td>
-        <td className="cx">{ship.standard[5].class}</td>
-        <td className="cx">{ship.standard[6].class}</td>
         <td className={cx({ disabled: !ship.hp[1] })}>{ship.hp[1]}</td>
         <td className={cx({ disabled: !ship.hp[2] })}>{ship.hp[2]}</td>
         <td className={cx({ disabled: !ship.hp[3] })}>{ship.hp[3]}</td>
@@ -165,23 +177,86 @@ class ShipTable extends React.Component {
     );
   }
 
-  _highlightShip(shipId, event) {
+  highlightShip(shipId, event) {
+    event.stopPropagation();
     this.setState({ shipId });
+  }
+
+  sortShips(shipPredicate, shipPredicateIndex) {
+    let shipDesc = this.state.shipDesc;
+
+    if (typeof shipPredicateIndex === 'object') {
+      shipPredicateIndex = undefined;
+    }
+
+    if (
+      this.state.shipPredicate === shipPredicate &&
+      this.state.shipPredicateIndex === shipPredicateIndex
+    ) {
+      shipDesc = !shipDesc;
+    }
+
+    this.setState({ shipPredicate, shipDesc, shipPredicateIndex });
   }
 
   render() {
     const { detailRows } = this.state;
     const shipRows = [];
-    const shipSummaries = this.state.detailRows;
-    const lastShipSortValue = null;
-    const termtip = this._termtip;
-    const hide = val => val;
+    let shipSummaries = this.state.detailRows;
+    const hide = this.tooltip.bind(null, null);
     const sizeRatio = 1;
-    const translate = this.language.translate;
-    const backgroundHighlight = false;
+    let backgroundHighlight = false;
+    const { shipPredicate, shipPredicateIndex } = this.state;
+
+    const sortShips = (predicate, index) => {
+      return;
+      return this.sortShips.bind(this, predicate, index);
+    };
+
+    const filters = {};
+    shipSummaries = shipSummaries.filter(s => {
+      for (const prop in filters) {
+        if (!(s[prop] in filters[prop])) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    // Sort shipsOverview
+    shipSummaries.sort((a, b) => {
+      let valA = a[shipPredicate],
+        valB = b[shipPredicate];
+
+      if (
+        shipPredicateIndex !==
+        undefined /* && (valA !== undefined && valB !== undefined) */
+      ) {
+        valA = valA[shipPredicateIndex];
+        valB = valB[shipPredicateIndex];
+      }
+
+      if (!this.state.shipDesc) {
+        const val = valA;
+        valA = valB;
+        valB = val;
+      }
+
+      if (valA == valB) {
+        if (a.name > b.name) {
+          return 1;
+        }
+        return -1;
+      } else if (valA > valB) {
+        return 1;
+      }
+      return -1;
+    });
+
     let i = 0;
-    const { units, formats } = this;
+    const { units, formats, translate } = this;
     for (const shipSummary of shipSummaries) {
+      backgroundHighlight = !backgroundHighlight;
       detailRows[i] = this._shipRowElement(
         shipSummary,
         this.language.translate,
@@ -195,12 +270,14 @@ class ShipTable extends React.Component {
           key={i}
           style={{ height: '4.5em' }}
           className={cx({
-            highlighted: this.state.shipId === shipSummary.id,
+            highlighted: this.state.shipId === s.coriolisId,
             alt: backgroundHighlight
           })}
         >
           <td className={s.le}>
-            <Link to={`/build/${shipSummary.shortid}`}>{shipSummary.name}</Link>
+            <Link to={`/build/${shipSummary ? shipSummary.shortid : ''}`}>
+              <p>{shipSummary ? shipSummary.name : ''}</p>
+            </Link>
           </td>
         </tr>
       );
@@ -209,251 +286,246 @@ class ShipTable extends React.Component {
 
     return (
       <div className={s.page} style={{ fontSize: `${sizeRatio}em` }}>
-        { this.state.tooltip }
-        <div
-          style={{
-            whiteSpace: 'nowrap',
-            margin: '0 auto',
-            fontSize: '0.8em',
-            position: 'relative',
-            display: 'inline-block',
-            maxWidth: '100%'
-          }}
-        >
-          <table style={{ width: '12em', position: 'absolute', zIndex: 1 }}>
-            <thead>
-              <tr>
-                <th className={cx('le', 'rgt')}>&nbsp;</th>
-              </tr>
-              <tr className="main">
-                <th className="sortable le rgt" onClick={sortShips('name')}>
-                  {translate('ship')}
-                </th>
-              </tr>
-              <tr>
-                <th className="le rgt invisible">{units['m/s']}</th>
-              </tr>
-            </thead>
-            <tbody>{shipRows}</tbody>
-          </table>
-          <div style={{ overflowX: 'scroll', maxWidth: '100%' }}>
-            <table style={{ marginLeft: 'calc(12em - 1px)', zIndex: 0 }}>
+        {this.state.tooltip}
+        <div className="page" style={{ fontSize: `${sizeRatio}em` }}>
+          <div
+            style={{
+              whiteSpace: 'nowrap',
+              margin: '0 auto',
+              fontSize: '0.8em',
+              position: 'relative',
+              display: 'inline-block',
+              maxWidth: '100%'
+            }}
+          >
+            <table style={{ width: '12em', position: 'absolute', zIndex: 1 }}>
               <thead>
+                <tr>
+                  <th className="le rgt">&nbsp;</th>
+                </tr>
                 <tr className="main">
-                  <th
-                    rowSpan={3}
-                    className="sortable"
-                    onClick={sortShips('manufacturer')}
-                  >
-                    {translate('manufacturer')}
-                  </th>
-                  <th>&nbsp;</th>
-                  <th
-                    rowSpan={3}
-                    className="sortable"
-                    onClick={sortShips('class')}
-                  >
-                    {translate('size')}
-                  </th>
-                  <th
-                    rowSpan={3}
-                    className="sortable"
-                    onClick={sortShips('crew')}
-                  >
-                    {translate('crew')}
-                  </th>
-                  <th
-                    rowSpan={3}
-                    className="sortable"
-                    onClick={sortShips('masslock')}
-                  >
-                    {translate('MLF')}
-                  </th>
-                  <th
-                    rowSpan={3}
-                    className="sortable"
-                    onClick={sortShips('agility')}
-                  >
-                    {translate('agility')}
-                  </th>
-                  <th
-                    rowSpan={3}
-                    className="sortable"
-                    onClick={sortShips('hardness')}
-                  >
-                    {translate('hrd')}
-                  </th>
-                  <th>&nbsp;</th>
-                  <th colSpan={4}>{translate('base')}</th>
-                  <th colSpan={5}>{translate('max')}</th>
-                  <th className="lft" colSpan={7} />
-                  <th className="lft" colSpan={5} />
-                  <th className="lft" colSpan={8} />
-                </tr>
-                <tr>
-                  <th
-                    className="sortable lft"
-                    onClick={sortShips('retailCost')}
-                  >
-                    {translate('cost')}
-                  </th>
-                  <th className="sortable lft" onClick={sortShips('hullMass')}>
-                    {translate('hull')}
-                  </th>
-                  <th className="sortable lft" onClick={sortShips('speed')}>
-                    {translate('speed')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('boost')}>
-                    {translate('boost')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('baseArmour')}>
-                    {translate('armour')}
-                  </th>
-                  <th
-                    className="sortable"
-                    onClick={sortShips('baseShieldStrength')}
-                  >
-                    {translate('shields')}
-                  </th>
-
-                  <th className="sortable lft" onClick={sortShips('topSpeed')}>
-                    {translate('speed')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('topBoost')}>
-                    {translate('boost')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('maxJumpRange')}>
-                    {translate('jump')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('maxCargo')}>
-                    {translate('cargo')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('maxPassengers')}>
-                    {translate('pax')}
-                  </th>
-
-                  <th className="lft" colSpan={7}>
-                    {translate('core module classes')}
-                  </th>
-                  <th
-                    colSpan={5}
-                    className="sortable lft"
-                    onClick={sortShips('hpCount')}
-                  >
-                    {translate('hardpoints')}
-                  </th>
-                  <th
-                    colSpan={8}
-                    className="sortable lft"
-                    onClick={sortShips('intCount')}
-                  >
-                    {translate('internal compartments')}
+                  <th className="sortable le rgt" onClick={sortShips('name')}>
+                    {translate('ship')}
                   </th>
                 </tr>
                 <tr>
-                  <th
-                    className="sortable lft"
-                    onClick={sortShips('retailCost')}
-                  >
-                    {units.CR}
-                  </th>
-                  <th className="sortable lft" onClick={sortShips('hullMass')}>
-                    {units.T}
-                  </th>
-                  <th className="sortable lft" onClick={sortShips('speed')}>
-                    {units['m/s']}
-                  </th>
-                  <th className="sortable" onClick={sortShips('boost')}>
-                    {units['m/s']}
-                  </th>
-                  <th>&nbsp;</th>
-                  <th
-                    className="sortable"
-                    onClick={sortShips('baseShieldStrength')}
-                  >
-                    {units.MJ}
-                  </th>
-                  <th className="sortable lft" onClick={sortShips('topSpeed')}>
-                    {units['m/s']}
-                  </th>
-                  <th className="sortable" onClick={sortShips('topBoost')}>
-                    {units['m/s']}
-                  </th>
-                  <th className="sortable" onClick={sortShips('maxJumpRange')}>
-                    {units.LY}
-                  </th>
-                  <th className="sortable" onClick={sortShips('maxCargo')}>
-                    {units.T}
-                  </th>
-                  <th>&nbsp;</th>
-                  <th
-                    className="sortable lft"
-                    onClick={sortShips('standard', 0)}
-                  >
-                    {'pp'}
-                  </th>
-                  <th className="sortable" onClick={sortShips('standard', 1)}>
-                    {'th'}
-                  </th>
-                  <th className="sortable" onClick={sortShips('standard', 2)}>
-                    {'fsd'}
-                  </th>
-                  <th className="sortable" onClick={sortShips('standard', 3)}>
-                    {'ls'}
-                  </th>
-                  <th className="sortable" onClick={sortShips('standard', 4)}>
-                    {'pd'}
-                  </th>
-                  <th className="sortable" onClick={sortShips('standard', 5)}>
-                    {'s'}
-                  </th>
-                  <th className="sortable" onClick={sortShips('standard', 6)}>
-                    {'ft'}
-                  </th>
-                  <th className="sortable lft" onClick={sortShips('hp', 1)}>
-                    {translate('S')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('hp', 2)}>
-                    {translate('M')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('hp', 3)}>
-                    {translate('L')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('hp', 4)}>
-                    {translate('H')}
-                  </th>
-                  <th className="sortable" onClick={sortShips('hp', 0)}>
-                    {translate('U')}
-                  </th>
-
-                  <th className="sortable lft" onClick={sortShips('int', 0)}>
-                    1
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 1)}>
-                    2
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 2)}>
-                    3
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 3)}>
-                    4
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 4)}>
-                    5
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 5)}>
-                    6
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 6)}>
-                    7
-                  </th>
-                  <th className="sortable" onClick={sortShips('int', 7)}>
-                    8
-                  </th>
+                  <th className="le rgt invisible">&nbsp;</th>
                 </tr>
               </thead>
-              <tbody>{detailRows}</tbody>
+              <tbody>{shipRows}</tbody>
             </table>
+            <div style={{ overflowX: 'scroll', maxWidth: '100%' }}>
+              <table style={{ marginLeft: 'calc(12em - 1px)', zIndex: 0 }}>
+                <thead>
+                  <tr className="main">
+                    <th
+                      rowSpan={3}
+                      className="sortable"
+                      onClick={sortShips('manufacturer')}
+                    >
+                      {translate('manufacturer')}
+                    </th>
+                    <th>&nbsp;</th>
+                    <th
+                      rowSpan={3}
+                      className="sortable"
+                      onClick={sortShips('class')}
+                    >
+                      {translate('size')}
+                    </th>
+                    <th
+                      rowSpan={3}
+                      className="sortable"
+                      onClick={sortShips('crew')}
+                    >
+                      {translate('crew')}
+                    </th>
+                    <th
+                      rowSpan={3}
+                      className="sortable"
+                      onMouseEnter={this._termtip.bind(
+                        null,
+                        'mass lock factor'
+                      )}
+                      onMouseLeave={hide}
+                      onClick={sortShips('masslock')}
+                    >
+                      {translate('MLF')}
+                    </th>
+                    <th
+                      rowSpan={3}
+                      className="sortable"
+                      onMouseEnter={this._termtip.bind(null, 'hardness')}
+                      onMouseLeave={hide}
+                      onClick={sortShips('hardness')}
+                    >
+                      {translate('hrd')}
+                    </th>
+                    <th>&nbsp;</th>
+                    <th colSpan={4}>{}</th>
+                    <th colSpan={5}>{}</th>
+                    <th className="lft" colSpan={7} />
+                    <th className="lft" colSpan={5} />
+                    <th className="lft" colSpan={8} />
+                  </tr>
+                  <tr>
+                    <th
+                      className="sortable lft"
+                      onClick={sortShips('retailCost')}
+                    >
+                      {translate('cost')}
+                    </th>
+                    <th
+                      className="sortable lft"
+                      onClick={sortShips('hullMass')}
+                    >
+                      {translate('hull')}
+                    </th>
+                    <th className="sortable lft" onClick={sortShips('speed')}>
+                      {translate('speed')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('boost')}>
+                      {translate('boost')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('baseArmour')}>
+                      {translate('armour')}
+                    </th>
+                    <th
+                      className="sortable"
+                      onClick={sortShips('baseShieldStrength')}
+                    >
+                      {translate('shields')}
+                    </th>
+
+                    <th
+                      className="sortable lft"
+                      onClick={sortShips('topSpeed')}
+                    >
+                      {translate('speed')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('topBoost')}>
+                      {translate('boost')}
+                    </th>
+                    <th
+                      className="sortable"
+                      onClick={sortShips('maxJumpRange')}
+                    >
+                      {translate('jump')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('maxCargo')}>
+                      {translate('cargo')}
+                    </th>
+                    <th
+                      className="sortable"
+                      onClick={sortShips('maxPassengers')}
+                    >
+                      {translate('pax')}
+                    </th>
+                    <th
+                      colSpan={5}
+                      className="sortable lft"
+                      onClick={sortShips('hpCount')}
+                    >
+                      {translate('hardpoints')}
+                    </th>
+                    <th
+                      colSpan={8}
+                      className="sortable lft"
+                      onClick={sortShips('intCount')}
+                    >
+                      {translate('internal compartments')}
+                    </th>
+                  </tr>
+                  <tr>
+                    <th
+                      className="sortable lft"
+                      onClick={sortShips('retailCost')}
+                    >
+                      {units.CR}
+                    </th>
+                    <th
+                      className="sortable lft"
+                      onClick={sortShips('hullMass')}
+                    >
+                      {units.T}
+                    </th>
+                    <th className="sortable lft" onClick={sortShips('speed')}>
+                      {units['m/s']}
+                    </th>
+                    <th className="sortable" onClick={sortShips('boost')}>
+                      {units['m/s']}
+                    </th>
+                    <th>&nbsp;</th>
+                    <th
+                      className="sortable"
+                      onClick={sortShips('baseShieldStrength')}
+                    >
+                      {units.MJ}
+                    </th>
+                    <th
+                      className="sortable lft"
+                      onClick={sortShips('topSpeed')}
+                    >
+                      {units['m/s']}
+                    </th>
+                    <th className="sortable" onClick={sortShips('topBoost')}>
+                      {units['m/s']}
+                    </th>
+                    <th
+                      className="sortable"
+                      onClick={sortShips('maxJumpRange')}
+                    >
+                      {units.LY}
+                    </th>
+                    <th className="sortable" onClick={sortShips('maxCargo')}>
+                      {units.T}
+                    </th>
+                    <th>&nbsp;</th>
+                    <th className="sortable lft" onClick={sortShips('hp', 1)}>
+                      {translate('S')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('hp', 2)}>
+                      {translate('M')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('hp', 3)}>
+                      {translate('L')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('hp', 4)}>
+                      {translate('H')}
+                    </th>
+                    <th className="sortable" onClick={sortShips('hp', 0)}>
+                      {translate('U')}
+                    </th>
+
+                    <th className="sortable lft" onClick={sortShips('int', 0)}>
+                      1
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 1)}>
+                      2
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 2)}>
+                      3
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 3)}>
+                      4
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 4)}>
+                      5
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 5)}>
+                      6
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 6)}>
+                      7
+                    </th>
+                    <th className="sortable" onClick={sortShips('int', 7)}>
+                      8
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{detailRows}</tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
