@@ -1,0 +1,37 @@
+
+.items {
+  margin-bottom: 10px;
+  clear: both;
+  overflow: hidden;
+
+  .item {
+    clear: both;
+    margin: 1px 0 0;
+    overflow: hidden;
+
+    .val {
+      float:right;
+      text-align: right;
+    }
+
+    .lbl {
+      float: left;
+    }
+    color: @disabled;
+    cursor: pointer;
+
+    &.enabled {
+      color: @fg;
+    }
+
+    &.consumer {
+      .val:before {
+        content: "-";
+      }
+    }
+
+    &.untoggleable {
+      cursor: default;
+    }
+  }
+}

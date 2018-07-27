@@ -1,0 +1,52 @@
+
+#shipyard {
+  vertical-align: top;
+  text-align: center;
+}
+
+a.ship {
+  display: inline-block;
+  width: 15em;
+  margin: 0.5em;
+  background-color: @bg;
+  padding: 0.5em;
+  text-decoration: none;
+  color: @fg;
+  font-family: @fStandard;
+  text-align: right;
+  .user-select-none();
+
+  .smallPhone({
+    width: 16em;
+  });
+
+  h2 {
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    font-size: 1.1em;
+  }
+
+  small {
+    color: @warning;
+    font-family: @fStandard;
+    float: left;
+    font-size: 0.8em;
+    margin-right: 2em;
+  }
+
+  .subtitle {
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .size {
+    float: left;
+    font-size: 0.8em;
+  }
+  .purpose {
+    text-transform: uppercase;
+    font-size: 0.7em;
+    float: right;
+  }
+}
