@@ -37,9 +37,8 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      failed: false,
-      error: '',
-      alreadyExists: false
+      alreadyExists: false,
+      message: ''
     };
     this.handleClick = this.handleClick.bind(this);
     this.setFormApi = this.setFormApi.bind(this);
@@ -74,9 +73,12 @@ class Register extends React.Component {
     const text = await res.json();
     console.info(text);
     if (text.success === true) {
-      this.setState({ failed: false, message: 'Registered successfully' });
+      this.setState({ message: 'Registered successfully' });
     } else {
-      this.setState({ failed: true, message: text.error, alreadyExists: text.error === 'User already exists.'});
+      this.setState({
+        message: text.error,
+        alreadyExists: text.error === 'User already exists.'
+      });
     }
   }
 

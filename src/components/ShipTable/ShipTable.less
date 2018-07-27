@@ -7,11 +7,10 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
+@import "../../less/app";
 @import '../variables';
 
-:root {
-  --brand-color: #61dafb;
-}
+@brand-color: #61dafb;
 
 .root {
   background: #373277;
@@ -25,7 +24,7 @@
 }
 
 .brand {
-  color: color(var(--brand-color) lightness(+10%));
+  color: lighten(@brand-color, 10%);
   text-decoration: none;
   font-size: 1.75em; /* ~28px */
 }

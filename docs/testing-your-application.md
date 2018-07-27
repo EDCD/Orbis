@@ -65,20 +65,20 @@ describe('Layout', () => {
 React-intl users MUST render/wrap components inside an IntlProvider like the
 example below:
 
-The example below example is a drop-in test for the RSK `BuildTable` component:
+The example below example is a drop-in test for the RSK `ShipTable` component:
 
 ```js
 import React from 'react';
-import BuildTable from './BuildTable';
+import ShipTable from './ShipTable';
 import IntlProvider from 'react-intl';
 import Navigation from '../../components/Navigation';
 
-describe('A test suite for <BuildTable />', () => {
+describe('A test suite for <ShipTable />', () => {
   it('should contain a <Navigation/> component', () => {
     it('rendering', () => {
       const wrapper = renderIntoDocument(
         <IntlProvider locale="en">
-          <BuildTable />
+          <ShipTable />
         </IntlProvider>,
       );
       expect(wrapper.find(Navigation)).to.have.length(1);

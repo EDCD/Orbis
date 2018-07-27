@@ -11,6 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Home.less';
+import ShipTable from '../../components/ShipTable/ShipTable';
 
 class Home extends React.Component {
   static propTypes = {
@@ -27,15 +28,7 @@ class Home extends React.Component {
       <div className={s.page}>
         <div className={s.container}>
           <h1>Latest builds</h1>
-          {this.props.builds.map(item => (
-            <div key={item.shortid}>
-              <h1>
-                <a href={`/build/${item.shortid}`}>{item.title}</a>
-              </h1>
-              <h3>{item.description}</h3>
-              <hr />
-            </div>
-          ))}
+          <ShipTable shipRows={this.props.builds} />
         </div>
       </div>
     );
