@@ -28,9 +28,9 @@ class Home extends React.Component {
         <div className={s.container}>
           <h1>Latest builds</h1>
           {this.props.builds.map(item => (
-            <div key={item.id} className={s.newsItem}>
-              <h1 className={s.newsTitle}>
-                <a href={`/build/${item.id}`}>{item.title}</a>
+            <div key={item.shortid}>
+              <h1>
+                <a href={`/build/${item.shortid}`}>{item.title}</a>
               </h1>
               <h3>{item.description}</h3>
               <hr />

@@ -6,7 +6,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-
+import * as shortid from 'shortid';
 import DataType from 'sequelize';
 import Model from '../sequelize';
 
@@ -16,6 +16,11 @@ const Ship = Model.define(
     id: {
       type: DataType.UUID,
       defaultValue: DataType.UUIDV1,
+      primaryKey: true
+    },
+    shortid: {
+      type: DataType.STRING(10),
+      defaultValue: shortid.generate,
       primaryKey: true
     },
     coriolisShip: {
@@ -55,6 +60,7 @@ const Ship = Model.define(
       { fields: ['id'] },
       { fields: ['updatedAt'] },
       { fields: ['createdAt'] },
+      { fields: ['shortid'] },
       { fields: ['ship'] }
     ]
   }

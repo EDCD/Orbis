@@ -14,12 +14,12 @@ import BuildsItemType from '../types/BuildsItemType';
 const build = {
   type: BuildsItemType,
   args: {
-    id: {
+    shortid: {
       type: new GraphQLNonNull(GraphQLString)
     }
   },
   resolve(source, args) {
-    return Ship.find({ where: { id: args.id } }).then(ships =>
+    return Ship.find({ where: { shortid: args.shortid } }).then(ships =>
       JSON.parse(JSON.stringify(ships))
     );
   }

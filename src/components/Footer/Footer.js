@@ -17,7 +17,7 @@ class Footer extends React.Component {
     return (
       <div className={s.root}>
         <div className={s.container}>
-          <span className={s.text}>© EDCD</span>
+          <span className={s.text}>© EDCD {new Date().getFullYear()}</span>
           <span className={s.spacer}>·</span>
           <Link className={s.link} to="/">
             Home
@@ -31,9 +31,9 @@ class Footer extends React.Component {
             Privacy
           </Link>
           <span className={s.spacer}>·</span>
-          <Link className={s.link} to="/not-found">
-            Not Found
-          </Link>
+          <a className={s.link} href="https://github.com/EDCD/orbis/issues/new">
+            Report an issue
+          </a>
         </div>
       </div>
     );

@@ -53,7 +53,8 @@ const BuildsItemType = new ObjectType({
     author: { type: StringType },
     Modules: { type: ObjectScalarType },
     createdAt: { type: new NonNull(StringType) },
-    id: { type: new NonNull(StringType) }
+    id: { type: new NonNull(StringType) },
+    shortid: { type: new NonNull(StringType) }
   }
 });
 

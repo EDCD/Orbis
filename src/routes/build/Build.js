@@ -25,7 +25,7 @@ class Build extends React.Component {
             Build: {this.props.build[0].title} by {this.props.build[0].author}
           </h1>
           {this.props.build.map(item => (
-            <article key={item.id} className={s.newsItem}>
+            <article key={item.id} className={s.build}>
               <div>
                 <div>
                   <p>Armour: {Math.round(item.coriolisShip.armour)}</p>
