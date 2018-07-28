@@ -15,7 +15,6 @@ import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
 import expressGraphQL from 'express-graphql';
-import jwt from 'jsonwebtoken';
 import nodeFetch from 'node-fetch';
 import { UniqueConstraintError } from 'sequelize';
 import React from 'react';
@@ -30,14 +29,24 @@ import passport from './passport';
 import router from './router';
 import models from './data/models';
 import schema from './data/schema';
+import sequelize from './data/sequelize';
 // import assets from './asset-manifest.json'; // eslint-disable-line import/no-unresolved
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import config from './config';
 import User from './data/models/User';
 import Ship from './data/models/Ship';
 import * as Sequelize from 'sequelize';
+import * as morgan from 'morgan';
 
 const session = require('express-session');
+
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+
+const sessionStore = new SequelizeStore({
+  db: sequelize,
+  checkExpirationInterval: 15 * 60 * 1000,
+  expiration: 7 * 24 * 60 * 60 * 1000
+});
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -68,41 +77,39 @@ app.set('trust proxy', config.trustProxy);
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: '5mb' }));
 app.use(cors({ credentials: true, origin: true }));
 app.options('*', cors({ credentials: true, origin: true }));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '1mb', strict: false }));
+app.use(morgan('dev'));
 
 //
 // Authentication
 // -----------------------------------------------------------------------------
-app.use(
-  expressJwt({
-    secret: config.auth.jwt.secret,
-    credentialsRequired: false,
-    getToken: req => req.cookies.id_token
-  })
-);
 
 app.use(
   session({
     secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore
   })
 );
 
-// Error handler for express-jwt
-app.use((err, req, res, next) => {
-  // eslint-disable-line no-unused-vars
-  if (err instanceof Jwt401Error) {
-    console.error('[express-jwt-error]', req.cookies.id_token);
-    // `clearCookie`, otherwise user can't use web-app until cookie expires
-    res.clearCookie('id_token');
-  }
-  next(err);
+sessionStore.sync();
+
+app.use(passport.initialize());
+
+passport.serializeUser((user, done) => {
+  done(null, user);
 });
+
+passport.deserializeUser((user, done) => {
+  return done(null, user)
+});
+
+app.use(passport.session());
 
 function isAuthenticated(req, res, next) {
   if (req.user) return next();
@@ -110,22 +117,12 @@ function isAuthenticated(req, res, next) {
     error: 'User not authenticated'
   });
 }
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
-app.use(passport.initialize());
-app.use(passport.session());
 const { Op } = Sequelize;
 app.post('/register', async (req, res) => {
   if (!req.body) {
     return res.status(413).end();
   }
-  console.table(req.body);
   let user = await User.find({
     where: {
       [Op.or]: [
@@ -163,12 +160,14 @@ app.post('/builds/add', async (req, res) => {
   if (!req.body) {
     return res.status(413).end();
   }
+  console.log(req.body);
   const data = JSON.parse(JSON.stringify(req.body));
-  data.author = req.user === undefined ? 'Anonymous' : req.user.email;
+  data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
   const ship = await Ship.create(data);
   return res.json({
     success: true,
     id: ship.id,
+    body: data,
     ship: 'created',
     link: `http://localhost:3000/build/${ship.shortid}`
   });

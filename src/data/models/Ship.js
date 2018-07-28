@@ -30,7 +30,7 @@ const Ship = Model.define(
       type: DataType.STRING
     },
     author: {
-      type: DataType.STRING
+      type: DataType.JSONB
     },
     title: {
       type: DataType.STRING
@@ -61,9 +61,20 @@ const Ship = Model.define(
       { fields: ['updatedAt'] },
       { fields: ['createdAt'] },
       { fields: ['shortid'] },
-      { fields: ['ship'] }
+      { fields: ['Ship'] }
     ]
   }
 );
+
+Ship.beforeCreate(ship => {
+  const author = JSON.parse(ship.author);
+  ship.author = {}
+  for (const i in author) {
+    if (i === 'password' || i === 'email') {
+      continue;
+    }
+    ship.author[i] = author[i];
+  }
+});
 
 export default Ship;

@@ -18,11 +18,12 @@ class Build extends React.Component {
   };
 
   render() {
+    this.props.build[0].author = JSON.parse(this.props.build[0].author);
     return (
       <div className={s.root}>
         <div className={s.container}>
           <h1>
-            Build: {this.props.build[0].title} by {this.props.build[0].author}
+            Build: {this.props.build[0].title} by {this.props.build[0].author.username}
           </h1>
           {this.props.build.map(item => (
             <article key={item.id} className={s.build}>
