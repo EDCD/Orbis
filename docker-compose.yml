@@ -12,7 +12,13 @@ services:
     - "traefik.basic.port=3000"
     - "traefik.basic.protocol=http"
     restart: always
-
+  db:
+    image: mysql
+    networks:
+      - orbis
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: test
 
 networks:
   orbis:

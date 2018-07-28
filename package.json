@@ -31,6 +31,7 @@
     "isomorphic-style-loader": "^4.0.0",
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.0",
+    "mysql2": "^1.5.3",
     "node-fetch": "^2.1.2",
     "normalize.css": "^8.0.0",
     "passport": "^0.4.0",
