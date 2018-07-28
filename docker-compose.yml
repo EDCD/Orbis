@@ -12,7 +12,7 @@ services:
     - "traefik.basic.port=3000"
     - "traefik.basic.protocol=http"
     restart: always
-    command: ["/wait-for-it.sh", "db:3306", "--", "node", "server.js"]
+    command: ["./wait-for-it.sh", "db:3306", "--", "node", "server.js"]
     depends_on:
     - db
   db:
