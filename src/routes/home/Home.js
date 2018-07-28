@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Home.less';
 import ShipTable from '../../components/ShipTable/ShipTable';
+import SocialCard from '../../components/ShipCard';
 
 class Home extends React.Component {
   static propTypes = {
@@ -25,10 +26,23 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div className={s.page}>
-        <div className={s.container}>
+      <div>
+        <div>
           <h1>Latest builds</h1>
-          <ShipTable shipRows={this.props.builds} />
+          {this.props.builds.map(e => {
+            e.image = 'http://via.placeholder.com/500x400';
+            e.content = 'some bollocks';
+            return (
+              <SocialCard
+                key={e.id}
+                content={e}
+                likes={0}
+                reposts={0}
+                likeIsClicked={false}
+                repostIsClicked={false}
+              />
+            );
+          })}
         </div>
       </div>
     );

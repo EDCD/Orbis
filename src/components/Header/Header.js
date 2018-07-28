@@ -13,20 +13,14 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Header.less';
 import Link from '../Link';
 import Navigation from '../Navigation';
-import logoUrl from './logo-small.png';
-import logoUrl2x from './logo-small@2x.png';
+import logoUrl from './Orbis.png';
 
 class Header extends React.Component {
   render() {
     return (
       <header>
         <Link className={s.l} to="/">
-          <img
-            src={logoUrl}
-            className={cx(s.l)}
-            srcSet={`${logoUrl2x} 2x`}
-            alt="React"
-          />
+          <img src={logoUrl} width="38px" height="38px" alt="React" />
         </Link>
         <div className={cx(s.l, s.menu)}>
           <div className={cx(s['menu-header'])}>

@@ -59,14 +59,14 @@ class Html extends React.Component {
         </head>
         <body
           style={{
-            backgroundColor: '#000'
+            backgroundColor: '#000',
+            minHeight: '100%'
           }}
         >
           <div
             id="app"
             style={{
-              minHeight: '100%',
-              overflowY: 'scroll'
+              minHeight: '100%'
             }}
             dangerouslySetInnerHTML={{ __html: children }}
           />
