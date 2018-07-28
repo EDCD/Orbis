@@ -144,7 +144,7 @@ class ShipTable extends TranslatedComponent {
           alt: highlight
         })}
       >
-        <td className="ri">{ship.manufacturer}</td>
+        <td className="ri">{ship.description}</td>
         <td className="ri">{fInt(ship.cost)}</td>
         <td className="ri cap">{translate(SizeMap[ship.class])}</td>
         <td className="ri">{fInt(ship.crew)}</td>
@@ -323,7 +323,7 @@ class ShipTable extends TranslatedComponent {
                       className="sortable"
                       onClick={sortShips('manufacturer')}
                     >
-                      {translate('manufacturer')}
+                      {translate('description')}
                     </th>
                     <th>&nbsp;</th>
                     <th
