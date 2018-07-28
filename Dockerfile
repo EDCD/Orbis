@@ -19,5 +19,5 @@ USER node
 # Set NODE_ENV env variable to "production" for faster expressjs
 ENV NODE_ENV production
 WORKDIR /usr/src/app/build
-
+COPY wait-for .
 CMD [ "node", "server.js" ]
