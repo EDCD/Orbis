@@ -1,21 +1,23 @@
 FROM node:8.10.0-alpine
-
+ARG db_url
+ENV DATABASE_URL $db_url
+ENV TRUST_PROXY 1
+ENV GOOGLE_TRACKING_ID UA-55840909-20
 # Set a working directory
 WORKDIR /usr/src/app
 
-COPY ./build/package.json .
-COPY ./build/yarn.lock .
+COPY . .
 
 # Install Node.js dependencies
-RUN yarn install --production --no-progress
+RUN yarn install --no-progress
 
-# Copy application files
-COPY ./build .
+RUN yarn build --release
 
 # Run the container under "node" user by default
 USER node
 
 # Set NODE_ENV env variable to "production" for faster expressjs
 ENV NODE_ENV production
+WORKDIR /usr/src/app/build
 
 CMD [ "node", "server.js" ]

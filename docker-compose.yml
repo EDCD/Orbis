@@ -1,0 +1,21 @@
+version: '2.2'
+
+services:
+  app:
+    build: .
+    networks:
+    - orbis
+    labels:
+    - "traefik.docker.network=orbis_orbis"
+    - "traefik.enable=true"
+    - "traefik.basic.frontend.rule=Host:orbistest.willb.info"
+    - "traefik.basic.port=3000"
+    - "traefik.basic.protocol=http"
+    restart: always
+
+
+networks:
+  orbis:
+
+volumes:
+  pg-data:
