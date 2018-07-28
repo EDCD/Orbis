@@ -1,4 +1,4 @@
-FROM node:8.10.0-alpine
+FROM node:8.10.0
 ARG db_url
 ENV DATABASE_URL $db_url
 ENV TRUST_PROXY 1
