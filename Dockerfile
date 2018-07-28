@@ -12,7 +12,7 @@ COPY . .
 RUN yarn install --no-progress
 
 RUN yarn build --release
-COPY wait-for-it.sh .
+COPY wait-for-it.sh /usr/src/app/build/
 RUN chmod +x /usr/src/app/build/wait-for-it.sh
 
 # Run the container under "node" user by default
