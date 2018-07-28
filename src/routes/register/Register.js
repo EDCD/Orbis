@@ -13,7 +13,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { Form, Text } from 'informed';
 
 import s from './Register.less';
-import Link from '../../Components/Link';
+import Link from '../../components/Link';
 
 const Label = props => {
   const { htmlFor, ...otherProps } = props;
