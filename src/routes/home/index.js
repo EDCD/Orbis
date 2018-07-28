@@ -14,7 +14,7 @@ import Layout from '../../components/Layout';
 async function action({ fetch }) {
   const resp = await fetch('/graphql', {
     body: JSON.stringify({
-      query: '{builds{id,shortid,author,title,description,coriolisShip}}'
+      query: '{builds{id,shortid,likes,author,title,description,coriolisShip}}'
     })
   });
   const { data } = await resp.json();

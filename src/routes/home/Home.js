@@ -31,13 +31,12 @@ class Home extends React.Component {
           <h1>Latest builds</h1>
           {this.props.builds.map(e => {
             e.image = 'http://via.placeholder.com/500x400';
-            e.content = 'some bollocks';
+            e.content = e.description;
             return (
               <SocialCard
                 key={e.id}
                 content={e}
-                likes={0}
-                reposts={0}
+                likes={e.likes}
                 likeIsClicked={false}
                 repostIsClicked={false}
               />

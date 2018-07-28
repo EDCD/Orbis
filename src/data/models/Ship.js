@@ -47,7 +47,10 @@ const Ship = Model.define(
     updatedAt: {
       type: DataType.DATE
     },
-    getHits: DataType.INTEGER,
+    likes: {
+      type: DataType.INTEGER,
+      defaultValue: 0
+    },
     Modules: {
       type: DataType.JSONB
     },

@@ -105,9 +105,7 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((user, done) => {
-  return done(null, user)
-});
+passport.deserializeUser((user, done) => done(null, user));
 
 app.use(passport.session());
 
@@ -193,6 +191,15 @@ app.post(
   }),
   (req, res) => res.redirect('/')
 );
+
+app.post('/updateLikes/:id', isAuthenticated, (req, res) => {
+  Ship.findById(req.params.id)
+    .then(ship => ship.increment('likes', { by: 1 }))
+    .then(ship => res.json(ship))
+    .catch(err => {
+      res.status(500).end()
+    })
+});
 
 //
 // Register API middleware

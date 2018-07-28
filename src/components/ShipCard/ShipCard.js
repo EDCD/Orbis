@@ -21,9 +21,10 @@ import TranslatedComponent from '../TranslatedComponent';
 const SizeMap = ['', 'small', 'medium', 'large', 'capital'];
 
 const UiButton = props => {
-  const classes = props.isClicked ? s['ui-button clicked'] : s['ui-button'];
+  const classes = props.isClicked
+    ? cx(s['ui-button'], s.clicked)
+    : s['ui-button'];
   const number = props.isClicked ? props.number + 1 : props.number;
-
   return (
     <button className={classes} id={props.text} onClick={() => props.onClick()}>
       <span className={s['ui-icon']}>{props.icon} </span>
@@ -35,36 +36,36 @@ const UiButton = props => {
 class ButtonBox extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props.likeIsClicked);
     this.state = {
-      likeIsClicked: props.likeIsClicked,
-      repostIsClicked: props.repostIsClicked
+      likeIsClicked: props.likeIsClicked
     };
   }
 
   toggle(index) {
     const state = {};
     state[index] = !this.state[index];
-    this.setState(state);
+    this.setState(state, () => {
+      this.updateLikes();
+    });
+  }
+
+  async updateLikes() {
+    await fetch(`/updateLikes/${this.props.id}`, {
+      method: 'POST',
+      credentials: 'include'
+    });
   }
 
   render() {
+    this.toggle = this.toggle.bind(this);
     return (
       <div>
-        <UiButton icon="✎" text="comment" number={2} isClicked={false} />
         <UiButton
           icon="♥"
           text="likes"
           number={this.props.likes}
           onClick={() => this.toggle('likeIsClicked')}
           isClicked={this.state.likeIsClicked}
-        />
-        <UiButton
-          icon="➥"
-          text="repost"
-          number={this.props.reposts}
-          onClick={() => this.toggle('repostIsClicked')}
-          isClicked={this.state.repostIsClicked}
         />
       </div>
     );
@@ -99,9 +100,8 @@ export class SocialCard extends React.Component {
         <div style={{ textAlign: 'right' }}>
           <ButtonBox
             likeIsClicked={this.props.likeIsClicked}
-            repostIsClicked={this.props.repostIsClicked}
+            id={this.props.content.id}
             likes={this.props.likes}
-            reposts={this.props.reposts}
           />
         </div>
       </div>

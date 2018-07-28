@@ -11,6 +11,7 @@
 import {
   GraphQLObjectType as ObjectType,
   GraphQLString as StringType,
+  GraphQLInt as IntegerType,
   GraphQLNonNull as NonNull,
   GraphQLScalarType
 } from 'graphql';
@@ -54,6 +55,7 @@ const BuildsItemType = new ObjectType({
     Modules: { type: ObjectScalarType },
     createdAt: { type: new NonNull(StringType) },
     id: { type: new NonNull(StringType) },
+    likes: { type: new NonNull(IntegerType) },
     shortid: { type: new NonNull(StringType) }
   }
 });

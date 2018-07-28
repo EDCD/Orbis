@@ -28,8 +28,6 @@ const builds = {
     let order;
     if (args.order) {
       [field, order] = args.order.split(' ');
-      console.log(field);
-      console.log(order);
     }
     return Ship.findAll({
       order: [[field || 'updatedAt', order || 'DESC']]
