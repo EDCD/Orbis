@@ -7,7 +7,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { Component } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
@@ -123,26 +123,28 @@ class ButtonBox extends React.Component {
   }
 }
 
-const UiCard = props => {
-  const { image, tag, title, content, author } = props.content;
-  return (
-    <div className={s['ui-card']}>
-      <div className={s['ui-card-img']}>
-        <Link className={s.noDec} to={`/build/${props.content.shortid}`}>
-          <img src={image} />
-        </Link>
+class UiCard extends Component {
+  render() {
+    const { image, tag, title, content, author } = this.props.content;
+    return (
+      <div className={s['ui-card']}>
+        <div className={s['ui-card-img']}>
+          <Link className={s.noDec} to={`/build/${this.props.content.shortid}`}>
+            <img src={image} />
+          </Link>
+        </div>
+        <div className={s['ui-card-content']}>
+          <h5>{tag}</h5>
+          <Link className={s.noDec} to={`/build/${this.props.content.shortid}`}>
+            <h3>{title}</h3>
+          </Link>
+          <p>{content}</p>
+          <p>- {author.username}</p>
+        </div>
       </div>
-      <div className={s['ui-card-content']}>
-        <h5>{tag}</h5>
-        <Link className={s.noDec} to={`/build/${props.content.shortid}`}>
-          <h3>{title}</h3>
-        </Link>
-        <p>{content}</p>
-        <p>- {author.username}</p>
-      </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export class SocialCard extends React.Component {
   render() {
