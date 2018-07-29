@@ -128,7 +128,9 @@ const UiCard = props => {
   return (
     <div className={s['ui-card']}>
       <div className={s['ui-card-img']}>
-        <img src={image} />
+        <Link className={s.noDec} to={`/build/${props.content.shortid}`}>
+          <img src={image} />
+        </Link>
       </div>
       <div className={s['ui-card-content']}>
         <h5>{tag}</h5>
