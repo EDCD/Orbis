@@ -110,7 +110,7 @@ if (__DEV__) {
 app.use(passport.initialize());
 
 passport.serializeUser((user, done) => {
-  done(null, user.get({ plain: true }));
+  done(null, user);
 });
 
 passport.deserializeUser((user, done) => done(null, user));

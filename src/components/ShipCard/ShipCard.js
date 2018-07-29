@@ -93,13 +93,6 @@ class ButtonBox extends React.Component {
     const json = await data.json();
     this.setState({ likes: json.count });
     if (!data.ok) {
-      const state = {};
-      state[index] = false;
-      state.shake = true;
-      this.setState(state);
-      setTimeout(() => {
-        this.setState({ shake: false });
-      }, 500);
     }
   }
 

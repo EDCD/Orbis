@@ -15,7 +15,6 @@ const router = express.Router();
 
 router.post('/updatevote/:vote/:shipId', isAuthenticated, (req, res) => {
   const author = _.cloneDeep(JSON.parse(req.user));
-  console.log(author);
   const body = _.cloneDeep(req.params);
 
   return ShipVote.upsert({
