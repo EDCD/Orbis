@@ -10,7 +10,7 @@
 * Launches [Browsersync](https://browsersync.io/) and
   [Hot Module Replacement](https://webpack.github.io/docs/hot-module-replacement)
 
-### `yarn run build` (`build.js`)
+### `yarn run build` (`vote.js`)
 
 * Cleans up the output `/build` folder (`clean.js`)
 * Copies static files to the output folder (`copy.js`)
@@ -18,7 +18,7 @@
 
 ### `yarn run deploy` (`deploy.js`)
 
-* Builds the project from source files (`build.js`)
+* Builds the project from source files (`vote.js`)
 * Pushes the contents of the `/build` folder to a remote server with Git
 
 ## Options

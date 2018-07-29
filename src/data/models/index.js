@@ -10,6 +10,7 @@
 import sequelize from '../sequelize';
 import User from './User';
 import Ship from './Ship';
+import ShipVote from './ShipVote';
 import UserLogin from './UserLogin';
 import UserClaim from './UserClaim';
 import UserProfile from './UserProfile';
@@ -40,4 +41,4 @@ function sync(...args) {
 }
 
 export default { sync };
-export { User, UserLogin, UserClaim, UserProfile, Ship };
+export { User, UserLogin, UserClaim, UserProfile, Ship, ShipVote };

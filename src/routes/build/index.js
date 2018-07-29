@@ -12,21 +12,15 @@ import Build from './Build';
 import Layout from '../../components/Layout';
 
 async function action({ fetch, params }) {
-  const resp = await fetch('/graphql', {
-    body: JSON.stringify({
-      query: `{build(shortid: "${
-        params.id
-      }"){id,author,Modules,description,title,author,coriolisShip}}`
-    })
-  });
-  const { data } = await resp.json();
+  const resp = await fetch(`/api/builds/${params.id}`);
+  const data = await resp.json();
   if (!data) throw new Error('Failed to load the builds feed.');
   return {
     title: 'Orbis Zone',
     chunks: ['build'],
     component: (
       <Layout>
-        <Build build={[data.build]} />
+        <Build build={[data]} />
       </Layout>
     )
   };

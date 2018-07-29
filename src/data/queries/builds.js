@@ -1,38 +1,60 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
-import { GraphQLList as List, GraphQLNonNull, GraphQLString } from 'graphql';
 import { Ship } from '../models';
-import BuildsItemType from '../types/BuildsItemType';
+import * as express from 'express';
+import ShipVote from '../models/ShipVote';
 
-const builds = {
-  type: new List(BuildsItemType),
-  args: {
-    filter: {
-      type: GraphQLString
-    },
-    order: {
-      type: GraphQLString
-    }
-  },
-  resolve(source, args) {
-    if (args.filter) {
-    }
-    let field;
-    let order;
-    if (args.order) {
-      [field, order] = args.order.split(' ');
-    }
-    return Ship.findAll({
-      order: [[field || 'updatedAt', order || 'DESC']]
-    }).then(ships => ships);
+const router = express.Router();
+
+router.post('/', (req, res) => {
+  const { order, field } = req.body;
+  return Ship.findAll({
+    order: [[field || 'updatedAt', order || 'DESC']]
+  })
+    .then(async ships => {
+      const promises = [];
+      ships.forEach(ship => {
+        promises.push(
+          ShipVote.sum('vote', {
+            where: {
+              shipId: ship.id
+            }
+          })
+        );
+      });
+      const data = await Promise.all(promises);
+      for (const i in data) {
+        ships[i].likes = data[i];
+      }
+      return res.json(ships);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+});
+
+router.get('/:id', (req, res) =>
+  Ship.find({ where: { shortid: req.params.id } })
+    .then(ships => res.json(ships))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    })
+);
+
+router.post('/add', async (req, res) => {
+  if (!req.body) {
+    return res.status(413).end();
   }
-};
+  const data = JSON.parse(JSON.stringify(req.body));
+  data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
+  const ship = await Ship.create(data);
+  return res.json({
+    success: true,
+    id: ship.id,
+    body: data,
+    ship: 'created',
+    link: `http://localhost:3000/build/${ship.shortid}`
+  });
+});
 
-export default builds;
+export default router;

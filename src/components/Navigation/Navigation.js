@@ -26,7 +26,7 @@ class Navigation extends React.Component {
   }
 
   async checkLogged() {
-    const res = await fetch('/checkauth', {
+    const res = await fetch('/api/checkauth', {
       method: 'GET',
       credentials: 'include'
     });

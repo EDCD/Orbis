@@ -20,7 +20,6 @@ import { User, UserLogin, UserClaim, UserProfile } from './data/models';
 import config from './config';
 import * as Sequelize from 'sequelize';
 
-
 const { Op } = Sequelize;
 
 passport.use(

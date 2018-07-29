@@ -35,8 +35,13 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import config from './config';
 import User from './data/models/User';
 import Ship from './data/models/Ship';
+import * as _ from 'lodash';
 import * as Sequelize from 'sequelize';
 import * as morgan from 'morgan';
+import ShipVote from './data/models/ShipVote';
+
+import builds from './data/queries/builds';
+import votes from './data/queries/vote';
 
 const session = require('express-session');
 
@@ -98,23 +103,44 @@ app.use(
 );
 
 sessionStore.sync();
+if (__DEV__) {
+  app.enable('trust proxy');
+}
 
 app.use(passport.initialize());
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user.get({ plain: true }));
 });
 
 passport.deserializeUser((user, done) => done(null, user));
 
 app.use(passport.session());
 
-function isAuthenticated(req, res, next) {
+app.post(
+  '/login',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  }),
+  (req, res) => res.redirect('/')
+);
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+export function isAuthenticated(req, res, next) {
   if (req.user) return next();
   return res.status(401).json({
     error: 'User not authenticated'
   });
 }
+app.get('/api/checkauth', isAuthenticated, (req, res) => {
+  res.status(200).json({
+    status: 'Login successful!'
+  });
+});
 
 const { Op } = Sequelize;
 app.post('/register', async (req, res) => {
@@ -154,65 +180,11 @@ app.post('/register', async (req, res) => {
   return res.json({ success: true, user: 'created' });
 });
 
-app.post('/builds/add', async (req, res) => {
-  if (!req.body) {
-    return res.status(413).end();
-  }
-  console.log(req.body);
-  const data = JSON.parse(JSON.stringify(req.body));
-  data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
-  const ship = await Ship.create(data);
-  return res.json({
-    success: true,
-    id: ship.id,
-    body: data,
-    ship: 'created',
-    link: `http://localhost:3000/build/${ship.shortid}`
-  });
-});
-
-app.get('/checkauth', isAuthenticated, (req, res) => {
-  res.status(200).json({
-    status: 'Login successful!'
-  });
-});
-
-app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
-});
-
-app.post(
-  '/login',
-  passport.authenticate('local', {
-    session: true,
-    successRedirect: '/',
-    failureRedirect: '/login'
-  }),
-  (req, res) => res.redirect('/')
-);
-
-app.post('/updateLikes/:id', isAuthenticated, (req, res) => {
-  Ship.findById(req.params.id)
-    .then(ship => ship.increment('likes', { by: 1 }))
-    .then(ship => res.json(ship))
-    .catch(err => {
-      res.status(500).end()
-    })
-});
-
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-app.use(
-  '/graphql',
-  expressGraphQL(req => ({
-    schema,
-    graphiql: __DEV__,
-    rootValue: { request: req },
-    pretty: __DEV__
-  }))
-);
+app.use('/api/builds', builds);
+app.use('/api/likes', votes);
 
 //
 // Register server-side rendering middleware

@@ -12,19 +12,18 @@ import Home from './Home';
 import Layout from '../../components/Layout';
 
 async function action({ fetch }) {
-  const resp = await fetch('/graphql', {
-    body: JSON.stringify({
-      query: '{builds{id,shortid,likes,author,title,description,coriolisShip}}'
-    })
+  const resp = await fetch('/api/builds', {
+    method: 'POST'
   });
-  const { data } = await resp.json();
+  const data = await resp.json();
+
   if (!data) throw new Error('Failed to load the builds feed.');
   return {
     title: 'Orbis Zone',
     chunks: ['home'],
     component: (
       <Layout>
-        <Home builds={data.builds} />
+        <Home builds={data} />
       </Layout>
     )
   };

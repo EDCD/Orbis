@@ -29,7 +29,7 @@ Before you start, take a moment to see how the project structure looks like:
 ├── /test/                      # Unit and end-to-end tests
 ├── /tools/                     # Build automation scripts and utilities
 │   ├── /lib/                   # Library for utility snippets
-│   ├── /build.js               # Builds the project from source to output (build) folder
+│   ├── /vote.js               # Builds the project from source to output (build) folder
 │   ├── /bundle.js              # Bundles the web resources into package(s) through Webpack
 │   ├── /clean.js               # Cleans up the output (build) folder
 │   ├── /copy.js                # Copies static files to output (build) folder

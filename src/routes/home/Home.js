@@ -11,7 +11,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Home.less';
-import ShipTable from '../../components/ShipTable/ShipTable';
 import SocialCard from '../../components/ShipCard';
 
 class Home extends React.Component {

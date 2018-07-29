@@ -18,7 +18,6 @@ class Build extends React.Component {
   };
 
   render() {
-    this.props.build[0].author = JSON.parse(this.props.build[0].author);
     return (
       <div className={s.root}>
         <div className={s.container}>

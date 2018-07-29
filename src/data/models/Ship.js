@@ -21,7 +21,7 @@ const Ship = Model.define(
     shortid: {
       type: DataType.STRING,
       defaultValue: shortid.generate,
-      primaryKey: true
+      primaryKey: false
     },
     coriolisShip: {
       type: DataType.JSONB

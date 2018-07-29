@@ -11,6 +11,8 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import { Shake, ShakeHard } from 'reshake';
+
 import Tooltip from '../../components/Tooltip';
 import s from './ShipCard.less';
 
@@ -21,52 +23,108 @@ import TranslatedComponent from '../TranslatedComponent';
 const SizeMap = ['', 'small', 'medium', 'large', 'capital'];
 
 const UiButton = props => {
-  const classes = props.isClicked
-    ? cx(s['ui-button'], s.clicked)
-    : s['ui-button'];
-  const number = props.isClicked ? props.number + 1 : props.number;
+  const classes = cx(s['ui-button'], { clicked: props.isClicked });
+  const number = props.number;
   return (
-    <button className={classes} id={props.text} onClick={() => props.onClick()}>
-      <span className={s['ui-icon']}>{props.icon} </span>
-      {number}
+    <button className={classes} id={props.text} onClick={props.onClick}>
+      <span>{props.icon} </span>
     </button>
   );
 };
 
+UiButton.propTypes = {
+  isClicked: PropTypes.bool.isRequired,
+  text: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  number: PropTypes.number.isRequired
+};
+
+const VoteCounter = props => (
+  // const classes = cx(s['ui-button']);
+  <span id={props.text}>{props.number}</span>
+);
+
+VoteCounter.propTypes = {
+  text: PropTypes.string.isRequired,
+  number: PropTypes.number.isRequired
+};
+
 class ButtonBox extends React.Component {
+  static propTypes = {
+    likeIsClicked: PropTypes.bool.isRequired,
+    likes: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      likeIsClicked: props.likeIsClicked
+      likeIsClicked: props.likeIsClicked,
+      shake: false,
+      likes: this.props.likes
     };
   }
 
   toggle(index) {
     const state = {};
     state[index] = !this.state[index];
+    console.log(state);
+    console.log(this.state);
     this.setState(state, () => {
-      this.updateLikes();
+      console.log(this.state);
+      this.updateLikes(index);
     });
   }
 
-  async updateLikes() {
-    await fetch(`/updateLikes/${this.props.id}`, {
-      method: 'POST',
-      credentials: 'include'
-    });
+  async updateLikes(e) {
+    const vote = {
+      type: e.target.id === 'upvote' ? 1 : -1,
+      shipId: this.props.id
+    };
+    const data = await fetch(
+      `/api/likes/updatevote/${vote.type}/${vote.shipId}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(vote),
+        credentials: 'include'
+      }
+    );
+    const json = await data.json();
+    this.setState({ likes: json.count });
+    if (!data.ok) {
+      const state = {};
+      state[index] = false;
+      state.shake = true;
+      this.setState(state);
+      setTimeout(() => {
+        this.setState({ shake: false });
+      }, 500);
+    }
   }
 
   render() {
     this.toggle = this.toggle.bind(this);
+    this.updateLikes = this.updateLikes.bind(this);
     return (
       <div>
         <UiButton
-          icon="♥"
-          text="likes"
-          number={this.props.likes}
-          onClick={() => this.toggle('likeIsClicked')}
+          icon="↑"
+          text="upvote"
+          id="upvote"
+          number={this.state.likes}
+          onClick={this.updateLikes}
           isClicked={this.state.likeIsClicked}
         />
+        <UiButton
+          icon="↓"
+          text="downvote"
+          id="downvote"
+          number={this.state.likes}
+          onClick={this.updateLikes}
+          isClicked={this.state.likeIsClicked}
+        />
+        <VoteCounter text="votes" number={this.state.likes} />
       </div>
     );
   }
