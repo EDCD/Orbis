@@ -1,10 +1,12 @@
-version: '3.1'
+version: '2.1'
 
 services:
   app:
     build: .
     networks:
     - orbis
+    env_file:
+      - .env
     labels:
     - "traefik.docker.network=orbis_orbis"
     - "traefik.enable=true"
@@ -12,17 +14,24 @@ services:
     - "traefik.basic.port=3000"
     - "traefik.basic.protocol=http"
     restart: always
-    command: ["./wait-for-it.sh", "db:3306", "--", "node", "server.js"]
+    ports:
+      - 8080:3000
     depends_on:
-    - db
+      db:
+        condition: service_healthy
   db:
-    image: bitnami/mariadb:latest
+    image: postgres:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres", "-ptest"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
     - orbis
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: test
-      MARIADB_DATABASE: orbis
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: orbis
 
 
 networks:
