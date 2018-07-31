@@ -16,8 +16,6 @@ services:
     - "traefik.port=3030"
     - "traefik.protocol=http"
     restart: always
-    ports:
-    - 8082:3030
     depends_on:
       db:
         condition: service_healthy
@@ -36,8 +34,6 @@ services:
     restart: always
     links:
       - server
-    ports:
-    - 8081:80
 
   imageproxy:
     image: willnorris/imageproxy
@@ -60,6 +56,8 @@ services:
       retries: 5
     networks:
     - orbis
+    volumes:
+      - orbis_data:/var/lib/postgresql/data
     restart: always
     environment:
       POSTGRES_PASSWORD: test

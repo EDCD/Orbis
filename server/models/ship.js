@@ -71,7 +71,7 @@ module.exports = (sequelize, DataType) => {
   Ship.beforeCreate(ship => {
     delete ship.author.password;
     delete ship.author.email;
-    ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/${ship.imageURL}`;
+    ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/${ship.imageURL || 'https://via.placeholder.com/500x400'}`;
   });
 
   return Ship;
