@@ -12,7 +12,7 @@ services:
     labels:
     - "traefik.docker.network=orbis"
     - "traefik.enable=true"
-    - "traefik.frontend.rule=Host:localhost;PathPrefix:/api"
+    - "traefik.frontend.rule=Host:orbis.zone;PathPrefix:/api"
     - "traefik.port=3030"
     - "traefik.protocol=http"
     restart: always
@@ -30,7 +30,7 @@ services:
     labels:
     - "traefik.docker.network=orbis"
     - "traefik.enable=true"
-    - "traefik.frontend.rule=Host:localhost;PathPrefix:/"
+    - "traefik.frontend.rule=Host:orbis.zone;PathPrefix:/"
     - "traefik.port=80"
     - "traefik.protocol=http"
     restart: always
@@ -38,6 +38,19 @@ services:
       - server
     ports:
     - 8081:80
+
+  imageproxy:
+    image: willnorris/imageproxy
+    command: -cache memory:200:4h -addr 0.0.0.0:8080
+    networks:
+    - orbis
+    labels:
+    - "traefik.docker.network=orbis"
+    - "traefik.enable=true"
+    - "traefik.frontend.rule=Host:orbis.zone;PathPrefixStrip:/imgproxy/"
+    - "traefik.port=8080"
+    - "traefik.protocol=http"
+    restart: always
   db:
     image: postgres:latest
     healthcheck:

@@ -12,10 +12,6 @@ export class EditBuild extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      build: [{
-        author: {},
-        coriolisShip: {}
-      }],
       loggedIn: false
     };
     this.submit = this.submit.bind(this);
@@ -70,18 +66,21 @@ export class EditBuild extends Component {
         <div>
           <div>
             <h1>
-              Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+              {this.state.build ? <span>
+                Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+              </span> : 'Loading'}
             </h1>
           </div>
-          {this.state.build.map(item => (
+          {this.state.build ? this.state.build.map(item => (
             <div>
-              <Form className={'formContainer'} getApi={this.setFormApi} onSubmit={this.submit}>
+              <Form initialValues={{imageURL: item.imageURL, description: item.description}} className={'formContainer'} getApi={this.setFormApi} onSubmit={this.submit}>
                 <div className={'formGroup flexSmall wrapper'}>
                   <label className={'label'} htmlFor="imageURL">
                     Image URL:
                     <Text
                       className={'input'}
                       id="imageURL"
+                      value={item.imageURL}
                       type="text"
                       field="imageURL"
                     />
@@ -109,7 +108,7 @@ export class EditBuild extends Component {
                 </div>
               </Form>
             </div>
-          ))}
+          )) : 'Loading'}
         </div>
       </Layout>
     );

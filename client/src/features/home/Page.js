@@ -78,7 +78,7 @@ export class Page extends React.Component {
           <Loader loaded={this.state.pageLoaded}>
             <div className={'builds-container'}>
             {this.state.data.map(e => {
-              e.imageURL = e.imageURL || 'http://via.placeholder.com/500x400';
+              e.imageURL = e.proxiedImage || 'http://via.placeholder.com/500x400';
               e.content = e.description;
               return (
                 <div className={'build-item'}>

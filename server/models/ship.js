@@ -24,6 +24,9 @@ module.exports = (sequelize, DataType) => {
       imageURL: {
         type: DataType.STRING
       },
+      proxiedImage: {
+        type: DataType.STRING
+      },
       author: {
         type: DataType.JSONB
       },
@@ -68,6 +71,7 @@ module.exports = (sequelize, DataType) => {
   Ship.beforeCreate(ship => {
     delete ship.author.password;
     delete ship.author.email;
+    ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/${ship.imageURL}`;
   });
 
   return Ship;

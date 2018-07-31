@@ -9,7 +9,7 @@ router.post('/', (req, res) => {
     // order: [[field || 'updatedAt', order || 'DESC']],
     limit: req.body.pageSize,
     offset: req.body.offset,
-    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author','imageURL', 'coriolisShip']
+    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'proxiedImage', 'coriolisShip']
   })
     .then(async ships => {
       const promises = [];
@@ -36,6 +36,8 @@ router.post('/', (req, res) => {
       res.status(500).end();
     });
 });
+
+const allowedUpdates = ['imageURL', 'description', 'title'];
 
 router.get('/:id', (req, res) =>
   Ship.find({
@@ -73,8 +75,14 @@ router.post('/update', async (req, res) => {
         if (!data.updates.hasOwnProperty(update)) {
           continue;
         }
+        if (allowedUpdates.indexOf(update) === -1) {
+          continue;
+        }
         ship[update] = data.updates[update];
-        console.log(data.updates[update])
+        if (update === 'imageURL') {
+          ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/{OPTIONS}/${data.updates[update]}`;
+        }
+        console.log(data.updates[update]);
 
       }
       return ship.save()
@@ -88,7 +96,7 @@ router.post('/update', async (req, res) => {
         );
     } else {
       console.log(req.user);
-      console.log(ship.id)
+      console.log(ship.id);
     }
   }
 });
