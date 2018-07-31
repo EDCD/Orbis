@@ -13,7 +13,8 @@ export class Build extends Component {
         author: {},
         coriolisShip: {}
       }],
-      loggedIn: false
+      loggedIn: false,
+      coriolisLink: ''
     };
   }
 
@@ -28,6 +29,24 @@ export class Build extends Component {
     }
   }
 
+  getCoriolisLink() {
+    return [
+      'https://beta.coriolis.io/outfit/',
+      this.state.build[0].coriolisShip.id,
+      '?code=',
+      'A',
+      this.state.build[0].coriolisShip.serialized.standard,
+      this.state.build[0].coriolisShip.serialized.hardpoints,
+      this.state.build[0].coriolisShip.serialized.internal,
+      '.',
+      this.state.build[0].coriolisShip.serialized.enabled,
+      '.',
+      this.state.build[0].coriolisShip.serialized.priorities,
+      '.',
+      this.state.build[0].coriolisShip.serialized.modifications
+    ].join('');
+  }
+
   async getData() {
     const resp = await fetch(`/api/builds/${this.props.match.params.id}`);
     const data = await resp.json();
@@ -38,10 +57,15 @@ export class Build extends Component {
   componentWillMount() {
     this.checkLogged();
     this.props.actions.getBuild({id: this.props.match.params.id})
-      .then(data => this.setState({ build: [data] }));
+      .then(data => {
+        return this.setState({ build: [data] }, () => {
+          this.setState({coriolisLink: this.getCoriolisLink()})
+        });
+      });
   }
 
   render() {
+    this.getCoriolisLink = this.getCoriolisLink.bind(this);
     return (
       <Layout>
         <div>
@@ -51,8 +75,12 @@ export class Build extends Component {
             </h1>
             <div>
               <Link to={`/build/${this.props.match.params.id}/edit`}>
-                Edit Build
+                Edit Build Info
               </Link>
+              <br/>
+              <a target='_blank' rel='noopener' href={this.state.coriolisLink}>
+                Edit Build on Coriolis
+              </a>
             </div>
             {this.state.build.map(item => (
               <article key={item.id} className={'build'}>
