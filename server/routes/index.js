@@ -11,13 +11,13 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/', (req, res) => {
-
+  res.status(200).json({});
 });
 
 router.post(
   '/login',
   passport.authenticate('local', {
-    successRedirect: '/',
+    successRedirect: '/api/',
     usernameField: 'email',
     failureRedirect: '/login'
   }),
