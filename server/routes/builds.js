@@ -45,6 +45,9 @@ router.get('/:id', (req, res) =>
     attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'coriolisShip']
   })
     .then(ships => {
+      if (!ships) {
+        return res.json({})
+      }
       ships.allowedToEdit = false;
       if (req.user) {
         if (req.user.id === ships.id) {
