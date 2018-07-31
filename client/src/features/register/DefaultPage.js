@@ -74,7 +74,6 @@ export class DefaultPage extends Component {
       credentials: 'include',
       body: JSON.stringify(postData),
       mode: 'cors',
-      redirect: 'follow',
       headers: {
         'Content-Type': 'application/json'
       }
