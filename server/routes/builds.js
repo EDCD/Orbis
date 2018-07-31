@@ -59,6 +59,34 @@ router.get('/:id', (req, res) =>
     })
 );
 
+router.delete('/:id', async (req, res) => {
+  const data = req.params;
+  const ship = await Ship.find({
+    where: {
+      id: data.id
+    }
+  });
+  if (req.user) {
+    if (req.user.id === ship.author.id) {
+      await ShipVote.destroy({
+        where: {
+          shipId: data.id
+        }
+      });
+      await Ship.destroy({
+        where: {
+          id: data.id
+        }
+      });
+    }
+    return res.json({
+      success: true
+    });
+  } else {
+    return res.status(403).json({success: false});
+  }
+});
+
 router.post('/update', async (req, res) => {
   if (!req.body || !req.body.updates) {
     return res.status(413).end();
@@ -95,8 +123,7 @@ router.post('/update', async (req, res) => {
           })
         );
     } else {
-      console.log(req.user);
-      console.log(ship.id);
+      return res.status(403).json({});
     }
   }
 });
@@ -116,4 +143,5 @@ router.post('/add', async (req, res) => {
     link: `https://orbis.zone/build/${ship.shortid}`
   });
 });
+
 module.exports = router;

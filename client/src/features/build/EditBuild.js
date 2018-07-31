@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { Form, Text, TextArea } from 'informed';
+import request from 'superagent';
 
 export class EditBuild extends Component {
   static propTypes = {};
@@ -17,6 +18,7 @@ export class EditBuild extends Component {
     this.submit = this.submit.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.setFormApi = this.setFormApi.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   setFormApi(formApi) {
@@ -35,7 +37,17 @@ export class EditBuild extends Component {
   }
 
   handleClick() {
-    console.info(this.formApi.getState());
+  }
+
+  handleDelete() {
+    return request
+      .delete(`/api/builds/${this.state.build[0].id}`)
+      .withCredentials()
+      .then(res => {
+        if (res.body && res.body.success === true) {
+          this.props.history.push('/')
+        }
+      })
   }
 
   async submit() {
@@ -105,6 +117,13 @@ export class EditBuild extends Component {
                     type="submit"
                   >
                     Update build
+                  </button>
+                  <br/>
+                  <button
+                    className={'button'}
+                    onClick={this.handleDelete}
+                  >
+                    Delete Build
                   </button>
 
                 </div>
