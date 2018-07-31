@@ -47,10 +47,10 @@ export class EditBuild extends Component {
       }
       updates[val] = form.values[val];
     }
-
-    console.log(form);
-    console.log(updates);
     return this.props.actions.updateBuild({updates, shipId: this.state.build[0].id})
+      .then(() => {
+          this.setState({ message: 'Build updated.' });
+      })
   }
 
   componentWillMount() {
@@ -98,6 +98,7 @@ export class EditBuild extends Component {
                   </label>
                 </div>
                 <div className={'formGroup'}>
+                  <p style={{textAlign: 'center'}} hidden={!this.state.message}>{this.state.message}</p>
                   <button
                     className={'button'}
                     onClick={this.handleClick}
@@ -105,6 +106,7 @@ export class EditBuild extends Component {
                   >
                     Update build
                   </button>
+
                 </div>
               </Form>
             </div>
