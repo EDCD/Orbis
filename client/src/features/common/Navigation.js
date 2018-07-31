@@ -26,7 +26,7 @@ export default class Navigation extends Component {
   }
 
   logout() {
-    return fetch('/logout', {
+    return fetch('/api/logout', {
       method: 'GET',
       credentials: 'include'
     }).then(() => this.setState({ loggedIn: false }));

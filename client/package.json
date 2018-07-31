@@ -78,7 +78,7 @@
   },
   "proxy": "http://localhost:3030/",
   "rekit": {
-    "devPort": 6075,
+    "devPort": 3000,
     "studioPort": 6076,
     "plugins": [],
     "css": "less"

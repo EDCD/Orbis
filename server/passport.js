@@ -1,40 +1,22 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const Auth0Strategy = require('passport-auth0');
 const models = require('./models');
 const Sequelize = require('sequelize');
-const {User} = models;
+const { User } = models;
 const { Op } = Sequelize;
 
-passport.use(
-  'local',
-  new LocalStrategy({ usernameField: 'email' }, (username, password, done) => {
-    User.find({
-      where: {
-        [Op.or]: [
-          {
-            email: username
-          },
-          {
-            username
-          }
-        ]
-      },
-      attributes: ['id', 'email', 'username', 'password']
-    })
-      .then(user => {
-        if (!user) {
-          return done(null, false, { message: 'Incorrect username.' });
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-        return done(null, user.get({plain: true}));
-      })
-      .catch(err => {
-        console.error(err);
-        return done(null, false, { message: 'Failed' });
-      });
-  })
+passport.use(new Auth0Strategy(
+  {
+    domain: 'gths.au.auth0.com',
+    clientID: 'nPS4V07RrUDQLTWYrE0CCujItmZ985Pz',
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:3030/api/callback'
+  },
+  (accessToken, refreshToken, extraParams, profile, done) => {
+    return done(null, profile);
+  }
+  )
 );
 
 module.exports = passport;

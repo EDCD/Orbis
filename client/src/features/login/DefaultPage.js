@@ -39,36 +39,9 @@ export class DefaultPage extends Component {
       <div className={'root'}>
         <div className={'container'}>
           <h1>{this.props.title}</h1>
-          <p className={'lead'}>Log in with your username or email address.</p>
-          <form method="post" action="/api/login">
-            <div className={'formGroup'}>
-              <label className={'label'} htmlFor="usernameOrEmail">
-                Email address or username:
-                <input
-                  className={'input'}
-                  id="usernameOrEmail"
-                  type="text"
-                  name="email"
-                />
-              </label>
-            </div>
-            <div className={'formGroup'}>
-              <label className={'label'} htmlFor="password">
-                Password:
-                <input
-                  className={'input'}
-                  id="password"
-                  type="password"
-                  name="password"
-                />
-              </label>
-            </div>
-            <div className={'formGroup'}>
-              <button className={'button'} type="submit">
-                Log in
-              </button>
-            </div>
-          </form>
+          <a href={"https://orbis.zone/api/login"} className={'button'}>
+            Log in
+          </a>
         </div>
       </div>
       </Layout>
