@@ -1,6 +1,8 @@
 import initialState from './initialState';
+import { reducer as getBuildsReducer } from './getBuilds';
 
 const reducers = [
+  getBuildsReducer,
 ];
 
 export default function reducer(state = initialState, action) {

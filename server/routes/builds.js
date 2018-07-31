@@ -1,16 +1,19 @@
 const express = require('express');
 const models = require('../models');
-const {Ship, ShipVote} = models;
+const { Ship, ShipVote } = models;
 const router = express.Router();
 
 router.post('/', (req, res) => {
   const { order, field } = req.body;
-  return Ship.findAll({
-    order: [[field || 'updatedAt', order || 'DESC']]
+  return Ship.findAndCountAll({
+    // order: [[field || 'updatedAt', order || 'DESC']],
+    limit: req.body.pageSize,
+    offset: req.body.offset,
+    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'coriolisShip']
   })
     .then(async ships => {
       const promises = [];
-      ships.forEach(ship => {
+      ships.rows.forEach(ship => {
         promises.push(
           ShipVote.sum('vote', {
             where: {
@@ -24,7 +27,7 @@ router.post('/', (req, res) => {
         if (isNaN(data[i])) {
           data[i] = 0;
         }
-        ships[i].likes = data[i];
+        ships.rows[i].likes = data[i];
       }
       return res.json(ships);
     })
@@ -35,7 +38,10 @@ router.post('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) =>
-  Ship.find({ where: { shortid: req.params.id } })
+  Ship.find({
+    where: { shortid: req.params.id },
+    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'coriolisShip']
+  })
     .then(ships => res.json(ships))
     .catch(err => {
       console.error(err);

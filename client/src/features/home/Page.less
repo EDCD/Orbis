@@ -75,3 +75,39 @@
     }
   }
 }
+
+.pagination ul {
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.pagination li {
+  display: inline-block;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.pagination .break-me a {
+  cursor: default;
+}
+
+.active {
+  border: none;
+  text-transform: capitalize;
+  font-family: @fStandard;
+  vertical-align: middle;
+  padding: 0.5em;
+  cursor: pointer;
+  background: @primary;
+  outline: none;
+
+  &.danger {
+    color: red;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: @disabled;
+  }
+}

@@ -5,10 +5,8 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const index = require('./routes');
 const passport = require('./passport');
-const users = require('./routes/users');
-const builds = require('./routes/builds');
+
 const models = require('./models');
 const session = require('express-session');
 const cors = require('cors');
@@ -31,13 +29,14 @@ const sessionStore = new SequelizeStore({
 
 
 const app = express();
+app.use(bodyParser.json({limit: '20mb'}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({ credentials: true, origin: true }));
 app.options('*', cors({ credentials: true, origin: true }));
 // Uncomment after placing your favicon in /public
 // app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
-app.use(bodyParser.json({limit: '20mb'}));
-app.use(bodyParser.urlencoded({extended: false}));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -73,8 +72,13 @@ app.get('/', (req, res) => {
   return res.status(200).end();
 });
 
+const index = require('./routes');
+const users = require('./routes/users');
+const builds = require('./routes/builds');
+const votes = require('./routes/votes');
 app.use('/api', index);
 app.use('/api/builds', builds);
 app.use('/api/users', users);
+app.use('/api/likes', votes);
 
 module.exports = app;

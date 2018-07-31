@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import './DefaultPage.less'
+import Layout from '../common/Layout';
+
 export class DefaultPage extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired
@@ -34,8 +35,7 @@ export class DefaultPage extends Component {
 
   render() {
     return (
-      <div>
-      <Header loggedIn={this.state.loggedIn} />
+      <Layout>
       <div className={'root'}>
         <div className={'container'}>
           <h1>{this.props.title}</h1>
@@ -71,8 +71,7 @@ export class DefaultPage extends Component {
           </form>
         </div>
       </div>
-      <Footer />
-      </div>
+      </Layout>
     );
   }
 }

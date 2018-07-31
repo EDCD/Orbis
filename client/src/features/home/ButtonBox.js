@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import UiButton from './UiButton';
 import VoteCounter from './VoteCounter';
+import request from 'superagent';
 
 export default class ButtonBox extends Component {
   static propTypes = {
@@ -31,19 +32,13 @@ export default class ButtonBox extends Component {
 
   async updateLikes(e) {
     const vote = {
-      type: e.target.id === 'upvote' ? 1 : -1,
-      shipId: this.props.id
+      shipId: this.props.id,
+      vote: e.target.id === 'upvote' ? 1 : -1
     };
-    const data = await fetch(
-      `/api/likes/updatevote/${vote.type}/${vote.shipId}`,
-      {
-        method: 'POST',
-        body: JSON.stringify(vote),
-        credentials: 'include'
-      }
-    );
-    const json = await data.json();
-    this.setState({ likes: json.count });
+    const data = await request
+      .post(`/api/likes`)
+      .send(vote)
+    this.setState({ likes: data.body.count });
   }
 
   render() {
@@ -69,7 +64,7 @@ export default class ButtonBox extends Component {
           onClick={this.updateLikes}
           isClicked={this.state.likeIsClicked}
         />
-        <VoteCounter text="votes" number={this.state.likes} />
+        <VoteCounter text="votes" number={this.state.likes}/>
       </div>
     );
   }

@@ -1,28 +1,34 @@
 const express = require('express');
 const models = require('../models');
+const _ = require('lodash');
 
 const router = express.Router();
 
-router.post('/:type', (req, res) => {
-  if (!req.body) {
-    return res.status(413).end();
+function isAuthenticated(req, res, next) {
+  if (req.user) {
+    return next();
   }
-  const author = JSON.parse(JSON.stringify(req.user));
-  const body = JSON.parse(JSON.stringify(req.body));
-  models.ShipVote.findOrCreate({
-    where: { userId: author.id, shipId: body.shipId },
-    defaults: {
-      vote: body.type,
-      userId: author.id,
-      shipId: body.shipId,
-      timeRecorded: new Date()
-    }
-  }).spread((ship, created) => {
-    console.log(ship.get({ plain: true }));
-    console.log(created);
-    return res.json({ created, vote: ship.get({ plain: true }) });
+  return res.status(401).json({
+    error: 'User not authenticated'
   });
-  return res.status(200).end();
+}
+const {ShipVote} = models;
+
+router.post('/', isAuthenticated, (req, res) => {
+  const author = req.user;
+
+  return ShipVote.upsert({
+    userId: author.id,
+    shipId: req.body.shipId,
+    vote: req.body.vote
+  }).then(async created => {
+    const count = await ShipVote.sum('vote', {
+      where: {
+        shipId: req.body.shipId
+      }
+    });
+    return res.json({ created, count });
+  });
 });
 
 module.exports = router;

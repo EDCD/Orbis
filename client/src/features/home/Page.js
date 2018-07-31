@@ -3,15 +3,24 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
+import Layout from '../common/Layout';
+import Loader from 'react-loader';
+import ReactPaginate from 'react-paginate';
+
 export class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loggedIn: false,
-      builds: []
+      builds: [],
+      data: [],
+      offset: 0,
+      perPage: 10,
+      pageLoaded: false,
+      loaded: false
     };
+    this.loadBuilds = this.loadBuilds.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
 
   async checkLogged() {
@@ -25,42 +34,68 @@ export class Page extends React.Component {
     }
   }
 
-  async getData() {
-    const resp = await fetch('/api/builds', {
-    method: 'POST'
-  });
-  const builds = await resp.json();
-  this.setState({builds})
+  componentDidMount() {
+    this.checkLogged();
+    this.setState({pageLoaded: false}, () => {
+      this.props.actions.getBuilds({ pageSize: this.state.perPage, offset: this.state.offset })
+        .then(data => {
+          return this.setState({ data: data.rows, pageCount: Math.ceil(data.count / this.state.perPage), pageLoaded: true });
+        });
+    })
   }
 
-  componentWillMount() {
-    this.checkLogged();
-    this.getData();
+  loadBuilds() {
+    this.setState({loaded: false}, () => {
+      this.props.actions.getBuilds({ pageSize: this.state.perPage, offset: this.state.offset })
+        .then(data => {
+          return this.setState({ data: data.rows, pageCount: Math.ceil(data.count / this.state.perPage), loaded: true });
+        });
+    })
   }
+
+  handlePageClick(data) {
+    console.log(data);
+    let selected = data.selected;
+    let offset = Math.ceil(selected * this.state.perPage);
+    this.setState({ offset: offset }, () => {
+      this.loadBuilds();
+    });
+  };
 
   render() {
     return (
-      <div>
-        <Header loggedIn={this.state.loggedIn} />
+      <Layout>
         <div>
           <h1>Latest builds</h1>
-          {this.state.builds.map(e => {
-            e.image = 'http://via.placeholder.com/500x400';
-            e.content = e.description;
-            return (
-              <SocialCard
-                key={e.id}
-                content={e}
-                loggedIn={this.state.loggedIn}
-                likes={e.likes}
-                likeIsClicked={false}
-                repostIsClicked={false}
-              />
-            );
-          })}
+          <Loader loaded={this.state.pageLoaded}>
+            {this.state.data.map(e => {
+              e.image = 'http://via.placeholder.com/500x400';
+              e.content = e.description;
+              return (
+                <SocialCard
+                  key={e.id}
+                  content={e}
+                  loggedIn={this.state.loggedIn}
+                  likes={e.likes}
+                  likeIsClicked={false}
+                  repostIsClicked={false}
+                />
+              );
+            })}
+            <ReactPaginate previousLabel={'Previous'}
+                           nextLabel={'Next'}
+                           breakLabel={<a href="">...</a>}
+                           breakClassName={'break-me'}
+                           pageCount={this.state.pageCount}
+                           marginPagesDisplayed={2}
+                           pageRangeDisplayed={5}
+                           onPageChange={this.handlePageClick}
+                           containerClassName={'pagination'}
+                           subContainerClassName={'pages pagination'}
+                           activeClassName={'active danger'}/>
+          </Loader>
         </div>
-        <Footer />
-      </div>
+      </Layout>
     );
   }
 }
@@ -68,14 +103,14 @@ export class Page extends React.Component {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    home: state.home,
+    home: state.home
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch),
+    actions: bindActionCreators({ ...actions }, dispatch)
   };
 }
 

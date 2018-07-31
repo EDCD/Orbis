@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Form, Text } from 'informed';
+import Layout from '../common/Layout';
 
 const Label = props => {
   const { htmlFor, ...otherProps } = props;
@@ -29,7 +30,9 @@ export class DefaultPage extends Component {
     super(props);
     this.state = {
       alreadyExists: false,
-      message: ''
+      message: '',
+      loggedIn: false
+
     };
     this.handleClick = this.handleClick.bind(this);
     this.setFormApi = this.setFormApi.bind(this);
@@ -37,6 +40,21 @@ export class DefaultPage extends Component {
 
   setFormApi(formApi) {
     this.formApi = formApi;
+  }
+
+  componentWillMount() {
+    this.checkLogged();
+  }
+
+  async checkLogged() {
+    const res = await fetch('/api/checkauth', {
+      method: 'GET',
+      credentials: 'include'
+    });
+    const json = await res.json();
+    if (json && json.status === 'Login successful!') {
+      this.setState({ loggedIn: true });
+    }
   }
 
   handleClick() {
@@ -76,60 +94,62 @@ export class DefaultPage extends Component {
   render() {
     this.submit = this.submit.bind(this);
     return (
-      <div className={'root'}>
-        <div className={'container'}>
-          <h1>{this.props.title}</h1>
-          <Form getApi={this.setFormApi} onSubmit={this.submit}>
-            <div className={'formGroup'}>
-              <label className={'label'} htmlFor="email">
-                Email address:
-                <Text
-                  className={'input'}
-                  id="email"
-                  type="text"
-                  field="email"
-                  autoFocus // eslint-disable-line jsx-a11y/no-autofocus
-                />
-              </label>
-            </div>
-            <div className={'formGroup'}>
-              <label className={'label'} htmlFor="username">
-                Username:
-                <Text
-                  className={'input'}
-                  id="username"
-                  type="text"
-                  field="username"
-                />
-              </label>
-            </div>
-            <div className={'formGroup'}>
-              <label className={'label'} htmlFor="password">
-                Password:
-                <Text
-                  className={'input'}
-                  id="password"
-                  type="password"
-                  field="password"
-                />
-              </label>
-            </div>
-            <div className={'formGroup'}>
-              <button
-                className={'button'}
-                onClick={this.handleClick}
-                type="submit"
-              >
-                Register
-              </button>
-            </div>
-          </Form>
-          <p hidden={!this.state.message}>{this.state.message}</p>
-          <Link hidden={!this.state.alreadyExists} to="/login">
-            Did you mean to login?
-          </Link>
+      <Layout>
+        <div className={'root'}>
+          <div className={'container'}>
+            <h1>{this.props.title}</h1>
+            <Form getApi={this.setFormApi} onSubmit={this.submit}>
+              <div className={'formGroup'}>
+                <label className={'label'} htmlFor="email">
+                  Email address:
+                  <Text
+                    className={'input'}
+                    id="email"
+                    type="text"
+                    field="email"
+                    autoFocus // eslint-disable-line jsx-a11y/no-autofocus
+                  />
+                </label>
+              </div>
+              <div className={'formGroup'}>
+                <label className={'label'} htmlFor="username">
+                  Username:
+                  <Text
+                    className={'input'}
+                    id="username"
+                    type="text"
+                    field="username"
+                  />
+                </label>
+              </div>
+              <div className={'formGroup'}>
+                <label className={'label'} htmlFor="password">
+                  Password:
+                  <Text
+                    className={'input'}
+                    id="password"
+                    type="password"
+                    field="password"
+                  />
+                </label>
+              </div>
+              <div className={'formGroup'}>
+                <button
+                  className={'button'}
+                  onClick={this.handleClick}
+                  type="submit"
+                >
+                  Register
+                </button>
+              </div>
+            </Form>
+            <p hidden={!this.state.message}>{this.state.message}</p>
+            <Link hidden={!this.state.alreadyExists} to="/login">
+              Did you mean to login?
+            </Link>
+          </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 }
@@ -137,7 +157,7 @@ export class DefaultPage extends Component {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    register: state.register,
+    register: state.register
   };
 }
 
