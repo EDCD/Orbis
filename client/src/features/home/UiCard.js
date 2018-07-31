@@ -7,12 +7,12 @@ export default class UiCard extends Component {
     content: PropTypes.any.isRequired
   };
   render() {
-    const { image, tag, title, content, author } = this.props.content;
+    const { imageURL, tag, title, content, author } = this.props.content;
     return (
       <div className={'ui-card'}>
         <div className={'ui-card-img'}>
           <Link className={'noDec'} to={`/build/${this.props.content.shortid}`}>
-            <img alt="" src={image} />
+            <img alt="" src={imageURL} />
           </Link>
         </div>
         <div className={'ui-card-content'}>

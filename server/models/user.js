@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataType) => {
 	const User = sequelize.define('User', {
       id: {
@@ -28,7 +29,8 @@ module.exports = (sequelize, DataType) => {
         { fields: ['username'] },
         { fields: ['id'] },
         { fields: ['badges'] }
-      ]
+	  ],
+	  freezeTableName: true
     });
   User.generateHash = password => bcrypt.hash(password, bcrypt.genSaltSync(8));
 

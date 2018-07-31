@@ -9,7 +9,7 @@ router.post('/', (req, res) => {
     // order: [[field || 'updatedAt', order || 'DESC']],
     limit: req.body.pageSize,
     offset: req.body.offset,
-    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'coriolisShip']
+    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author','imageURL', 'coriolisShip']
   })
     .then(async ships => {
       const promises = [];
@@ -40,14 +40,58 @@ router.post('/', (req, res) => {
 router.get('/:id', (req, res) =>
   Ship.find({
     where: { shortid: req.params.id },
-    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'coriolisShip']
+    attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'coriolisShip']
   })
-    .then(ships => res.json(ships))
+    .then(ships => {
+      ships.allowedToEdit = false;
+      if (req.user) {
+        if (req.user.id === ships.id) {
+          ships.allowedToEdit = true;
+        }
+      }
+      return res.json(ships);
+    })
     .catch(err => {
       console.error(err);
       res.status(500).end();
     })
 );
+
+router.post('/update', async (req, res) => {
+  if (!req.body || !req.body.updates) {
+    return res.status(413).end();
+  }
+  const data = req.body;
+  const ship = await Ship.find({
+    where: {
+      id: data.id
+    }
+  });
+  if (req.user) {
+    if (req.user.id === ship.author.id) {
+      for (const update in data.updates) {
+        if (!data.updates.hasOwnProperty(update)) {
+          continue;
+        }
+        ship[update] = data.updates[update];
+        console.log(data.updates[update])
+
+      }
+      return ship.save()
+        .then(ship => res.json({
+            success: true,
+            id: ship.id,
+            body: data,
+            ship: 'created',
+            link: `http://localhost:3000/build/${ship.shortid}`
+          })
+        );
+    } else {
+      console.log(req.user);
+      console.log(ship.id)
+    }
+  }
+});
 
 router.post('/add', async (req, res) => {
   if (!req.body) {

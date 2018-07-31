@@ -1,0 +1,60 @@
+version: '2.1'
+
+services:
+  server:
+    build:
+      context: server/
+      dockerfile: Dockerfile
+    networks:
+    - orbis
+    env_file:
+    - .env
+    labels:
+    - "traefik.docker.network=orbis"
+    - "traefik.enable=true"
+    - "traefik.frontend.rule=Host:localhost;PathPrefix:/api"
+    - "traefik.port=3030"
+    - "traefik.protocol=http"
+    restart: always
+    ports:
+    - 8082:3030
+    depends_on:
+      db:
+        condition: service_healthy
+  client:
+    build:
+      context: client/
+      dockerfile: Dockerfile
+    networks:
+    - orbis
+    labels:
+    - "traefik.docker.network=orbis"
+    - "traefik.enable=true"
+    - "traefik.frontend.rule=Host:localhost;PathPrefix:/"
+    - "traefik.port=80"
+    - "traefik.protocol=http"
+    restart: always
+    links:
+      - server
+    ports:
+    - 8081:80
+  db:
+    image: postgres:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres", "-ptest"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+    - orbis
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: orbis
+
+
+networks:
+  orbis:
+
+volumes:
+  orbis_data:

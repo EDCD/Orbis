@@ -4,25 +4,26 @@ module.exports = (sequelize, DataType) => {
     'ShipVote',
     {
       userId: {
-        type: DataType.INTEGER(11),
+        type: DataType.UUID,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: 'user',
+          model: 'User',
           key: 'id'
         }
       },
       shipId: {
-        type: DataType.INTEGER(11),
+        type: DataType.UUID,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: 'ship',
+          model: 'Ship',
           key: 'id'
         }
       },
       timeRecorded: {
-        type: DataType.DATE,
+		type: DataType.DATE,
+		defaultValue: Date.now,
         allowNull: false
       },
       vote: {
@@ -35,7 +36,8 @@ module.exports = (sequelize, DataType) => {
         { fields: ['vote'] },
         { fields: ['shipId'] },
         { fields: ['userId'] }
-      ]
+      ],
+	  freezeTableName: true
     }
   );
 	return ShipVote;

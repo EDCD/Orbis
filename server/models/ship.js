@@ -21,6 +21,9 @@ module.exports = (sequelize, DataType) => {
       ShipName: {
         type: DataType.STRING
       },
+      imageURL: {
+        type: DataType.STRING
+      },
       author: {
         type: DataType.JSONB
       },
@@ -57,7 +60,8 @@ module.exports = (sequelize, DataType) => {
         { fields: ['createdAt'] },
         { fields: ['shortid'] },
         { fields: ['Ship'] }
-      ]
+      ],
+	  freezeTableName: true
     }
   );
 

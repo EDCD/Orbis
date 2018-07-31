@@ -1,16 +1,17 @@
 import {
-  BUILD_GET_BUILD_BEGIN,
-  BUILD_GET_BUILD_SUCCESS,
-  BUILD_GET_BUILD_FAILURE,
-  BUILD_GET_BUILD_DISMISS_ERROR
+  BUILD_UPDATE_BUILD_BEGIN,
+  BUILD_UPDATE_BUILD_SUCCESS,
+  BUILD_UPDATE_BUILD_FAILURE,
+  BUILD_UPDATE_BUILD_DISMISS_ERROR
 } from './constants';
+import request from 'superagent';
 
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
-export function getBuild(args = {}) {
+export function updateBuild(args = {}) {
   return (dispatch) => { // optionally you can have getState as the second argument
     dispatch({
-      type: BUILD_GET_BUILD_BEGIN
+      type: BUILD_UPDATE_BUILD_BEGIN
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -21,18 +22,18 @@ export function getBuild(args = {}) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      fetch(`/api/builds/${args.id}`)
-        .then(res => res.json())
+      request.post(`/api/builds/update`)
+        .send({ updates: args.updates, id: args.shipId })
         .then(res => {
           dispatch({
-            type: BUILD_GET_BUILD_SUCCESS,
-            data: res
+            type: BUILD_UPDATE_BUILD_SUCCESS,
+            data: res.body
           });
-          resolve(res);
+          resolve(res.body);
         })
         .catch(err => {
           dispatch({
-            type: BUILD_GET_BUILD_FAILURE,
+            type: BUILD_UPDATE_BUILD_FAILURE,
             data: { error: err }
           });
           reject(err);
@@ -44,43 +45,43 @@ export function getBuild(args = {}) {
 
 // Async action saves request error by default, this method is used to dismiss the error info.
 // If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissGetBuildError() {
+export function dismissUpdateBuildError() {
   return {
-    type: BUILD_GET_BUILD_DISMISS_ERROR
+    type: BUILD_UPDATE_BUILD_DISMISS_ERROR
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
-    case BUILD_GET_BUILD_BEGIN:
+    case BUILD_UPDATE_BUILD_BEGIN:
       // Just after a request is sent
       return {
         ...state,
-        getBuildPending: true,
-        getBuildError: null
+        updateBuildPending: true,
+        updateBuildError: null
       };
 
-    case BUILD_GET_BUILD_SUCCESS:
+    case BUILD_UPDATE_BUILD_SUCCESS:
       // The request is success
       return {
         ...state,
-        getBuildPending: false,
-        getBuildError: null
+        updateBuildPending: false,
+        updateBuildError: null
       };
 
-    case BUILD_GET_BUILD_FAILURE:
+    case BUILD_UPDATE_BUILD_FAILURE:
       // The request is failed
       return {
         ...state,
-        getBuildPending: false,
-        getBuildError: action.data.error
+        updateBuildPending: false,
+        updateBuildError: action.data.error
       };
 
-    case BUILD_GET_BUILD_DISMISS_ERROR:
+    case BUILD_UPDATE_BUILD_DISMISS_ERROR:
       // Dismiss the request failure error
       return {
         ...state,
-        getBuildError: null
+        updateBuildError: null
       };
 
     default:

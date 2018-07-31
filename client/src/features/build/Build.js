@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import Layout from '../common/Layout';
+import {Link} from 'react-router-dom';
 
 export class Build extends Component {
   constructor(props) {
@@ -49,6 +50,9 @@ export class Build extends Component {
               Build: {this.state.build[0].title} by {this.state.build[0].author.username}
             </h1>
             <div>
+              <Link to={`/build/${this.props.match.params.id}/edit`}>
+                Edit Build
+              </Link>
             </div>
             {this.state.build.map(item => (
               <article key={item.id} className={'build'}>

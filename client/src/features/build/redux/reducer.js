@@ -8,9 +8,11 @@
 
 import initialState from './initialState';
 import { reducer as getBuildReducer } from './getBuild';
+import { reducer as updateBuildReducer } from './updateBuild';
 
 const reducers = [
   getBuildReducer,
+  updateBuildReducer,
 ];
 
 export default function reducer(state = initialState, action) {
