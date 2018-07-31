@@ -85,29 +85,29 @@
 .pagination li {
   display: inline-block;
   padding-left: 10px;
+  cursor: pointer;
   padding-right: 10px;
 }
 
-.pagination .break-me a {
+.pagination .break a {
   cursor: default;
 }
 
 .active {
   border: none;
   text-transform: capitalize;
-  font-family: @fStandard;
   vertical-align: middle;
   padding: 0.5em;
   cursor: pointer;
-  background: @primary;
+  background-color: @primary;
   outline: none;
 
   &.danger {
     color: red;
   }
 
-  &:disabled {
+  &.disabled {
     cursor: not-allowed;
-    color: @disabled;
+    background-color: @disabled;
   }
 }

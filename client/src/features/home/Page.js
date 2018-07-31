@@ -36,21 +36,29 @@ export class Page extends React.Component {
 
   componentDidMount() {
     this.checkLogged();
-    this.setState({pageLoaded: false}, () => {
+    this.setState({ pageLoaded: false }, () => {
       this.props.actions.getBuilds({ pageSize: this.state.perPage, offset: this.state.offset })
         .then(data => {
-          return this.setState({ data: data.rows, pageCount: Math.ceil(data.count / this.state.perPage), pageLoaded: true });
+          return this.setState({
+            data: data.rows,
+            pageCount: Math.ceil(data.count / this.state.perPage),
+            pageLoaded: true
+          });
         });
-    })
+    });
   }
 
   loadBuilds() {
-    this.setState({loaded: false}, () => {
+    this.setState({ loaded: false }, () => {
       this.props.actions.getBuilds({ pageSize: this.state.perPage, offset: this.state.offset })
         .then(data => {
-          return this.setState({ data: data.rows, pageCount: Math.ceil(data.count / this.state.perPage), loaded: true });
+          return this.setState({
+            data: data.rows,
+            pageCount: Math.ceil(data.count / this.state.perPage),
+            loaded: true
+          });
         });
-    })
+    });
   }
 
   handlePageClick(data) {
@@ -84,8 +92,8 @@ export class Page extends React.Component {
             })}
             <ReactPaginate previousLabel={'Previous'}
                            nextLabel={'Next'}
-                           breakLabel={<a href="">...</a>}
-                           breakClassName={'break-me'}
+                           breakLabel={'...'}
+                           breakClassName={'break'}
                            pageCount={this.state.pageCount}
                            marginPagesDisplayed={2}
                            pageRangeDisplayed={5}
