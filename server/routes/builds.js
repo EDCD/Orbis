@@ -91,7 +91,7 @@ router.post('/update', async (req, res) => {
             id: ship.id,
             body: data,
             ship: 'created',
-            link: `http://localhost:3000/build/${ship.shortid}`
+            link: `https://orbis.zone/build/${ship.shortid}`
           })
         );
     } else {
