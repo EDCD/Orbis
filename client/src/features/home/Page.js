@@ -106,7 +106,7 @@ export class Page extends React.Component {
                   content={e}
                   loggedIn={this.state.loggedIn}
                   likes={e.likes}
-                  coriolisLink={this.getCoriolisLink(index)}
+                  coriolisLink={e.coriolisShip.url || this.getCoriolisLink(index)}
                   likeIsClicked={false}
                   repostIsClicked={false}
                 />

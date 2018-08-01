@@ -56,7 +56,7 @@ export class Build extends Component {
     this.props.actions.getBuild({ id: this.props.match.params.id })
       .then(data => {
         return this.setState({ build: [data] }, () => {
-          this.setState({ coriolisLink: this.getCoriolisLink() });
+          this.setState({ coriolisLink: this.state.build[0].coriolisShip.url || this.getCoriolisLink() });
         });
       });
   }
