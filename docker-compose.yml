@@ -37,7 +37,9 @@ services:
 
   imageproxy:
     image: willnorris/imageproxy
-    command: -cache memory:200:4h -addr 0.0.0.0:8080
+    command: -cache memory:200:4h -cache /tmp/imageproxy -addr 0.0.0.0:8080
+    volumes:
+      - ./data/imageproxy:/tmp/imageproxy
     networks:
     - orbis
     labels:
