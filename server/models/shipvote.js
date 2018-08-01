@@ -7,10 +7,6 @@ module.exports = (sequelize, DataType) => {
         type: DataType.UUID,
         allowNull: false,
         primaryKey: true,
-        references: {
-          model: 'User',
-          key: 'id'
-        }
       },
       shipId: {
         type: DataType.UUID,
