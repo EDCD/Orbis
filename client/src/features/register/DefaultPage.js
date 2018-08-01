@@ -97,7 +97,7 @@ export class DefaultPage extends Component {
         <div className={'root'}>
           <div className={'container'}>
             <h1>{this.props.title}</h1>
-            <a href={"https://login.willb.info/signup?client_id=a555021d-17d2-4b4e-8f16-f831d8add0f5&scope=openid profile email address phone offline_access&response_type=code&passReqToCallback=true&redirect_uri=https%3A%2F%2Forbis.zone%3A3030%2Fapi%2Fauth%2Fcb"} className={'button'}>
+            <a href={"https://login.willb.info/signup?client_id=a555021d-17d2-4b4e-8f16-f831d8add0f5&scope=openid profile email address phone offline_access&response_type=code&passReqToCallback=true&redirect_uri=https://orbis.zone/api/auth/cb"} className={'button'}>
               Signup
             </a>
             <p hidden={!this.state.message}>{this.state.message}</p>
