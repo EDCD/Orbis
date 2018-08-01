@@ -31,6 +31,7 @@ Issuer.discover('https://login.willb.info') // => Promise
       client_secret: process.env.CLIENT_SECRET || 'e14b6974302683c4051d',
       client_id: 'a555021d-17d2-4b4e-8f16-f831d8add0f5'
     });
+    client.CLOCK_TOLERANCE = 10;
     passport.use('oidc', new Strategy({ client, params, passReqToCallback, usePKCE }, (tokenset, userinfo, done) => {
       console.log('tokenset', tokenset);
       console.log('access_token', tokenset.access_token);
