@@ -23,6 +23,10 @@ export default class Footer extends React.Component {
           <a className={'link'} href="https://edassets.org/#/">
             Logo by EDAssets
           </a>
+          <span className={'spacer'}>·</span>
+          <a className={'link'} href="https://www.edsm.net/">
+            Default ship images by EDSM
+          </a>
         </div>
       </div>
     );

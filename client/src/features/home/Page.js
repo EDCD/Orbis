@@ -97,7 +97,7 @@ export class Page extends React.Component {
           <Loader loaded={this.state.pageLoaded}>
             <div className={'builds-container'}>
             {this.state.data.map((e,index) => {
-              e.imageURL = e.proxiedImage || 'https://via.placeholder.com/500x400';
+              e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/shipimages/${e.coriolisShip.id}.jpg`;
               e.content = e.description;
               return (
                 <div className={'build-item'}>
