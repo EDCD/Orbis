@@ -36,6 +36,14 @@
   padding: 12px 16px 12px 16px;
   font-size: 12px;
   text-align: left;
+  display: inline-block;
+  & p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;     /** IE6+, Firefox 7+, Opera 11+, Chrome, Safari **/
+    -o-text-overflow: ellipsis;  /** Opera 9 & 10 **/
+    width: 350px; /* note that this width will have to be smaller to see the effect */
+  }
 }
 
 .ui-card-content h5 {
