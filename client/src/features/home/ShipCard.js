@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import UiCard from './UiCard'
+
 import ButtonBox from './ButtonBox'
 export default class ShipCard extends Component {
   static propTypes = {
@@ -23,6 +24,7 @@ export default class ShipCard extends Component {
             likeIsClicked={this.props.likeIsClicked}
             loggedIn={this.props.loggedIn}
             id={this.props.content.id}
+            coriolisLink={this.props.coriolisLink}
             likes={this.props.likes}
           />
         </div>

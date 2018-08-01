@@ -70,14 +70,33 @@ export class Page extends React.Component {
     });
   };
 
+  getCoriolisLink(index) {
+    return [
+      'https://beta.coriolis.io/outfit/',
+      this.state.data[index].coriolisShip.id,
+      '?code=',
+      'A',
+      this.state.data[index].coriolisShip.serialized.standard,
+      this.state.data[index].coriolisShip.serialized.hardpoints,
+      this.state.data[index].coriolisShip.serialized.internal,
+      '.',
+      this.state.data[index].coriolisShip.serialized.enabled,
+      '.',
+      this.state.data[index].coriolisShip.serialized.priorities,
+      '.',
+      this.state.data[index].coriolisShip.serialized.modifications
+    ].join('');
+  }
+
   render() {
+    this.getCoriolisLink = this.getCoriolisLink.bind(this);
     return (
       <Layout>
         <div>
           <h1>Latest builds</h1>
           <Loader loaded={this.state.pageLoaded}>
             <div className={'builds-container'}>
-            {this.state.data.map(e => {
+            {this.state.data.map((e,index) => {
               e.imageURL = e.proxiedImage || 'https://via.placeholder.com/500x400';
               e.content = e.description;
               return (
@@ -87,6 +106,7 @@ export class Page extends React.Component {
                   content={e}
                   loggedIn={this.state.loggedIn}
                   likes={e.likes}
+                  coriolisLink={this.getCoriolisLink(index)}
                   likeIsClicked={false}
                   repostIsClicked={false}
                 />

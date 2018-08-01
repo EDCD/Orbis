@@ -3,16 +3,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import Layout from '../common/Layout';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export class Build extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      build: [{
-        author: {},
-        coriolisShip: {}
-      }],
+      build: [],
       loggedIn: false,
       coriolisLink: ''
     };
@@ -56,10 +53,10 @@ export class Build extends Component {
 
   componentWillMount() {
     this.checkLogged();
-    this.props.actions.getBuild({id: this.props.match.params.id})
+    this.props.actions.getBuild({ id: this.props.match.params.id })
       .then(data => {
         return this.setState({ build: [data] }, () => {
-          this.setState({coriolisLink: this.getCoriolisLink()})
+          this.setState({ coriolisLink: this.getCoriolisLink() });
         });
       });
   }
@@ -70,53 +67,58 @@ export class Build extends Component {
       <Layout>
         <div>
           <div className={'container'}>
-            <h1>
-              Build: {this.state.build[0].title} by {this.state.build[0].author.username}
-            </h1>
-            <div>
-              <Link to={`/build/${this.props.match.params.id}/edit`}>
-                Edit Build Info
-              </Link>
-              <br/>
-              <a target='_blank' rel='noopener' href={this.state.coriolisLink}>
-                Edit Build on Coriolis
-              </a>
-            </div>
-            {this.state.build.map(item => (
-              <article key={item.id} className={'build'}>
-                <div>
-                  <div>
-                    <p>Armour: {Math.round(item.coriolisShip.armour)}</p>
-                    <p>Shield: {Math.round(item.coriolisShip.shield)}</p>
-                    <p>Top Speed: {Math.round(item.coriolisShip.topBoost)}</p>
-                    <p>
-                      Hull Thermal Res:{' '}
-                      {Math.round(item.coriolisShip.hullThermRes * 100)}%
-                    </p>
-                    <p>
-                      Hull Explosive Res:{' '}
-                      {Math.round(item.coriolisShip.hullExplRes * 100)}%
-                    </p>
-                    <p>
-                      Hull Kinetic Res:{' '}
-                      {Math.round(item.coriolisShip.shieldKinRes * 100)}%
-                    </p>
-                    <p>
-                      Shield Thermal Res:{' '}
-                      {Math.round(item.coriolisShip.shieldThermRes * 100)}%
-                    </p>
-                    <p>
-                      Shield Explosive Res:{' '}
-                      {Math.round(item.coriolisShip.shieldExplRes * 100)}%
-                    </p>
-                    <p>
-                      Shield Kinetic Res:{' '}
-                      {Math.round(item.coriolisShip.shieldKinRes * 100)}%
-                    </p>
-                  </div>
-                </div>
-              </article>
-            ))}
+            {this.state.build[0] ? (
+              <div>
+                <h1>
+                  Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+                </h1>
+                {this.state.build[0] ? (
+                  <Link to={`/build/${this.props.match.params.id}/edit`}>
+                    Edit Build Info
+                  </Link>
+                ) : ''}
+
+                <br/>
+                <a target='_blank' rel='noopener' href={this.state.coriolisLink}>
+                  Edit Build on Coriolis
+                </a>
+                {this.state.build.map(item => (
+                  <article key={item.id} className={'build'}>
+                    <div>
+                      <div>
+                        <p>Armour: {Math.round(item.coriolisShip.armour)}</p>
+                        <p>Shield: {Math.round(item.coriolisShip.shield)}</p>
+                        <p>Top Speed: {Math.round(item.coriolisShip.topBoost)}</p>
+                        <p>
+                          Hull Thermal Res:{' '}
+                          {Math.round(item.coriolisShip.hullThermRes * 100)}%
+                        </p>
+                        <p>
+                          Hull Explosive Res:{' '}
+                          {Math.round(item.coriolisShip.hullExplRes * 100)}%
+                        </p>
+                        <p>
+                          Hull Kinetic Res:{' '}
+                          {Math.round(item.coriolisShip.shieldKinRes * 100)}%
+                        </p>
+                        <p>
+                          Shield Thermal Res:{' '}
+                          {Math.round(item.coriolisShip.shieldThermRes * 100)}%
+                        </p>
+                        <p>
+                          Shield Explosive Res:{' '}
+                          {Math.round(item.coriolisShip.shieldExplRes * 100)}%
+                        </p>
+                        <p>
+                          Shield Kinetic Res:{' '}
+                          {Math.round(item.coriolisShip.shieldKinRes * 100)}%
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : 'Loading...'}
           </div>
         </div>
       </Layout>
