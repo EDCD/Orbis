@@ -14,38 +14,17 @@ router.get('/', (req, res) => {
   res.status(200).end()
 });
 
-const env = {
-  AUTH0_CLIENT_ID: 'HSg5eEBr9pxCNInvKFsLILCG8wXgBpza',
-  AUTH0_DOMAIN: 'gths.au.auth0.com',
-  AUTH0_CALLBACK_URL: 'http://localhost:3000/api/callback'
-};
 
+// start authentication request
+// options [optional], extra authentication parameters
+router.get('/auth', passport.authenticate('oidc'));
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.json({loggedOut: true})
+});
 
-router.get(
-  '/login',
-  passport.authenticate('auth0', {
-    domain: 'gths.au.auth0.com',
-    clientID: 'nPS4V07RrUDQLTWYrE0CCujItmZ985Pz',
-    redirectUri: process.env.AUTH0_CALLBACK_URL || env.AUTH0_CALLBACK_URL,
-    audience: 'https://' + env.AUTH0_DOMAIN + '/userinfo',
-    responseType: 'code',
-    scope: 'openid'
-  }),
-  function(req, res) {
-    res.redirect('/');
-  }
-);
-
-router.get(
-  '/callback',
-  passport.authenticate('auth0', {
-    failureRedirect: '/'
-  }),
-  function(req, res) {
-    res.redirect(req.session.returnTo || '/');
-  }
-);
-
+// authentication callback
+router.get('/auth/cb', passport.authenticate('oidc', { successRedirect: '/', failureRedirect: '/api/login' }));
 
 router.get('/checkauth', isAuthenticated, (req, res) => {
   return res.status(200).json({status: 'Login successful!'})

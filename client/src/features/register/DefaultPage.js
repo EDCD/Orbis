@@ -97,51 +97,9 @@ export class DefaultPage extends Component {
         <div className={'root'}>
           <div className={'container'}>
             <h1>{this.props.title}</h1>
-            <Form getApi={this.setFormApi} onSubmit={this.submit}>
-              <div className={'formGroup'}>
-                <label className={'label'} htmlFor="email">
-                  Email address:
-                  <Text
-                    className={'input'}
-                    id="email"
-                    type="text"
-                    field="email"
-                    autoFocus // eslint-disable-line jsx-a11y/no-autofocus
-                  />
-                </label>
-              </div>
-              <div className={'formGroup'}>
-                <label className={'label'} htmlFor="username">
-                  Username:
-                  <Text
-                    className={'input'}
-                    id="username"
-                    type="text"
-                    field="username"
-                  />
-                </label>
-              </div>
-              <div className={'formGroup'}>
-                <label className={'label'} htmlFor="password">
-                  Password:
-                  <Text
-                    className={'input'}
-                    id="password"
-                    type="password"
-                    field="password"
-                  />
-                </label>
-              </div>
-              <div className={'formGroup'}>
-                <button
-                  className={'button'}
-                  onClick={this.handleClick}
-                  type="submit"
-                >
-                  Register
-                </button>
-              </div>
-            </Form>
+            <a href={"https://login.willb.info/signup?client_id=a555021d-17d2-4b4e-8f16-f831d8add0f5&scope=openid profile email address phone offline_access&response_type=code&passReqToCallback=true&redirect_uri=https%3A%2F%2Forbis.zone%3A3030%2Fapi%2Fauth%2Fcb"} className={'button'}>
+              Signup
+            </a>
             <p hidden={!this.state.message}>{this.state.message}</p>
             <Link hidden={!this.state.alreadyExists} to="/login">
               Did you mean to login?

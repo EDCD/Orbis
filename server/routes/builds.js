@@ -1,8 +1,9 @@
 const express = require('express');
 const models = require('../models');
 const { Ship, ShipVote } = models;
+const { Issuer } = require('openid-client');
 const router = express.Router();
-
+const passport = require('../passport');
 router.post('/', (req, res) => {
   const { order, field } = req.body;
   return Ship.findAndCountAll({
@@ -62,7 +63,14 @@ router.get('/:id', (req, res) =>
     })
 );
 
-router.delete('/:id', async (req, res) => {
+function isAuthenticated(req, res, next) {
+  if (req.user) return next();
+  return res.status(401).json({
+    error: 'User not authenticated'
+  });
+}
+
+router.delete('/:id', isAuthenticated, async (req, res) => {
   const data = req.params;
   const ship = await Ship.find({
     where: {
@@ -90,7 +98,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-router.post('/update', async (req, res) => {
+router.post('/update', passport.authenticate('oidc'), async (req, res) => {
   if (!req.body || !req.body.updates) {
     return res.status(413).end();
   }
@@ -131,11 +139,12 @@ router.post('/update', async (req, res) => {
   }
 });
 
-router.post('/add', async (req, res) => {
+router.post('/add', isAuthenticated, async (req, res) => {
   if (!req.body) {
     return res.status(413).end();
   }
   const data = JSON.parse(JSON.stringify(req.body));
+  console.log(req.user);
   data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
   const ship = await Ship.create(data);
   return res.json({
