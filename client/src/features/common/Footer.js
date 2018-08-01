@@ -12,16 +12,16 @@ export default class Footer extends React.Component {
             Home
           </Link>
           <span className={'spacer'}>·</span>
-          <Link className={'link'} to="/admin">
-            Admin
-          </Link>
-          <span className={'spacer'}>·</span>
           <Link className={'link'} to="/privacy">
             Privacy
           </Link>
           <span className={'spacer'}>·</span>
           <a className={'link'} href="https://github.com/EDCD/orbis/issues/new">
             Report an issue
+          </a>
+          <span className={'spacer'}>·</span>
+          <a className={'link'} href="https://edassets.org/#/">
+            Logo by EDAssets
           </a>
         </div>
       </div>
