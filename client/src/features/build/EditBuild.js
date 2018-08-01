@@ -99,6 +99,17 @@ export class EditBuild extends Component {
                   </label>
                 </div>
                 <div className={'formGroup'}>
+                  <label className={'label'} htmlFor="title">
+                    Title:
+                    <TextArea
+                      className={'input'}
+                      id="title"
+                      type="text"
+                      field="title"
+                    />
+                  </label>
+                </div>
+                <div className={'formGroup'}>
                   <label className={'label'} htmlFor="desc">
                     Description:
                     <TextArea
