@@ -98,7 +98,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-router.post('/update', passport.authenticate('oidc'), async (req, res) => {
+router.post('/update', isAuthenticated, async (req, res) => {
   if (!req.body || !req.body.updates) {
     return res.status(413).end();
   }
