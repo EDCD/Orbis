@@ -85,7 +85,7 @@ export class EditBuild extends Component {
           </div>
           {this.state.build ? this.state.build.map(item => (
             <div>
-              <Form initialValues={{imageURL: item.imageURL, description: item.description}} className={'formContainer'} getApi={this.setFormApi} onSubmit={this.submit}>
+              <Form initialValues={{imageURL: item.imageURL, description: item.description, title: item.title}} className={'formContainer'} getApi={this.setFormApi} onSubmit={this.submit}>
                 <div className={'formGroup flexSmall wrapper'}>
                   <label className={'label'} htmlFor="imageURL">
                     Image URL:

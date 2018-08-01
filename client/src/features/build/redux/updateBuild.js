@@ -24,6 +24,7 @@ export function updateBuild(args = {}) {
       // args.error here is only for test coverage purpose.
       request.post(`/api/builds/update`)
         .send({ updates: args.updates, id: args.shipId })
+        .withCredentials()
         .then(res => {
           dispatch({
             type: BUILD_UPDATE_BUILD_SUCCESS,
