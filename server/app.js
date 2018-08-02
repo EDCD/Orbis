@@ -4,33 +4,31 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
-const passport = require('./passport');
-
-const models = require('./models');
-const session = require('express-session');
 const cors = require('cors');
+const session = require('express-session');
+const models = require('./models');
+const passport = require('./passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const {User, sequelize} = models;
-process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection at:', p, 'reason:', reason);
-  // send entire app down. Process manager will restart it
-});
+const { sequelize } = models;
 
-process.on('uncaughtException', reason => {
-  console.error('Uncaught exception:', reason);
-  // send entire app down. Process manager will restart it
-});
 const sessionStore = new SequelizeStore({
   db: sequelize,
   checkExpirationInterval: 15 * 60 * 1000,
   expiration: 7 * 24 * 60 * 60 * 1000
 });
 
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+});
+
+process.on('uncaughtException', reason => {
+  console.error('Uncaught exception:', reason);
+});
 
 const app = express();
-app.use(bodyParser.json({limit: '20mb'}));
-app.use(bodyParser.urlencoded({extended: false}));
+
+app.use(bodyParser.json({ limit: '20mb' }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({ credentials: true, origin: true }));
 app.options('*', cors({ credentials: true, origin: true }));
 // Uncomment after placing your favicon in /public
@@ -48,8 +46,8 @@ app.use(
     store: sessionStore
   })
 );
-
 app.use(passport.initialize());
+
 
 passport.serializeUser((user, done) => {
   done(null, user);

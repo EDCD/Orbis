@@ -1,9 +1,10 @@
 const express = require('express');
 const models = require('../models');
 const { Ship, ShipVote } = models;
-const { Issuer } = require('openid-client');
 const router = express.Router();
+const rp = require('request-promise-native');
 const passport = require('../passport');
+
 router.post('/', (req, res) => {
   const { order, field } = req.body;
   return Ship.findAndCountAll({
@@ -78,7 +79,8 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
     }
   });
   if (req.user) {
-    if (req.user.sub === ship.author.sub) {
+
+    if (req.user.keycloakId === ship.author.sub) {
       await ShipVote.destroy({
         where: {
           shipId: data.id
@@ -109,7 +111,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
     }
   });
   if (req.user) {
-    if (req.user.sub === ship.author.sub) {
+    if (req.user.keycloakId === ship.author.sub) {
       for (const update in data.updates) {
         if (!data.updates.hasOwnProperty(update)) {
           continue;
@@ -144,7 +146,6 @@ router.post('/add', isAuthenticated, async (req, res) => {
     return res.status(413).end();
   }
   const data = JSON.parse(JSON.stringify(req.body));
-  console.log(req.user);
   data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
   const ship = await Ship.create(data);
   return res.json({

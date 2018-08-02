@@ -71,7 +71,6 @@ module.exports = (sequelize, DataType) => {
   Ship.beforeCreate(ship => {
     delete ship.author.family_name;
     delete ship.author.given_name;
-    ship.author.username = ship.author.nickname;
     ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/${ship.imageURL || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${ship.coriolisShip.id}.jpg`}`;
   });
 

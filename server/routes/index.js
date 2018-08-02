@@ -17,14 +17,20 @@ router.get('/', (req, res) => {
 
 // start authentication request
 // options [optional], extra authentication parameters
-router.get('/auth', passport.authenticate('oidc'));
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.json({loggedOut: true})
+router.get('/auth', passport.authenticate('keycloak'), (req, res) => {
+  res.redirect('/')
 });
 
-// authentication callback
-router.get('/auth/cb', passport.authenticate('oidc', { successRedirect: '/', failureRedirect: '/api/login' }));
+router.get('/auth/cb', passport.authenticate('keycloak'),  (req, res) => {
+  console.log(req.user);
+  return res.redirect('/')
+});
+
+router.get('/logout',  (req, res) => {
+  console.log(req.user);
+  req.logout();
+  res.redirect('/')
+});
 
 router.get('/checkauth', isAuthenticated, (req, res) => {
   return res.status(200).json({status: 'Login successful!'})
