@@ -64,7 +64,7 @@ module.exports = (sequelize, DataType) => {
 				{fields: ['shortid']},
 				{fields: ['Ship']}
 			],
-	  freezeTableName: true
+			freezeTableName: true
 		}
 	);
 
