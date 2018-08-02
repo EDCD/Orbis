@@ -18,7 +18,7 @@ router.post('/', isAuthenticated, (req, res) => {
   const author = req.user;
 
   return ShipVote.upsert({
-    userId: author.sub,
+    userId: author.keycloakId,
     shipId: req.body.shipId,
     vote: req.body.vote
   }).then(async created => {
