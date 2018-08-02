@@ -119,9 +119,6 @@
       "node"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "description": "client created by Rekit.",
   "devDependencies": {
     "@types/autoprefixer": "^6.7.3",

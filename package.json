@@ -5,7 +5,9 @@
   "author": "willyb321 <wbwilliam7@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"(cd server && npm run dev)\" \"(cd client && npm start)\""
+    "dev": "concurrently \"(cd server && npm run dev)\" \"(cd client && npm start)\"",
+    "lint": "xo",
+    "lint:fix": "xo --fix"
   },
   "devDependencies": {
     "concurrently": "^3.6.1",
@@ -15,20 +17,11 @@
     "eslint-plugin-ava": "^5.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-no-use-extend-native": "^0.3.12",
+    "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-unicorn": "^5.0.0",
     "nodemon": "^1.18.3",
     "xo": "^0.21.1"
-  },
-  "eslintConfig": {
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "xo/esnext",
-      "xo-react",
-      "./node_modules/xo/config/plugins.js"
-    ]
   }
 }

@@ -1,0 +1,11 @@
+{
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "extends": [
+    "xo/esnext",
+    "xo-react",
+    "./node_modules/xo/config/plugins.js"
+  ]
+}
