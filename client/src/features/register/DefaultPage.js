@@ -97,7 +97,7 @@ export class DefaultPage extends Component {
         <div className={'root'}>
           <div className={'container'}>
             <h1>{this.props.title}</h1>
-            <a href={"https://login.willb.info/auth/realms/Orbis/protocol/openid-connect/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3030%2Fapi%2Fauth%2Fcb&client_id=account"} className={'button'}>
+            <a href={"https://orbis.zone/api/auth"} className={'button'}>
               Signup
             </a>
             <p hidden={!this.state.message}>{this.state.message}</p>
