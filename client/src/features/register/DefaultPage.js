@@ -97,7 +97,7 @@ export class DefaultPage extends Component {
         <div className={'root'}>
           <div className={'container'}>
             <h1>{this.props.title}</h1>
-            <a href={"https://orbis.zone/api/auth"} className={'button'}>
+            <a href={'https://orbis.zone/api/auth'} className={'button'}>
               Signup
             </a>
             <p hidden={!this.state.message}>{this.state.message}</p>

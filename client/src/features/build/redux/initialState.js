@@ -6,9 +6,9 @@
 
 // NOTE: initialState constant is necessary so that Rekit could auto add initial state when creating async actions.
 const initialState = {
-  updateBuildPending: false,
-  updateBuildError: null,
- 
+	updateBuildPending: false,
+	updateBuildError: null
+
 };
 
 export default initialState;

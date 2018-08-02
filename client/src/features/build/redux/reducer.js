@@ -7,21 +7,21 @@
 // https://medium.com/@nate_wang/a-new-approach-for-managing-redux-actions-91c26ce8b5da.
 
 import initialState from './initialState';
-import { reducer as getBuildReducer } from './getBuild';
-import { reducer as updateBuildReducer } from './updateBuild';
+import {reducer as getBuildReducer} from './getBuild';
+import {reducer as updateBuildReducer} from './updateBuild';
 
 const reducers = [
-  getBuildReducer,
-  updateBuildReducer,
+	getBuildReducer,
+	updateBuildReducer
 ];
 
 export default function reducer(state = initialState, action) {
-  let newState;
-  switch (action.type) {
-    // Handle cross-topic actions here
-    default:
-      newState = state;
-      break;
-  }
-  return reducers.reduce((s, r) => r(s, action), newState);
+	let newState;
+	switch (action.type) {
+		// Handle cross-topic actions here
+		default:
+			newState = state;
+			break;
+	}
+	return reducers.reduce((s, r) => r(s, action), newState);
 }

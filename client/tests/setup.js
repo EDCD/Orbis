@@ -2,12 +2,12 @@
 // so import all necessary modules which should be included for webpack compiling.
 import axios from 'axios';
 import httpAdapter from 'axios/lib/adapters/http';
-import { configure } from 'enzyme';
+import {configure} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-configure({ adapter: new Adapter(), disableLifecycleMethods: true });
+configure({adapter: new Adapter(), disableLifecycleMethods: true});
 
 if (process.env.NODE_ENV === 'test') {
-  axios.defaults.baseURL = 'http://localhost';
-  axios.defaults.adapter = httpAdapter;
+	axios.defaults.baseURL = 'http://localhost';
+	axios.defaults.adapter = httpAdapter;
 }

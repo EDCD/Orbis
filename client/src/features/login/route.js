@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  DefaultPage,
-} from './';
+	DefaultPage
+} from '.';
 
 export default {
-  path: 'login',
-  name: 'Login',
-  childRoutes: [
-    { path: 'default-page', name: 'Default page', component: DefaultPage, isIndex: true },
-  ],
+	path: 'login',
+	name: 'Login',
+	childRoutes: [
+		{path: 'default-page', name: 'Default page', component: DefaultPage, isIndex: true}
+	]
 };

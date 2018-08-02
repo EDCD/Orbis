@@ -17,6 +17,8 @@ export default class ButtonBox extends Component {
     super(props);
     this.state = {
       likeIsClicked: props.likeIsClicked,
+      upvote: false,
+      downvote: false,
       shake: false,
       likes: this.props.likes
     };
@@ -35,10 +37,13 @@ export default class ButtonBox extends Component {
       shipId: this.props.id,
       vote: e.target.id === 'upvote' ? 1 : -1
     };
+    const state = {};
+    state[e.target.id] = true;
     const data = await request
       .post(`/api/likes`)
-      .send(vote)
-    this.setState({ likes: data.body.count });
+      .send(vote);
+    state.likes = data.body.count;
+    this.setState(state);
   }
 
   render() {

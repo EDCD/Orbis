@@ -1,79 +1,79 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import cx from 'classnames';
 import {Link} from 'react-router-dom';
 
 export default class Navigation extends Component {
-    constructor() {
-    super();
-    this.state = {
-      loggedIn: false
-    };
-  }
+	constructor() {
+		super();
+		this.state = {
+			loggedIn: false
+		};
+	}
 
-  componentDidMount() {
-    this.checkLogged();
-  }
+	componentDidMount() {
+		this.checkLogged();
+	}
 
-  async checkLogged() {
-    const res = await fetch('/api/checkauth', {
-      method: 'GET',
-      credentials: 'include'
-    });
-    const json = await res.json();
-    if (json && json.status === 'Login successful!') {
-      this.setState({ loggedIn: true });
-    }
-  }
+	async checkLogged() {
+		const res = await fetch('/api/checkauth', {
+			method: 'GET',
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json && json.status === 'Login successful!') {
+			this.setState({loggedIn: true});
+		}
+	}
 
-  logout() {
-    return fetch('/api/logout', {
-      method: 'GET',
-      credentials: 'include'
-    }).then(() => this.setState({ loggedIn: false }));
-  }
+	logout() {
+		return fetch('/api/logout', {
+			method: 'GET',
+			credentials: 'include'
+		}).then(() => this.setState({loggedIn: false}));
+	}
 
-  render() {
-    this.logout = this.logout.bind(this);
-    return (
-      <div>
-        <div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
-          <div className={cx(['menu-header'])}>
-            <Link className={cx(['menu-item-label'])} to="/login">
+	render() {
+		this.logout = this.logout.bind(this);
+		return (
+			<div>
+				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
+					<div className={cx(['menu-header'])}>
+						<Link className={cx(['menu-item-label'])} to="/login">
               Log in
-            </Link>
-          </div>
-        </div>
-        <div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
-          <div className={cx(['menu-header'])}>
-            <Link className={cx(['menu-item-label'])} to="/register">
+						</Link>
+					</div>
+				</div>
+				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
+					<div className={cx(['menu-header'])}>
+						<Link className={cx(['menu-item-label'])} to="/register">
               Sign up
-            </Link>
-          </div>
-        </div>
-        <div hidden={!this.state.loggedIn} className={cx('r', 'menu')}>
-          <div className={cx(['menu-header'])}>
-            <div onClick={this.logout} className={cx(['menu-item-label'])}>
+						</Link>
+					</div>
+				</div>
+				<div hidden={!this.state.loggedIn} className={cx('r', 'menu')}>
+					<div className={cx(['menu-header'])}>
+						<div onClick={this.logout} className={cx(['menu-item-label'])}>
               Log out
-            </div>
-          </div>
-        </div>
-        <div className={cx('r')}>
-          <div className={cx('r', 'menu')}>
-            <div className={cx(['menu-header'])}>
-              <Link className={cx(['menu-item-label'])} to="/contact">
+						</div>
+					</div>
+				</div>
+				<div className={cx('r')}>
+					<div className={cx('r', 'menu')}>
+						<div className={cx(['menu-header'])}>
+							<Link className={cx(['menu-item-label'])} to="/contact">
                 Contact
-              </Link>
-            </div>
-          </div>
-          <div className={cx('r', 'menu')}>
-            <div className={cx(['menu-header'])}>
-              <Link className={cx(['menu-item-label'])} to="/about">
+							</Link>
+						</div>
+					</div>
+					<div className={cx('r', 'menu')}>
+						<div className={cx(['menu-header'])}>
+							<Link className={cx(['menu-item-label'])} to="/about">
                 About
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+							</Link>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 }
