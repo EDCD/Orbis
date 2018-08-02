@@ -8,7 +8,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
-const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
@@ -109,24 +108,6 @@ module.exports = {
 			// TODO: Disable require.ensure as it's not a standard language feature.
 			// We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
 			// { parser: { requireEnsure: false } },
-
-			// First, run the linter.
-			// It's important to do this before Babel processes the JS.
-			{
-				test: /\.(js|jsx|mjs)$/,
-				enforce: 'pre',
-				use: [
-					{
-						options: {
-							formatter: eslintFormatter,
-							eslintPath: require.resolve('eslint')
-
-						},
-						loader: require.resolve('eslint-loader')
-					}
-				],
-				include: paths.appSrc
-			},
 			{
 				// "oneOf" will traverse all following loaders until one will
 				// match the requirements. When no loader matches it will fall
