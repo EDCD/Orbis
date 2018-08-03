@@ -3,8 +3,8 @@ const models = require('../models');
 
 const {Ship, ShipVote} = models;
 const router = express.Router();
-const rp = require('request-promise-native');
 const passport = require('../passport');
+const kc = require('../keycloak');
 
 router.post('/', (req, res) => {
 	const {order, field} = req.body;
@@ -69,10 +69,19 @@ function isAuthenticated(req, res, next) {
 	if (req.user) {
 		return next();
 	}
+
 	return res.status(401).json({
 		error: 'User not authenticated'
 	});
 }
+
+const isAdmin = req => req.user.admin === true || kc.userHasRole(req.user.id, '0e7b465d-3eee-4a77-ae92-816da2456464')
+	.then(data => {
+		if (data) {
+			req.user.admin = true;
+		}
+		return Boolean(data);
+	});
 
 router.delete('/:id', isAuthenticated, async (req, res) => {
 	const data = req.params;
@@ -82,7 +91,8 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 		}
 	});
 	if (req.user) {
-		if (req.user.id === ship.author.id) {
+		const isadmin = await isAdmin(req);
+		if (req.user.id === ship.author.id || isadmin) {
 			await ShipVote.destroy({
 				where: {
 					shipId: data.id
@@ -93,10 +103,11 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 					id: data.id
 				}
 			});
+			return res.json({
+				success: true
+			});
 		}
-		return res.json({
-			success: true
-		});
+		return res.status(403).json({success: false});
 	}
 	return res.status(403).json({success: false});
 });
@@ -112,7 +123,8 @@ router.post('/update', isAuthenticated, async (req, res) => {
 		}
 	});
 	if (req.user) {
-		if (req.user.id === ship.author.id) {
+		const isadmin = await isAdmin(req);
+		if (req.user.id === ship.author.id || isadmin) {
 			for (const update in data.updates) {
 				if (!data.updates.hasOwnProperty(update)) {
 					continue;
