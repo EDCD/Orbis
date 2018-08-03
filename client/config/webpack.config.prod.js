@@ -32,7 +32,7 @@ const env = getClientEnvironment(publicUrl);
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 	throw new Error('Production builds must have NODE_ENV=production.');
 }
-
+const PUBLIC_URL = '/';
 // Note: defined here because it will be used more than once.
 const cssFilename = 'static/css/[name].[contenthash:8].css';
 
@@ -279,9 +279,56 @@ module.exports = {
 		new ManifestPlugin({
 			fileName: 'asset-manifest.json'
 		}),
-		new WorkboxPlugin.InjectManifest({
-			swSrc: './src/sw.js',
-			swDest: 'service-worker.js'
+		new WorkboxPlugin.GenerateSW({
+			// Exclude images from the precache
+			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+			navigateFallback: PUBLIC_URL + 'index.html',
+			navigateFallbackBlacklist: [/^\/_/, /api/],
+			dontCacheBustUrlsMatching: /\.\w{8}\./,
+			// Define runtime caching rules.
+			runtimeCaching: [{
+				// Match any request ends with .png, .jpg, .jpeg or .svg.
+				urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+
+				// Apply a cache-first strategy.
+				handler: 'cacheFirst',
+
+				options: {
+					// Use a custom cache name.
+					cacheName: 'images',
+
+					// Only cache 10 images.
+					expiration: {
+						maxEntries: 10
+					}
+				}
+			}, {
+				// Match any same-origin request that contains 'api'.
+				urlPattern: /api/,
+				// Apply a network-first strategy.
+				handler: 'networkFirst',
+				options: {
+					// Fall back to the cache after 10 seconds.
+					networkTimeoutSeconds: 10,
+					// Use a custom cache name for this route.
+					cacheName: 'orbis-api-cache',
+					// Configure custom cache expiration.
+					expiration: {
+						maxEntries: 5,
+						maxAgeSeconds: 60
+					},
+					// Configure which responses are considered cacheable.
+					cacheableResponse: {
+						statuses: [0, 200]
+					},
+					// Configure the broadcast cache update plugin.
+					broadcastUpdate: {
+						channelName: 'orbis-update-channel'
+					},
+					// Add in any additional plugin logic you need.
+					plugins: []
+				}
+			}]
 		}),
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
