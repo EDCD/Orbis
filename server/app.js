@@ -76,10 +76,12 @@ const index = require('./routes');
 const users = require('./routes/users');
 const builds = require('./routes/builds');
 const votes = require('./routes/votes');
+const webhooks = require('./routes/webhooks');
 
 app.use('/api', index);
 app.use('/api/builds', builds);
 app.use('/api/users', users);
 app.use('/api/likes', votes);
+app.use('/api/webhook', webhooks);
 
 module.exports = app;
