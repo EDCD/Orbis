@@ -1,34 +1,33 @@
-import React, { Component } from 'react';
-import UiCard from './UiCard'
+import React, {Component} from 'react';
+import UiCard from './UiCard';
 
-import ButtonBox from './ButtonBox'
+import ButtonBox from './ButtonBox';
+
 export default class ShipCard extends Component {
-  static propTypes = {
+	static propTypes = {};
 
-  };
+	constructor(props) {
+		super(props);
+		this.state = {
+			loggedIn: false
+		};
+	}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: false
-    };
-  }
-
-  render() {
-    return (
-      <div className={'social-card'}>
-        <UiCard content={this.props.content} />
-        <div className={'line'} />
-        <div style={{ textAlign: 'right' }}>
-          <ButtonBox
-            likeIsClicked={this.props.likeIsClicked}
-            loggedIn={this.props.loggedIn}
-            id={this.props.content.id}
-            coriolisLink={this.props.coriolisLink}
-            likes={this.props.likes}
-          />
-        </div>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div className="social-card">
+				<UiCard content={this.props.content}/>
+				<div className="line"/>
+				<div style={{textAlign: 'right'}}>
+					<ButtonBox
+						likeIsClicked={this.props.likeIsClicked}
+						loggedIn={this.props.loggedIn}
+						id={this.props.content.id}
+						coriolisLink={this.props.coriolisLink}
+						likes={this.props.likes}
+					/>
+				</div>
+			</div>
+		);
+	}
 }
