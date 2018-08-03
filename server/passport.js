@@ -30,7 +30,7 @@ passport.use(
 			// This is called after a successful authentication has been completed
 			// Here's a sample of what you can then do, i.e., write the user to your DB
 			// User.findOrCreate({ email: profile.email }, (err, user) => {
-			User.findOrCreate({email: profile.email}, (err, user) => {
+			User.findOrCreate({where: {email: profile.email}}, (err, user) => {
 				if (err) {
 					console.error(err);
 					return done(null, false, {error: err.message});
