@@ -328,7 +328,32 @@ module.exports = {
 					// Add in any additional plugin logic you need.
 					plugins: []
 				}
-			}]
+			}, {
+				// Match any same-origin request that contains 'imgproxy'.
+				urlPattern: /imgproxy/,
+				// Apply a network-first strategy.
+				handler: 'networkFirst',
+				options: {
+					// Fall back to the cache after 10 seconds.
+					networkTimeoutSeconds: 10,
+					// Use a custom cache name for this route.
+					cacheName: 'orbis-imgproxy-cache',
+					// Configure custom cache expiration.
+					expiration: {
+						maxEntries: 5,
+						maxAgeSeconds: 60
+					},
+					// Configure which responses are considered cacheable.
+					cacheableResponse: {
+						statuses: [0, 200]
+					},
+					// Configure the broadcast cache update plugin.
+					broadcastUpdate: {
+						channelName: 'orbis-update-channel'
+					},
+					// Add in any additional plugin logic you need.
+					plugins: []
+				}]
 		}),
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
