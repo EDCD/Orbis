@@ -281,7 +281,7 @@ module.exports = {
 		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: './src/sw.js',
-			swDest: 'sw.js'
+			swDest: 'service-worker.js'
 		}),
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
