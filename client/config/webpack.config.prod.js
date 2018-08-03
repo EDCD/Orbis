@@ -307,16 +307,6 @@ module.exports = {
 				// Apply a network-first strategy.
 				handler: 'networkOnly',
 				options: {
-					// Fall back to the cache after 10 seconds.
-					networkTimeoutSeconds: 10,
-					// Use a custom cache name for this route.
-					cacheName: 'orbis-api-cache',
-					// Configure custom cache expiration.
-					expiration: {
-						maxEntries: 5,
-						maxAgeSeconds: 60
-					},
-					// Configure the broadcast cache update plugin.
 					broadcastUpdate: {
 						channelName: 'orbis-update-channel'
 					}
