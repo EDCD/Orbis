@@ -282,7 +282,7 @@ module.exports = {
 		new WorkboxPlugin.GenerateSW({
 			// Exclude images from the precache
 			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
-			navigateFallback: '/index.html',
+			navigateFallback: '/',
 			navigateFallbackBlacklist: [/api/],
 			// Define runtime caching rules.
 			runtimeCaching: [{
@@ -305,7 +305,7 @@ module.exports = {
 				// Match any same-origin request that contains 'api'.
 				urlPattern: /api/,
 				// Apply a network-first strategy.
-				handler: 'networkFirst',
+				handler: 'networkOnly',
 				options: {
 					// Fall back to the cache after 10 seconds.
 					networkTimeoutSeconds: 10,
