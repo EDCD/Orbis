@@ -46,16 +46,5 @@ module.exports = (sequelize, DataType) => {
 	}
 
 	User.prototype.validPassword = validPassword;
-
-	User.beforeCreate(user =>
-		bcrypt
-			.hash(user.password, bcrypt.genSaltSync(8))
-			.then(hash => {
-				user.password = hash;
-			})
-			.catch(err => {
-				throw err;
-			})
-	);
 	return User;
 };
