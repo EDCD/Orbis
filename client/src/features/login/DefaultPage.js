@@ -1,69 +1,68 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import * as actions from './redux/actions';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
 import Layout from '../common/Layout';
 
 export class DefaultPage extends Component {
-  static propTypes = {
-    title: PropTypes.string.isRequired
-  };
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: false
-    };
-  }
+	static propTypes = {
+		title: PropTypes.string.isRequired
+	};
 
-  async checkLogged() {
-      const res = await fetch('/api/checkauth', {
-        method: 'GET',
-        credentials: 'include'
-      });
-      const json = await res.json();
-      if (json && json.status === 'Login successful!') {
-        this.setState({ loggedIn: true });
-      }
-    }
+	constructor(props) {
+		super(props);
+		this.state = {
+			loggedIn: false
+		};
+	}
 
-  componentWillMount() {
-    this.checkLogged();
-  }
+	async checkLogged() {
+		const res = await fetch('/api/checkauth', {
+			method: 'GET',
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json && json.status === 'Login successful!') {
+			this.setState({loggedIn: true});
+		}
+	}
 
-  render() {
-    return (
-      <Layout>
-      <div className={'root'}>
-        <div className={'container'}>
-          <h1>{this.props.title}</h1>
-          <a href={"https://orbis.zone/api/auth"} className={'button'}>
-            Log in
-          </a>
-        </div>
-      </div>
-      </Layout>
-    );
-  }
+	componentWillMount() {
+		this.checkLogged();
+	}
+
+	render() {
+		return (
+			<Layout>
+				<div className="root">
+					<div className="container">
+						<h1>{this.props.title}</h1>
+						<a href="https://orbis.zone/api/auth" className="button">
+							Log in
+						</a>
+					</div>
+				</div>
+			</Layout>
+		);
+	}
 }
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  return {
-    login: state.login,
-  };
+	return {
+		login: state.login
+	};
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({ ...actions }, dispatch)
-  };
+	return {
+		actions: bindActionCreators({...actions}, dispatch)
+	};
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(DefaultPage);

@@ -282,8 +282,8 @@ module.exports = {
 		new WorkboxPlugin.GenerateSW({
 			// Exclude images from the precache
 			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+			navigateFallback: '/index.html',
 			navigateFallbackBlacklist: [/api/],
-
 			// Define runtime caching rules.
 			runtimeCaching: [{
 				// Match any request ends with .png, .jpg, .jpeg or .svg.
@@ -315,10 +315,6 @@ module.exports = {
 					expiration: {
 						maxEntries: 5,
 						maxAgeSeconds: 60
-					},
-					// Configure which responses are considered cacheable.
-					cacheableResponse: {
-						statuses: [0, 200]
 					},
 					// Configure the broadcast cache update plugin.
 					broadcastUpdate: {
