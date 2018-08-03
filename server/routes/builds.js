@@ -82,7 +82,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 		}
 	});
 	if (req.user) {
-		if (req.user.keycloakId === ship.author.sub) {
+		if (req.user.id === ship.author.id) {
 			await ShipVote.destroy({
 				where: {
 					shipId: data.id
@@ -112,7 +112,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 		}
 	});
 	if (req.user) {
-		if (req.user.keycloakId === ship.author.sub) {
+		if (req.user.id === ship.author.id) {
 			for (const update in data.updates) {
 				if (!data.updates.hasOwnProperty(update)) {
 					continue;
