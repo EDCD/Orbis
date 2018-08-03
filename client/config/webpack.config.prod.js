@@ -353,7 +353,8 @@ module.exports = {
 					},
 					// Add in any additional plugin logic you need.
 					plugins: []
-				}]
+				}
+			}]
 		}),
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
