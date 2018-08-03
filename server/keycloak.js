@@ -53,4 +53,4 @@ class Keycloak {
 	}
 }
 
-module.exports = new Keycloak(process.env.KEYCLOAK_HOST, 'realm-management', 'Orbis', process.env.KEYCLOAK_USER, process.env.KEYCLOAK_PW, process.env.KEYCLOAK_CLIENT_SECRET, process.env.KEYCLOAK_MANAGEMENT_ID);
+module.exports = new Keycloak(process.env.KEYCLOAK_HOST, 'realm-management', 'Orbis', process.env.KEYCLOAK_USER, process.env.KEYCLOAK_PW, process.env.KEYCLOAK_MANAGEMENT_SECRET, process.env.KEYCLOAK_MANAGEMENT_ID);
