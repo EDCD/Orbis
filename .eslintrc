@@ -6,7 +6,7 @@
     "es6": true
   },
   "extends": [
-    "xo/esnext",
+    "xo",
     "xo-react"
   ]
 }

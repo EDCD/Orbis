@@ -8,7 +8,10 @@ module.exports = (sequelize, DataType) => {
 			defaultValue: DataType.UUIDV1,
 			primaryKey: true
 		},
-
+		keycloakId: {
+			type: DataType.STRING(255),
+			primaryKey: true
+		},
 		email: {
 			type: DataType.STRING(255),
 			unique: true,
@@ -21,16 +24,20 @@ module.exports = (sequelize, DataType) => {
 			type: DataType.STRING(255),
 			unique: true
 		},
-		password: {type: DataType.STRING(255)}
+		imageURL: {
+			type: DataType.STRING(255),
+			unique: false
+		}
 	},
 	{
 		indexes: [
 			{fields: ['email']},
 			{fields: ['username']},
 			{fields: ['id']},
+			{fields: ['keycloakId']},
 			{fields: ['badges']}
-	  ],
-	  freezeTableName: true
+		],
+		freezeTableName: true
 	});
 	User.generateHash = password => bcrypt.hash(password, bcrypt.genSaltSync(8));
 
