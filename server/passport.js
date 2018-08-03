@@ -35,14 +35,18 @@ passport.use(
 					keycloakId: profile.keycloakId,
 					username: profile.username
 				}
-			}, (err, user) => {
-				if (err) {
-					console.error(err);
-					return done(null, false, {error: err.message});
+			}).spread((user, created) => {
+				if (created) {
+					console.info(`Created user ${user.username}`);
 				}
-				return done(err, user);
-			});
-			return done(null, profile);
+				return done(null, user);
+			})
+				.catch(err => {
+					if (err) {
+						console.error(err);
+						return done(null, false, {error: err.message});
+					}
+				});
 		}
 	)
 );
