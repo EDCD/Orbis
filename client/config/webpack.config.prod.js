@@ -282,6 +282,7 @@ module.exports = {
 		new WorkboxPlugin.GenerateSW({
 			// Exclude images from the precache
 			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
+			navigateFallbackBlacklist: [/api/],
 
 			// Define runtime caching rules.
 			runtimeCaching: [{
@@ -317,12 +318,11 @@ module.exports = {
 					},
 					// Configure which responses are considered cacheable.
 					cacheableResponse: {
-						statuses: [0, 200],
-						headers: {'x-test': 'true'}
+						statuses: [0, 200]
 					},
 					// Configure the broadcast cache update plugin.
 					broadcastUpdate: {
-						channelName: 'my-update-channel'
+						channelName: 'orbis-update-channel'
 					}
 				}
 
