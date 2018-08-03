@@ -279,40 +279,9 @@ module.exports = {
 		new ManifestPlugin({
 			fileName: 'asset-manifest.json'
 		}),
-		new WorkboxPlugin.GenerateSW({
-			// Exclude images from the precache
-			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
-			navigateFallback: '/',
-			navigateFallbackBlacklist: [/api/],
-			// Define runtime caching rules.
-			runtimeCaching: [{
-				// Match any request ends with .png, .jpg, .jpeg or .svg.
-				urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
-
-				// Apply a cache-first strategy.
-				handler: 'cacheFirst',
-
-				options: {
-					// Use a custom cache name.
-					cacheName: 'images',
-
-					// Only cache 10 images.
-					expiration: {
-						maxEntries: 10
-					}
-				}
-			}, {
-				// Match any same-origin request that contains 'api'.
-				urlPattern: /api/,
-				// Apply a network-first strategy.
-				handler: 'networkOnly',
-				options: {
-					broadcastUpdate: {
-						channelName: 'orbis-update-channel'
-					}
-				}
-
-			}]
+		new WorkboxPlugin.InjectManifest({
+			swSrc: './src/sw.js',
+			swDest: 'sw.js'
 		}),
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
