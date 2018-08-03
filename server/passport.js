@@ -30,15 +30,17 @@ passport.use(
 			// This is called after a successful authentication has been completed
 			// Here's a sample of what you can then do, i.e., write the user to your DB
 			// User.findOrCreate({ email: profile.email }, (err, user) => {
-			User.findOrCreate({where: {email: profile.email}}, (err, user) => {
+			User.findOrCreate({
+				where: {email: profile.email}, defaults: {
+					keycloakId: profile.keycloakId,
+					username: profile.username
+				}
+			}, (err, user) => {
 				if (err) {
 					console.error(err);
 					return done(null, false, {error: err.message});
 				}
-				user.keycloakId = profile.keycloakId;
-				user.username = profile.username;
-				user.badges = user.badges || {};
-				user.save((err, savedUser) => done(err, savedUser));
+				return done(err, user);
 			});
 			return done(null, profile);
 		}
