@@ -75,13 +75,18 @@ function isAuthenticated(req, res, next) {
 	});
 }
 
-const isAdmin = req => req.user.admin === true || kc.userHasRole(req.user.id, '0e7b465d-3eee-4a77-ae92-816da2456464')
-	.then(data => {
-		if (data) {
-			req.user.admin = true;
-		}
-		return Boolean(data);
-	});
+const isAdmin = req => {
+	if (req.user.admin === true) {
+		return true;
+	}
+	return kc.userHasRole(req.user.id, '0e7b465d-3eee-4a77-ae92-816da2456464')
+		.then(data => {
+			if (data) {
+				req.user.admin = true;
+			}
+			return Boolean(data);
+		});
+};
 
 router.delete('/:id', isAuthenticated, async (req, res) => {
 	const data = req.params;
