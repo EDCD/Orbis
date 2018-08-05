@@ -6,11 +6,11 @@ services:
       context: server/
       dockerfile: Dockerfile
     networks:
-    - orbis
+    - web
     env_file:
     - .env
     labels:
-    - "traefik.docker.network=orbis"
+    - "traefik.docker.network=web"
     - "traefik.enable=true"
     - "traefik.frontend.rule=Host:orbis.zone;PathPrefix:/api"
     - "traefik.port=3030"
@@ -24,9 +24,9 @@ services:
       context: client/
       dockerfile: Dockerfile
     networks:
-    - orbis
+    - web
     labels:
-    - "traefik.docker.network=orbis"
+    - "traefik.docker.network=web"
     - "traefik.enable=true"
     - "traefik.frontend.rule=Host:orbis.zone;PathPrefix:/"
     - "traefik.port=80"
@@ -41,9 +41,9 @@ services:
     volumes:
       - ./data/imageproxy:/tmp/imageproxy
     networks:
-    - orbis
+    - web
     labels:
-    - "traefik.docker.network=orbis"
+    - "traefik.docker.network=web"
     - "traefik.enable=true"
     - "traefik.frontend.rule=Host:orbis.zone;PathPrefixStrip:/imgproxy/"
     - "traefik.port=8080"
@@ -59,7 +59,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-    - orbis
+    - web
     volumes:
       - orbis_data:/var/lib/postgresql/data
     restart: always
@@ -69,7 +69,8 @@ services:
 
 
 networks:
-  orbis:
+  web:
+    external: true
 
 volumes:
   orbis_data:
