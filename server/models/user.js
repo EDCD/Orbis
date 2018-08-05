@@ -12,6 +12,10 @@ module.exports = (sequelize, DataType) => {
 			type: DataType.STRING(255),
 			primaryKey: true
 		},
+		admin: {
+			type: DataType.BOOLEAN,
+			defaultValue: false
+		},
 		email: {
 			type: DataType.STRING(255),
 			unique: true,
