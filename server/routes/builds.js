@@ -85,7 +85,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 		}
 	});
 	if (req.user) {
-		const isadmin = await isAdmin(req);
+		const isadmin = isAdmin(req);
 		if (req.user.id === ship.author.id || isadmin) {
 			await ShipVote.destroy({
 				where: {
@@ -117,7 +117,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 		}
 	});
 	if (req.user) {
-		const isadmin = await isAdmin(req);
+		const isadmin = isAdmin(req);
 		if (req.user.id === ship.author.id || isadmin) {
 			for (const update in data.updates) {
 				if (!data.updates.hasOwnProperty(update)) {
