@@ -3,13 +3,11 @@ const models = require('../models');
 
 const {Ship, ShipVote} = models;
 const router = express.Router();
-const passport = require('../passport');
-const kc = require('../keycloak');
 
 router.post('/', (req, res) => {
 	const {order, field} = req.body;
 	return Ship.findAndCountAll({
-		// Order: [[field || 'updatedAt', order || 'DESC']],
+		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
 		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'proxiedImage', 'coriolisShip']
@@ -157,7 +155,6 @@ router.post('/add', isAuthenticated, async (req, res) => {
 	return res.json({
 		success: true,
 		id: ship.id,
-		body: data,
 		ship: 'created',
 		link: `https://orbis.zone/build/${ship.shortid}`
 	});

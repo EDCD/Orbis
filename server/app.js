@@ -1,6 +1,5 @@
 const path = require('path');
 const express = require('express');
-const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -9,6 +8,7 @@ const session = require('express-session');
 const models = require('./models');
 const passport = require('./passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const expressOasGenerator = require('express-oas-generator');
 
 const {sequelize} = models;
 
@@ -27,7 +27,7 @@ process.on('uncaughtException', reason => {
 });
 
 const app = express();
-
+expressOasGenerator.init(app, require('./api-spec.json'), {save: true, path: './api-spec.json'});
 app.use(bodyParser.json({limit: '20mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({credentials: true, origin: true}));
