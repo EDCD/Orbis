@@ -7,7 +7,7 @@ const {User} = models;
 
 router.post('/register', async (req, res) => {
 	if (!req.body) {
-		return res.status(413).end();
+		return res.status(400).end();
 	}
 	let user = await User.find({
 		where: {

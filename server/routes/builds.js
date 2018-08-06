@@ -106,7 +106,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 
 router.post('/update', isAuthenticated, async (req, res) => {
 	if (!req.body || !req.body.updates) {
-		return res.status(413).end();
+		return res.status(400).end();
 	}
 	const data = req.body;
 	const ship = await Ship.find({
@@ -147,7 +147,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 
 router.post('/add', isAuthenticated, async (req, res) => {
 	if (!req.body) {
-		return res.status(413).end();
+		return res.status(400).end();
 	}
 	const data = JSON.parse(JSON.stringify(req.body));
 	data.author = req.user === undefined ? {username: 'Anonymous'} : req.user;

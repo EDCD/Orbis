@@ -17,7 +17,9 @@ const {ShipVote} = models;
 
 router.post('/', isAuthenticated, (req, res) => {
 	const author = req.user;
-
+	if (!req.body) {
+		return res.status(400).end();
+	}
 	return ShipVote.upsert({
 		userId: author.keycloakId,
 		shipId: req.body.shipId,
@@ -29,7 +31,11 @@ router.post('/', isAuthenticated, (req, res) => {
 			}
 		});
 		return res.json({created, count});
-	});
+	})
+		.catch(err => {
+			console.error(err);
+			return res.status(500).end();
+		});
 });
 
 module.exports = router;

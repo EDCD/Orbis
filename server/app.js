@@ -8,7 +8,8 @@ const session = require('express-session');
 const models = require('./models');
 const passport = require('./passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const expressOasGenerator = require('express-oas-generator');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./api-spec.json');
 
 const {sequelize} = models;
 
@@ -27,7 +28,6 @@ process.on('uncaughtException', reason => {
 });
 
 const app = express();
-expressOasGenerator.init(app, require('./api-spec.json'), {save: true, path: './api-spec.json'});
 app.use(bodyParser.json({limit: '20mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({credentials: true, origin: true}));
@@ -57,15 +57,6 @@ passport.deserializeUser((user, done) => done(null, user));
 
 app.use(passport.session());
 
-function isAuthenticated(req, res, next) {
-	if (req.user) {
-		return next();
-	}
-	return res.status(401).json({
-		error: 'User not authenticated'
-	});
-}
-
 sessionStore.sync();
 
 app.get('/', (req, res) => {
@@ -83,5 +74,7 @@ app.use('/api/builds', builds);
 app.use('/api/users', users);
 app.use('/api/likes', votes);
 app.use('/api/webhook', webhooks);
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = app;
