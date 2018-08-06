@@ -3,10 +3,10 @@ FROM node:8.10.0
 WORKDIR /usr/src/app
 
 COPY . .
+RUN chown --recursive node:node /usr/src/app
 
 # Install Node.js dependencies
 RUN yarn install --no-progress
-
 # Run the container under "node" user by default
 USER node
 
