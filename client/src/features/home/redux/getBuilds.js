@@ -26,7 +26,8 @@ export function getBuilds(args = {}) {
 			request.post(`/api/builds`)
 				.send({
 					offset: args.offset,
-					pageSize: args.pageSize
+					pageSize: args.pageSize,
+					search: args.search
 				})
 				.then(res => {
 					dispatch({
