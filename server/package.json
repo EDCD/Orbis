@@ -12,7 +12,7 @@
     "test-integration": "cross-env NODE_ENV=test ./node_modules/.bin/mocha test/integration/*.test.js"
   },
   "dependencies": {
-    "@exlinc/keycloak-passport": "^1.0.2",
+    "@exlinc/keycloak-passport": "github:willyb321/keycloak-passport",
     "bcrypt": "^3.0.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
@@ -24,10 +24,11 @@
     "express": "^4.16.3",
     "express-rate-limit": "^2.12.1",
     "express-session": "^1.15.6",
-    "keycloak-connect": "^4.2.0",
+    "keycloak-connect": "^4.2.1",
     "morgan": "^1.9.0",
     "openid-client": "^2.2.1",
     "passport": "^0.4.0",
+    "passport-oauth2-refresh": "^1.1.0",
     "patreon": "^0.4.1",
     "pg": "^7.4.3",
     "pug": "^2.0.3",

@@ -1,11 +1,11 @@
 const express = require('express');
 const models = require('../models');
-const passport = require('../passport');
+const {keycloak} = require('../keycloak');
 
 const router = express.Router();
 
 function isAuthenticated(req, res, next) {
-	if (req.user) {
+	if (req.session) {
 		return next();
 	}
 	return res.status(401).json({
@@ -19,13 +19,8 @@ router.get('/', (req, res) => {
 
 // Start authentication request
 // options [optional], extra authentication parameters
-router.get('/auth', passport.authenticate('keycloak'), (req, res) => {
+router.get('/auth', keycloak.protect(), (req, res) => {
 	res.redirect('/');
-});
-
-router.get('/auth/cb', passport.authenticate('keycloak'), (req, res) => {
-	console.log(req.user);
-	return res.redirect('/');
 });
 
 router.get('/logout', (req, res) => {

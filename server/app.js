@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const models = require('./models');
-const passport = require('./passport');
+const {keycloak, getUserInfo} = require('./keycloak');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./api-spec.json');
@@ -48,16 +48,8 @@ app.use(
 		store: sessionStore
 	})
 );
-app.use(passport.initialize());
-
-passport.serializeUser((user, done) => {
-	done(null, user);
-});
-
-passport.deserializeUser((user, done) => done(null, user));
-
-app.use(passport.session());
-
+app.use(keycloak.middleware({logout: '/api/logout'}));
+app.use(getUserInfo);
 sessionStore.sync();
 
 app.get('/', (req, res) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const models = require('../models');
 const RateLimit = require('express-rate-limit');
-
+const {keycloak} = require('../keycloak');
 const {Ship, ShipVote} = models;
 const router = express.Router();
 
@@ -88,7 +88,7 @@ router.get('/:id', (req, res) =>
 );
 
 function isAuthenticated(req, res, next) {
-	if (req.user) {
+	if (req.user || req.session) {
 		return next();
 	}
 
@@ -99,7 +99,7 @@ function isAuthenticated(req, res, next) {
 
 const isAdmin = req => req.user.admin === true;
 
-router.delete('/:id', isAuthenticated, async (req, res) => {
+router.delete('/:id', keycloak.protect(), async (req, res) => {
 	const data = req.params;
 	const ship = await Ship.find({
 		where: {
@@ -128,7 +128,7 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
 	return res.status(403).json({success: false});
 });
 
-router.post('/update', isAuthenticated, async (req, res) => {
+router.post('/update', keycloak.protect(), async (req, res) => {
 	if (!req.body || !req.body.updates) {
 		return res.status(400).end();
 	}
@@ -156,12 +156,12 @@ router.post('/update', isAuthenticated, async (req, res) => {
 			}
 			return ship.save()
 				.then(ship => res.json({
-						success: true,
-						id: ship.id,
-						body: data,
-						ship: 'created',
-						link: `https://orbis.zone/build/${ship.shortid}`
-					})
+					success: true,
+					id: ship.id,
+					body: data,
+					ship: 'created',
+					link: `https://orbis.zone/build/${ship.shortid}`
+				})
 				);
 		}
 		return res.status(403).json({});
@@ -169,7 +169,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 	return res.status(500).json({});
 });
 
-router.post('/add', isAuthenticated, addLimiter, async (req, res) => {
+router.post('/add', keycloak.protect(), addLimiter, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).end();
 	}
@@ -184,7 +184,7 @@ router.post('/add', isAuthenticated, addLimiter, async (req, res) => {
 	});
 });
 
-router.post('/add/batch', isAuthenticated, batchAddLimiter, async (req, res) => {
+router.post('/add/batch', keycloak.protect(), batchAddLimiter, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).end();
 	}

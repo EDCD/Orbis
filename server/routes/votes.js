@@ -5,7 +5,7 @@ const models = require('../models');
 const router = express.Router();
 
 function isAuthenticated(req, res, next) {
-	if (req.user) {
+	if (req.session) {
 		return next();
 	}
 	return res.status(401).json({

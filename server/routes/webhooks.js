@@ -1,13 +1,12 @@
 const express = require('express');
 const models = require('../models');
-const passport = require('../passport');
 const crypto = require('crypto');
 
 const {User} = models;
 const router = express.Router();
 
 function isAuthenticated(req, res, next) {
-	if (req.user) {
+	if (req.session) {
 		return next();
 	}
 	return res.status(401).json({
