@@ -28,7 +28,8 @@ process.on('uncaughtException', reason => {
 });
 
 const app = express();
-app.use(bodyParser.json({limit: '20mb'}));
+app.enable('trust proxy');
+app.use(bodyParser.json({limit: '30mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({credentials: true, origin: true}));
 app.options('*', cors({credentials: true, origin: true}));
