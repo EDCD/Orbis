@@ -9,6 +9,8 @@ services:
     - web
     env_file:
     - .env
+    links:
+      - orbis_db:db
     labels:
     - "traefik.docker.network=web"
     - "traefik.enable=true"
@@ -17,7 +19,7 @@ services:
     - "traefik.protocol=http"
     restart: always
     depends_on:
-      db:
+      orbis_db:
         condition: service_healthy
   client:
     build:
@@ -49,7 +51,7 @@ services:
     - "traefik.port=8080"
     - "traefik.protocol=http"
     restart: always
-  db:
+  orbis_db:
     image: postgres:latest
     env_file:
       - .env
