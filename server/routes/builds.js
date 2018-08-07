@@ -1,17 +1,35 @@
 const express = require('express');
 const models = require('../models');
+const RateLimit = require('express-rate-limit');
 
 const {Ship, ShipVote} = models;
 const router = express.Router();
 
+const limiter = new RateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 20, // Limit each IP to 20 requests per windowMs
+	delayMs: 1000, // Disable delaying - full speed until the max limit is reached
+	delayAfter: 5,
+	message: 'Too many builds uploaded. Please try again later.'
+});
+
+const {Op} = require('sequelize');
+
 router.post('/', (req, res) => {
-	const {order, field} = req.body;
-	return Ship.findAndCountAll({
+	const {order, field, search} = req.body;
+	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
 		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'proxiedImage', 'coriolisShip']
-	})
+	};
+	if (search && search.key && search.value) {
+		query.where = {};
+		query.where[search.key] = {
+			[Op.iLike]: `%${search.value}%`
+		};
+	}
+	return Ship.findAndCountAll(query)
 		.then(async ships => {
 			const promises = [];
 			ships.rows.forEach(ship => {
@@ -118,7 +136,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 		const isadmin = isAdmin(req);
 		if (req.user.id === ship.author.id || isadmin) {
 			for (const update in data.updates) {
-				if (!data.updates.hasOwnProperty(update)) {
+				if (!Object.prototype.hasOwnProperty.call(data.updates, update)) {
 					continue;
 				}
 				if (allowedUpdates.indexOf(update) === -1) {
@@ -145,7 +163,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 	return res.status(500).json({});
 });
 
-router.post('/add', isAuthenticated, async (req, res) => {
+router.post('/add', isAuthenticated, limiter, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).end();
 	}
