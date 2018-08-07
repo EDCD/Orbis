@@ -62,7 +62,9 @@ module.exports = (sequelize, DataType) => {
 				{fields: ['updatedAt']},
 				{fields: ['createdAt']},
 				{fields: ['shortid']},
-				{fields: ['Ship']}
+				{fields: ['Ship']},
+				// Add a FULLTEXT index
+				{type: 'FULLTEXT', name: 'text_idx', fields: ['description', 'title']}
 			],
 			freezeTableName: true
 		}
