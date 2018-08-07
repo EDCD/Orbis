@@ -160,4 +160,33 @@ router.post('/add', isAuthenticated, async (req, res) => {
 	});
 });
 
+router.post('/add/batch', isAuthenticated, limiter, async (req, res) => {
+	if (!req.body) {
+		return res.status(400).end();
+	}
+	let promises = [];
+	const data = JSON.parse(JSON.stringify(req.body));
+	for (const build in data) {
+		data[build].author = req.user;
+		promises.push(Ship.create(data[build]));
+	}
+	return Promise.all(promises)
+		.then(datas => {
+			const returnObj = [];
+			for (const s of datas) {
+				returnObj.push({
+					success: true,
+					id: s.id,
+					ship: 'created',
+					link: `https://orbis.zone/build/${s.shortid}`
+				});
+			}
+			return res.json({totalCreated: returnObj.length, data: returnObj});
+		})
+		.catch(err => {
+			console.error(err);
+			return res.status(500).json({error: err.message});
+		});
+});
+
 module.exports = router;
