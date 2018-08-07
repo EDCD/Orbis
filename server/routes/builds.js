@@ -5,11 +5,17 @@ const RateLimit = require('express-rate-limit');
 const {Ship, ShipVote} = models;
 const router = express.Router();
 
-const limiter = new RateLimit({
+const addLimiter = new RateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 20, // Limit each IP to 20 requests per windowMs
 	delayMs: 1000, // Disable delaying - full speed until the max limit is reached
 	delayAfter: 5,
+	message: 'Too many builds uploaded. Please try again later.'
+});
+
+const batchAddLimiter = new RateLimit({
+	windowMs: 60 * 60 * 1000, // 15 minutes
+	max: 1, // Limit each IP to 20 requests per windowMs
 	message: 'Too many builds uploaded. Please try again later.'
 });
 
@@ -150,12 +156,12 @@ router.post('/update', isAuthenticated, async (req, res) => {
 			}
 			return ship.save()
 				.then(ship => res.json({
-					success: true,
-					id: ship.id,
-					body: data,
-					ship: 'created',
-					link: `https://orbis.zone/build/${ship.shortid}`
-				})
+						success: true,
+						id: ship.id,
+						body: data,
+						ship: 'created',
+						link: `https://orbis.zone/build/${ship.shortid}`
+					})
 				);
 		}
 		return res.status(403).json({});
@@ -163,7 +169,7 @@ router.post('/update', isAuthenticated, async (req, res) => {
 	return res.status(500).json({});
 });
 
-router.post('/add', isAuthenticated, limiter, async (req, res) => {
+router.post('/add', isAuthenticated, addLimiter, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).end();
 	}
@@ -178,7 +184,7 @@ router.post('/add', isAuthenticated, limiter, async (req, res) => {
 	});
 });
 
-router.post('/add/batch', isAuthenticated, limiter, async (req, res) => {
+router.post('/add/batch', isAuthenticated, batchAddLimiter, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).end();
 	}
@@ -186,7 +192,17 @@ router.post('/add/batch', isAuthenticated, limiter, async (req, res) => {
 	const data = JSON.parse(JSON.stringify(req.body));
 	for (const build in data) {
 		data[build].author = req.user;
-		promises.push(Ship.create(data[build]));
+		promises.push(Ship.findOrCreate({
+			where: {
+				author: {
+					username: req.user.username
+				},
+				title: data[build].title,
+				ShipName: data[build].ShipName,
+				description: data[build].description
+			},
+			defaults: data[build]
+		}));
 	}
 	return Promise.all(promises)
 		.then(datas => {
