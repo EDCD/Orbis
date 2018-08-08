@@ -39,36 +39,38 @@ export default class Navigation extends Component {
 				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
 					<div className={cx(['menu-header'])}>
 						<Link className={cx(['menu-item-label'])} to="/login">
-              Log in
+							Log in
 						</Link>
 					</div>
 				</div>
 				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
 					<div className={cx(['menu-header'])}>
 						<Link className={cx(['menu-item-label'])} to="/register">
-              Sign up
+							Sign up
 						</Link>
 					</div>
 				</div>
 				<div hidden={!this.state.loggedIn} className={cx('r', 'menu')}>
 					<div className={cx(['menu-header'])}>
-						<div onClick={this.logout} className={cx(['menu-item-label'])}>
-              Log out
-						</div>
+						<a href="/api/logout">
+							<div className={cx(['menu-item-label'])}>
+								Log out
+							</div>
+						</a>
 					</div>
 				</div>
 				<div className={cx('r')}>
 					<div className={cx('r', 'menu')}>
 						<div className={cx(['menu-header'])}>
 							<Link className={cx(['menu-item-label'])} to="/contact">
-                Contact
+								Contact
 							</Link>
 						</div>
 					</div>
 					<div className={cx('r', 'menu')}>
 						<div className={cx(['menu-header'])}>
 							<Link className={cx(['menu-item-label'])} to="/about">
-                About
+								About
 							</Link>
 						</div>
 					</div>
