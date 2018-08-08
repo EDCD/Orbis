@@ -13,7 +13,7 @@ const sessionStore = new SequelizeStore({
 const keycloak = new Keycloak({store: sessionStore/*, scope: 'offline_access'*/}, null);
 
 const getUserInfo = (req, res, next) => {
-	if (req.session) {
+	if (req.user) {
 		return next();
 	}
 	if (!req.kauth || !req.kauth.grant) {
