@@ -15,6 +15,7 @@ export class Page extends React.Component {
 			loggedIn: false,
 			builds: [],
 			data: [],
+			loading: false,
 			offset: 0,
 			perPage: 10,
 			pageLoaded: false,
@@ -64,11 +65,12 @@ export class Page extends React.Component {
 	}
 
 	handlePageClick(data) {
-		console.log(data);
-		const selected = data.selected;
-		const offset = Math.ceil(selected * this.state.perPage);
-		this.setState({offset}, () => {
-			this.loadBuilds();
+		this.setState({loading: true}, () => {
+			const selected = data.selected;
+			const offset = Math.ceil(selected * this.state.perPage);
+			this.setState({offset}, () => {
+				this.loadBuilds();
+			});
 		});
 	}
 
@@ -115,7 +117,7 @@ export class Page extends React.Component {
 						debounceTimeout={300}
 						onChange={this.searchChangeHandler}/>
 					<div className="builds-container">
-						{this.state.data.length > 0 || this.state.loaded ? this.state.data.map((e, index) => {
+						{this.state.data.length > 0 || this.state.loaded || this.state.loading ? this.state.data.map((e, index) => {
 							e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
 							e.content = e.description;
 							return (
