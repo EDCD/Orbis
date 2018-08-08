@@ -67,7 +67,7 @@ const allowedUpdates = ['imageURL', 'description', 'title'];
 router.get('/:id', (req, res) =>
 	Ship.find({
 		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'coriolisShip']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'proxiedImage', 'coriolisShip']
 	})
 		.then(ships => {
 			if (!ships) {

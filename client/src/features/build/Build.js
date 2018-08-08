@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import Layout from '../common/Layout';
 import * as actions from './redux/actions';
+import ReactLoading from 'react-loading';
+import IdealImage from 'react-ideal-image';
 
 export class Build extends Component {
 	constructor(props) {
@@ -57,6 +59,7 @@ export class Build extends Component {
 		this.checkLogged();
 		this.props.actions.getBuild({id: this.props.match.params.id})
 			.then(data => {
+				console.log(data)
 				return this.setState({build: [data]}, () => {
 					this.setState({coriolisLink: this.state.build[0].coriolisShip.url || this.getCoriolisLink()});
 				});
@@ -68,24 +71,29 @@ export class Build extends Component {
 		return (
 			<Layout>
 				<div>
-					<div className={'container'}>
+					<div className="container">
 						{this.state.build[0] ? (
 							<div>
 								<h1>
                   Build: {this.state.build[0].title} by {this.state.build[0].author.username}
 								</h1>
-								{this.state.build[0] ? (
+								{this.state.build[0] && this.state.build[0].allowedToEdit ? (
 									<Link to={`/build/${this.props.match.params.id}/edit`}>
                     Edit Build Info
 									</Link>
 								) : ''}
 
 								<br/>
-								<a target="_blank" rel="noopener" href={this.state.coriolisLink}>
+								<a target="_blank" rel="noopener noreferrer" href={this.state.coriolisLink}>
                   Edit Build on Coriolis
 								</a>
-								{this.state.build.map(item => (
-									<article key={item.id} className={'build'}>
+								{this.state.build && this.state.build.length > 0 ? this.state.build.map(item => (
+									<article key={item.id} className="build">
+										<IdealImage placeholder={{lqip: item.proxiedImage.replace('{OPTIONS}', '20x')}} shouldAutoDownload={() => true}
+											height={250} width={400} srcSet={[
+												{width: 200, src: item.proxiedImage.replace('{OPTIONS}', '200x125')},
+												{width: 400, src: item.proxiedImage.replace('{OPTIONS}', '400x250')}
+											]}/>
 										<div>
 											<div>
 												<p>Armour: {Math.round(item.coriolisShip.armour)}</p>
@@ -118,9 +126,9 @@ export class Build extends Component {
 											</div>
 										</div>
 									</article>
-								))}
+								)) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
 							</div>
-						) : 'Loading...'}
+						) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
 					</div>
 				</div>
 			</Layout>

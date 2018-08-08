@@ -16,10 +16,7 @@ const getUserInfo = (req, res, next) => {
 	if (req.user) {
 		return next();
 	}
-	if (!req.kauth || !req.kauth.grant) {
-		return next();
-	}
-	if (!req.kauth.grant.access_token || !req.kauth.grant.access_token.content) {
+	if (!req.kauth || !req.kauth.grant || !req.kauth.grant.access_token || !req.kauth.grant.access_token.content) {
 		return next();
 	}
 	const profile = req.kauth.grant.access_token.content;

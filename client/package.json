@@ -51,6 +51,7 @@
     "react-hot-loader": "^4.0.0",
     "react-ideal-image": "^0.0.5",
     "react-loader": "^2.4.5",
+    "react-loading": "^2.0.3",
     "react-paginate": "^5.2.3",
     "react-redux": "^5.0.7",
     "react-redux-loading-bar": "^4.0.5",

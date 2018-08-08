@@ -2,7 +2,7 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {DebounceInput} from 'react-debounce-input';
-import Loader from 'react-loader';
+import ReactLoading from 'react-loading';
 import ReactPaginate from 'react-paginate';
 import Layout from '../common/Layout';
 import * as actions from './redux/actions';
@@ -104,48 +104,46 @@ export class Page extends React.Component {
 			<Layout>
 				<div>
 					<h1>Latest builds</h1>
-					<Loader loaded={this.state.pageLoaded}>
-						<label>Search by: </label>
-						<select>
-							<option>title</option>
-						</select>
-						<br/>
-						<label>Search for: </label>
-						<DebounceInput
-							minLength={2}
-							debounceTimeout={300}
-							onChange={this.searchChangeHandler}/>
-						<div className="builds-container">
-							{this.state.data.map((e, index) => {
-								e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
-								e.content = e.description;
-								return (
-									<div key={e.id} className="build-item">
-										<SocialCard
-											key={e.id}
-											content={e}
-											loggedIn={this.state.loggedIn}
-											likes={e.likes}
-											coriolisLink={e.coriolisShip.url || this.getCoriolisLink(index)}
-											likeIsClicked={false}
-											repostIsClicked={false}
-										/>
-									</div>
-								);
-							})}
-						</div>
-						<ReactPaginate previousLabel="Previous"
-													 nextLabel="Next"
-													 breakLabel="..."
-													 breakClassName="break"
-													 pageCount={this.state.pageCount}
-													 marginPagesDisplayed={2}
-													 pageRangeDisplayed={5}
-													 onPageChange={this.handlePageClick}
-													 containerClassName="pagination"
-													 subContainerClassName="pages pagination"
-													 activeClassName="active danger"/>
-					</Loader>
+					<label>Search by: </label>
+					<select>
+						<option>title</option>
+					</select>
+					<br/>
+					<label>Search for: </label>
+					<DebounceInput
+						minLength={2}
+						debounceTimeout={300}
+						onChange={this.searchChangeHandler}/>
+					<div className="builds-container">
+						{this.state.data.length > 0 || this.state.loaded ? this.state.data.map((e, index) => {
+							e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
+							e.content = e.description;
+							return (
+								<div key={e.id} className="build-item">
+									<SocialCard
+										key={e.id}
+										content={e}
+										loggedIn={this.state.loggedIn}
+										likes={e.likes}
+										coriolisLink={e.coriolisShip.url || this.getCoriolisLink(index)}
+										likeIsClicked={false}
+										repostIsClicked={false}
+									/>
+								</div>
+							);
+						}) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
+					</div>
+					<ReactPaginate previousLabel="Previous"
+						nextLabel="Next"
+						breakLabel="..."
+						breakClassName="break"
+						pageCount={this.state.pageCount}
+						marginPagesDisplayed={2}
+						pageRangeDisplayed={5}
+						onPageChange={this.handlePageClick}
+						containerClassName="pagination"
+						subContainerClassName="pages pagination"
+						activeClassName="active danger"/>
 				</div>
 			</Layout>
 		);
