@@ -5,7 +5,7 @@ const {keycloak} = require('../keycloak');
 const router = express.Router();
 
 function isAuthenticated(req, res, next) {
-	if (req.session) {
+	if (req.user) {
 		return next();
 	}
 	return res.status(401).json({
