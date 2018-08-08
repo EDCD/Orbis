@@ -38,7 +38,7 @@ export class DefaultPage extends Component {
 				<div className="root">
 					<div className="container">
 						<h1>{this.props.title}</h1>
-						<a href="http://localhost:3030/api/auth" className="button">
+						<a href="/api/auth" className="button">
 							Log in
 						</a>
 					</div>
