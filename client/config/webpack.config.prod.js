@@ -283,8 +283,9 @@ module.exports = {
 			// Exclude images from the precache
 			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
 			navigateFallback: PUBLIC_URL + 'index.html',
+			skipWaiting: true,
+			clientsClaim: true,
 			navigateFallbackBlacklist: [/^\/_/, /api/],
-			dontCacheBustUrlsMatching: /\.\w{8}\./,
 			// Define runtime caching rules.
 			runtimeCaching: [{
 				// Match any request ends with .png, .jpg, .jpeg or .svg.
