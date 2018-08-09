@@ -8,12 +8,13 @@ import Layout from '../common/Layout';
 import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
 import Search from './Search';
+import {getCookie, setCookie} from '../../common/utils';
 
 export class Page extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loggedIn: false,
+			loggedIn: Boolean(getCookie('accessToken')),
 			builds: [],
 			data: [],
 			loading: false,
@@ -35,6 +36,10 @@ export class Page extends React.Component {
 		const json = await res.json();
 		if (json && json.status === 'Login successful!') {
 			this.setState({loggedIn: true});
+			setCookie('accessToken', json.accessToken);
+		} else {
+			setCookie('accessToken', undefined);
+			this.setState({loggedIn: false});
 		}
 	}
 

@@ -30,7 +30,8 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/checkauth', isAuthenticated, (req, res) => {
-	return res.status(200).json({status: 'Login successful!'});
+	console.log(req.kauth)
+	return res.status(200).json({status: 'Login successful!', accessToken: req.kauth.grant.access_token.token});
 });
 
 module.exports = router;

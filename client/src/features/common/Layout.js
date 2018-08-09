@@ -7,28 +7,6 @@ export default class Layout extends Component {
 		children: PropTypes.node.isRequired
 	};
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			loggedIn: false
-		};
-	}
-
-	componentWillMount() {
-		this.checkLogged();
-	}
-
-	async checkLogged() {
-		const res = await fetch('/api/checkauth', {
-			method: 'GET',
-			credentials: 'include'
-		});
-		const json = await res.json();
-		if (json && json.status === 'Login successful!') {
-			this.setState({loggedIn: true});
-		}
-	}
-
 	render() {
 		return (
 			<div className="layout-container">

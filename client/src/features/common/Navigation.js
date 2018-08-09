@@ -2,12 +2,13 @@ import React, {Component} from 'react';
 import cx from 'classnames';
 import {Link} from 'react-router-dom';
 import * as Svg from '../common/Svg';
+import {setCookie, getCookie} from '../../common/utils';
 
 export default class Navigation extends Component {
 	constructor() {
 		super();
 		this.state = {
-			loggedIn: false
+			loggedIn: Boolean(getCookie('accessToken'))
 		};
 	}
 
@@ -23,6 +24,10 @@ export default class Navigation extends Component {
 		const json = await res.json();
 		if (json && json.status === 'Login successful!') {
 			this.setState({loggedIn: true});
+			setCookie('accessToken', json.accessToken);
+		} else {
+			setCookie('accessToken', undefined);
+			this.setState({loggedIn: false});
 		}
 	}
 
