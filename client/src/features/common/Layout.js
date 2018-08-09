@@ -31,7 +31,7 @@ export default class Layout extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="layout-container">
 				<Header/>
 				{this.props.children}
 				<Footer/>

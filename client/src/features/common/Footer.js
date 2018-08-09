@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 export default class Footer extends React.Component {
 	render() {
 		return (
-			<div className="root">
+			<div className="footer-root">
 				<div className="container">
 					<span className="text">© EDCD {new Date().getFullYear()}</span>
 					<span className="spacer">·</span>
@@ -26,6 +26,10 @@ export default class Footer extends React.Component {
 					<span className="spacer">·</span>
 					<a className="link" href="https://www.edsm.net/">
 						Default ship images by EDSM
+					</a>
+					<span className="spacer">·</span>
+					<a className="link" href="https://fontawesome.com/license">
+						Other icons by FontAwesome
 					</a>
 				</div>
 			</div>

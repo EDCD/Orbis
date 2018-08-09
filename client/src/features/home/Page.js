@@ -7,6 +7,7 @@ import ReactPaginate from 'react-paginate';
 import Layout from '../common/Layout';
 import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
+import Search from './Search';
 
 export class Page extends React.Component {
 	constructor(props) {
@@ -20,7 +21,7 @@ export class Page extends React.Component {
 			perPage: 10,
 			pageLoaded: false,
 			loaded: false,
-			search: {key: 'title', value: ''}
+			search: {key: '', value: '', sort: {field: 'createdAt', order: 'ASC'}}
 		};
 		this.loadBuilds = this.loadBuilds.bind(this);
 		this.handlePageClick = this.handlePageClick.bind(this);
@@ -40,7 +41,13 @@ export class Page extends React.Component {
 	componentDidMount() {
 		this.checkLogged();
 		this.setState({pageLoaded: false}, () => {
-			this.props.actions.getBuilds({pageSize: this.state.perPage, offset: this.state.offset})
+			this.props.actions.getBuilds({
+				pageSize: this.state.perPage,
+				offset: this.state.offset,
+				search: this.state.search,
+				field: this.state.search.sort.field,
+				order: this.state.search.sort.order
+			})
 				.then(data => {
 					return this.setState({
 						data: data.rows,
@@ -53,7 +60,13 @@ export class Page extends React.Component {
 
 	loadBuilds() {
 		this.setState({loaded: false}, () => {
-			this.props.actions.getBuilds({pageSize: this.state.perPage, offset: this.state.offset, search: this.state.search})
+			this.props.actions.getBuilds({
+				pageSize: this.state.perPage,
+				offset: this.state.offset,
+				search: this.state.search,
+				field: this.state.search.sort.field,
+				order: this.state.search.sort.order
+			})
 				.then(data => {
 					return this.setState({
 						data: data.rows,
@@ -92,61 +105,42 @@ export class Page extends React.Component {
 		].join('');
 	}
 
-	searchChangeHandler(e) {
-		const key = this.state.search.key;
-		this.setState({search: {value: e.target.value, key}}, () => {
-			this.loadBuilds();
-		});
-	}
-
 	render() {
 		this.getCoriolisLink = this.getCoriolisLink.bind(this);
-		this.searchChangeHandler = this.searchChangeHandler.bind(this);
 		return (
 			<Layout>
-				<div>
-					<h1>Latest builds</h1>
-					<label>Search by: </label>
-					<select>
-						<option>title</option>
-					</select>
-					<br/>
-					<label>Search for: </label>
-					<DebounceInput
-						minLength={2}
-						debounceTimeout={300}
-						onChange={this.searchChangeHandler}/>
-					<div className="builds-container">
-						{this.state.data.length > 0 || this.state.loaded || this.state.loading ? this.state.data.map((e, index) => {
-							e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
-							e.content = e.description;
-							return (
-								<div key={e.id} className="build-item">
-									<SocialCard
-										key={e.id}
-										content={e}
-										loggedIn={this.state.loggedIn}
-										likes={e.likes}
-										coriolisLink={e.coriolisShip.url || this.getCoriolisLink(index)}
-										likeIsClicked={false}
-										repostIsClicked={false}
-									/>
-								</div>
-							);
-						}) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
-					</div>
-					<ReactPaginate previousLabel="Previous"
-						nextLabel="Next"
-						breakLabel="..."
-						breakClassName="break"
-						pageCount={this.state.pageCount}
-						marginPagesDisplayed={2}
-						pageRangeDisplayed={5}
-						onPageChange={this.handlePageClick}
-						containerClassName="pagination"
-						subContainerClassName="pages pagination"
-						activeClassName="active danger"/>
+				<h1>Latest builds</h1>
+				<Search/>
+				<div className="builds-container">
+					{this.state.data.length > 0 || this.state.loaded || this.state.loading ? this.state.data.map((e, index) => {
+						e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
+						e.content = e.description;
+						return (
+							<div key={e.id} className="build-item">
+								<SocialCard
+									key={e.id}
+									content={e}
+									loggedIn={this.state.loggedIn}
+									likes={e.likes}
+									coriolisLink={e.coriolisShip.url || this.getCoriolisLink(index)}
+									likeIsClicked={false}
+									repostIsClicked={false}
+								/>
+							</div>
+						);
+					}) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
 				</div>
+				<ReactPaginate previousLabel="Previous"
+					nextLabel="Next"
+					breakLabel="..."
+					breakClassName="break"
+					pageCount={this.state.pageCount}
+					marginPagesDisplayed={2}
+					pageRangeDisplayed={5}
+					onPageChange={this.handlePageClick}
+					containerClassName="pagination"
+					subContainerClassName="pages pagination"
+					activeClassName="active danger"/>
 			</Layout>
 		);
 	}

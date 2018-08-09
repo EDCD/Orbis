@@ -27,7 +27,9 @@ export function getBuilds(args = {}) {
 				.send({
 					offset: args.offset,
 					pageSize: args.pageSize,
-					search: args.search
+					search: args.search,
+					field: args.field,
+					order: args.order
 				})
 				.then(res => {
 					dispatch({

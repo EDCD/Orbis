@@ -1,0 +1,33 @@
+@import '../../styles/mixins';
+
+.search-container {
+	border: #FF8C0D solid 1px;
+	display: flex;
+	width: 500px;
+	margin: auto;
+	justify-content: center;
+	flex-flow: row nowrap;
+	align-items: center;
+}
+
+.search-container > div {
+	padding: 5px;
+	&#search-by {
+		order: 1;
+	}
+	&#search-for {
+		order: 2;
+	}
+	&#sort-field {
+		order: 3;
+	}
+	&#sort-order {
+		order: 4;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.search-container {
+		width: auto;
+	}
+}

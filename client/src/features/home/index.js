@@ -5,3 +5,4 @@ export {default as UiCard} from './UiCard';
 export {default as ButtonBox} from './ButtonBox';
 export {default as VoteCounter} from './VoteCounter';
 export {default as UiButton} from './UiButton';
+export { default as Search } from './Search';

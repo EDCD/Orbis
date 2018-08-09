@@ -35,7 +35,7 @@ export class DefaultPage extends Component {
 	render() {
 		return (
 			<Layout>
-				<div className="root">
+				<div className="login-root">
 					<div className="container">
 						<h1>{this.props.title}</h1>
 						<a href="/api/auth" className="button">

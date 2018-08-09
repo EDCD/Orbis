@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import cx from 'classnames';
 import {Link} from 'react-router-dom';
+import * as Svg from '../common/Svg';
 
 export default class Navigation extends Component {
 	constructor() {
@@ -35,28 +36,41 @@ export default class Navigation extends Component {
 	render() {
 		this.logout = this.logout.bind(this);
 		return (
-			<div>
+			<div className="navigation-container">
 				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
 					<div className={cx(['menu-header'])}>
-						<Link className={cx(['menu-item-label'])} to="/login">
+						<span>
+							<Link to="/login">
+								<Svg.Login className="xl warning"/>
+							</Link>
+							<Link className={cx(['menu-item-label'])} to="/login">
 							Log in
-						</Link>
+							</Link>
+						</span>
 					</div>
 				</div>
 				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>
 					<div className={cx(['menu-header'])}>
-						<Link className={cx(['menu-item-label'])} to="/register">
+						<span>
+							<Link to="/register">
+								<Svg.Logout className="xl secondary"/>
+							</Link>
+							<Link className={cx(['menu-item-label'])} to="/register">
 							Sign up
-						</Link>
+							</Link>
+						</span>
 					</div>
 				</div>
 				<div hidden={!this.state.loggedIn} className={cx('r', 'menu')}>
 					<div className={cx(['menu-header'])}>
-						<a href="/api/logout">
-							<div className={cx(['menu-item-label'])}>
-								Log out
-							</div>
-						</a>
+						<span>
+							<a href="/api/logout">
+								<Svg.Logout className="xl warning"/>
+							</a>
+							<a className={cx(['menu-item-label'])} href="/api/logout">
+							Log out
+							</a>
+						</span>
 					</div>
 				</div>
 				<div className={cx('r')}>
