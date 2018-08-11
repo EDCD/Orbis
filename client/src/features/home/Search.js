@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import Layout from '../common/Layout';
+import PropTypes from 'prop-types';
+
 import {DebounceInput} from 'react-debounce-input';
-import SocialCard from './ShipCard';
-import ReactLoading from 'react-loading';
-import ReactPaginate from 'react-paginate';
 
 export default class Search extends Component {
-	static propTypes = {};
+	static propTypes = {
+		loadBuilds: PropTypes.func.isRequired
+	};
 
 	constructor(props) {
 		super(props);
@@ -26,7 +26,7 @@ export default class Search extends Component {
 				value: e.target.value, key, sort
 			}
 		}, () => {
-			this.loadBuilds();
+			this.props.loadBuilds();
 		});
 	}
 
@@ -41,7 +41,7 @@ export default class Search extends Component {
 				}
 			}
 		}, () => {
-			this.loadBuilds();
+			this.props.loadBuilds();
 		});
 	}
 
@@ -56,7 +56,7 @@ export default class Search extends Component {
 				}
 			}
 		}, () => {
-			this.loadBuilds();
+			this.props.loadBuilds();
 		});
 	}
 

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import cx from 'classnames';
 import {Link} from 'react-router-dom';
 import * as Svg from '../common/Svg';
-import {setCookie, getCookie} from '../../common/utils';
+import {setCookie, getCookie, deleteCookie} from '../../common/utils';
 
 export default class Navigation extends Component {
 	constructor() {
@@ -26,7 +26,7 @@ export default class Navigation extends Component {
 			this.setState({loggedIn: true});
 			setCookie('accessToken', json.accessToken);
 		} else {
-			setCookie('accessToken', undefined);
+			deleteCookie('accessToken');
 			this.setState({loggedIn: false});
 		}
 	}
@@ -39,7 +39,6 @@ export default class Navigation extends Component {
 	}
 
 	render() {
-		this.logout = this.logout.bind(this);
 		return (
 			<div className="navigation-container">
 				<div hidden={this.state.loggedIn} className={cx('r', 'menu')}>

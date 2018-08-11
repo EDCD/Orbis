@@ -22,3 +22,7 @@ export const getCookie = cookieName => {
 	}
 	return '';
 };
+
+export function deleteCookie(name) {
+	document.cookie = `${name}=; Max-Age=-99999999;`;
+}
