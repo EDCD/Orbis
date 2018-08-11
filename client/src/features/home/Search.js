@@ -11,7 +11,7 @@ export default class Search extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			search: {key: '', value: '', sort: {field: 'createdAt', order: 'ASC'}}
+			search: {key: 'title', value: '', sort: {field: 'createdAt', order: 'ASC'}}
 		};
 		this.searchChangeHandler = this.searchChangeHandler.bind(this);
 		this.sortFieldChangeHandler = this.sortFieldChangeHandler.bind(this);
@@ -24,6 +24,18 @@ export default class Search extends Component {
 		this.setState({
 			search: {
 				value: e.target.value, key, sort
+			}
+		}, () => {
+			this.props.loadBuilds(this.state.search);
+		});
+	}
+
+	searchFieldChangeHandler(e) {
+		const sort = this.state.search.sort;
+		const value = this.state.search.value;
+		this.setState({
+			search: {
+				value, key: e.target.value, sort
 			}
 		}, () => {
 			this.props.loadBuilds(this.state.search);
@@ -62,6 +74,7 @@ export default class Search extends Component {
 
 	render() {
 		this.searchChangeHandler = this.searchChangeHandler.bind(this);
+		this.searchFieldChangeHandler = this.searchFieldChangeHandler.bind(this);
 		this.sortFieldChangeHandler = this.sortFieldChangeHandler.bind(this);
 		this.sortOrderChangeHandler = this.sortOrderChangeHandler.bind(this);
 		return (
@@ -69,8 +82,9 @@ export default class Search extends Component {
 				<div id="search-by">
 					<label>Search:</label>
 					<br/>
-					<select>
+					<select onChange={this.searchFieldChangeHandler}>
 						<option>title</option>
+						<option>description</option>
 					</select>
 				</div>
 				<div id="search-for">
