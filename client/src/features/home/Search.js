@@ -26,7 +26,7 @@ export default class Search extends Component {
 				value: e.target.value, key, sort
 			}
 		}, () => {
-			this.props.loadBuilds();
+			this.props.loadBuilds(this.state.search);
 		});
 	}
 
@@ -41,7 +41,7 @@ export default class Search extends Component {
 				}
 			}
 		}, () => {
-			this.props.loadBuilds();
+			this.props.loadBuilds(this.state.search);
 		});
 	}
 
@@ -56,7 +56,7 @@ export default class Search extends Component {
 				}
 			}
 		}, () => {
-			this.props.loadBuilds();
+			this.props.loadBuilds(this.state.search);
 		});
 	}
 

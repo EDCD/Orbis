@@ -24,7 +24,6 @@ export class Page extends React.Component {
 			loaded: false,
 			search: {key: '', value: '', sort: {field: 'createdAt', order: 'ASC'}}
 		};
-		this.loadBuilds = this.loadBuilds.bind(this);
 		this.handlePageClick = this.handlePageClick.bind(this);
 	}
 
@@ -63,8 +62,8 @@ export class Page extends React.Component {
 		});
 	}
 
-	loadBuilds() {
-		this.setState({loaded: false}, () => {
+	loadBuilds(search) {
+		this.setState({loaded: false, search}, () => {
 			this.props.actions.getBuilds({
 				pageSize: this.state.perPage,
 				offset: this.state.offset,
@@ -111,6 +110,7 @@ export class Page extends React.Component {
 	}
 
 	render() {
+		this.loadBuilds = this.loadBuilds.bind(this);
 		this.getCoriolisLink = this.getCoriolisLink.bind(this);
 		return (
 			<Layout>
