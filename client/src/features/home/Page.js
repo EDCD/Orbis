@@ -1,14 +1,13 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {DebounceInput} from 'react-debounce-input';
 import ReactLoading from 'react-loading';
 import ReactPaginate from 'react-paginate';
 import Layout from '../common/Layout';
 import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
 import Search from './Search';
-import {getCookie, setCookie} from '../../common/utils';
+import {deleteCookie, getCookie, setCookie} from '../../common/utils';
 
 export class Page extends React.Component {
 	constructor(props) {
@@ -37,7 +36,7 @@ export class Page extends React.Component {
 			this.setState({loggedIn: true});
 			setCookie('accessToken', json.accessToken);
 		} else {
-			setCookie('accessToken', undefined);
+			deleteCookie('accessToken');
 			this.setState({loggedIn: false});
 		}
 	}
