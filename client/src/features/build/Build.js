@@ -77,6 +77,7 @@ export class Build extends Component {
 								<h1>
                   Build: {this.state.build[0].title} by {this.state.build[0].author.username}
 								</h1>
+								<p>{this.state.build[0].description}</p>
 								{this.state.build[0] && this.state.build[0].allowedToEdit ? (
 									<Link to={`/build/${this.props.match.params.id}/edit`}>
                     Edit Build Info
