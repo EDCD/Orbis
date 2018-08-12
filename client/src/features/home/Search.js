@@ -99,7 +99,7 @@ export default class Search extends Component {
 					<select onChange={this.sortFieldChangeHandler}>
 						<option>createdAt</option>
 						<option>updatedAt</option>
-						<option>votes</option>
+						<option>likes</option>
 						<option>title</option>
 						<option>description</option>
 					</select>
