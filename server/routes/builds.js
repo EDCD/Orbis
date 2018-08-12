@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'proxiedImage', 'coriolisShip']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'likes', 'proxiedImage', 'coriolisShip']
 	};
 	if (search && search.key && search.value) {
 		query.where = {};
@@ -39,23 +39,6 @@ router.post('/', (req, res) => {
 	}
 	return Ship.findAndCountAll(query)
 		.then(async ships => {
-			const promises = [];
-			ships.rows.forEach(ship => {
-				promises.push(
-					ShipVote.sum('vote', {
-						where: {
-							shipId: ship.id
-						}
-					})
-				);
-			});
-			const data = await Promise.all(promises);
-			for (const i in data) {
-				if (isNaN(data[i])) {
-					data[i] = 0;
-				}
-				ships.rows[i].likes = data[i];
-			}
 			return res.json(ships);
 		})
 		.catch(err => {

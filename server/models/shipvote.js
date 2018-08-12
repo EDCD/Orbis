@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = (sequelize, DataType) => {
 	const ShipVote = sequelize.define(
 		'ShipVote',
@@ -33,8 +34,27 @@ module.exports = (sequelize, DataType) => {
 				{fields: ['shipId']},
 				{fields: ['userId']}
 			],
-	  freezeTableName: true
+			freezeTableName: true
 		}
 	);
+
+	function updateVotesColumn(instance) {
+		const {Ship} = require('.');
+		Ship.find({where: {id: instance.shipId}})
+			.then(async ship => {
+				if (!ship) {
+					return;
+				}
+				ship.likes = await ShipVote.sum('vote', {
+					where: {
+						shipId: ship.id
+					}
+				});
+				ship.save();
+			});
+	}
+
+	ShipVote.beforeUpsert(updateVotesColumn);
+
 	return ShipVote;
 };
