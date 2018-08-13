@@ -6,13 +6,7 @@ import {Provider} from 'react-redux';
 import {Switch, Route} from 'react-router-dom';
 import {ConnectedRouter} from 'react-router-redux';
 import history from './common/history';
-
-const PiwikReactRouter = require('piwik-react-router');
-
-const piwik = PiwikReactRouter({
-	url: 'matomo.willb.info',
-	siteId: 1
-});
+import Analytics from 'react-router-ga';
 
 function renderRouteConfigV3(routes, contextPath) {
 	// Resolve route config object in React Router v3.
@@ -58,7 +52,11 @@ export default class Root extends React.Component {
 		const children = renderRouteConfigV3(this.props.routeConfig, '/');
 		return (
 			<Provider store={this.props.store}>
-				<ConnectedRouter history={piwik.connectToHistory(history)}>{children}</ConnectedRouter>
+				<ConnectedRouter history={history}>
+					<Analytics id="UA-55840909-20" debug={false}>
+						{children}
+					</Analytics>
+				</ConnectedRouter>
 			</Provider>
 		);
 	}
