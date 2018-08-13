@@ -2,56 +2,64 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Provider } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
-import { ConnectedRouter } from 'react-router-redux';
+import {Provider} from 'react-redux';
+import {Switch, Route} from 'react-router-dom';
+import {ConnectedRouter} from 'react-router-redux';
 import history from './common/history';
 
+const PiwikReactRouter = require('piwik-react-router');
+
+const piwik = PiwikReactRouter({
+	url: 'matomo.willb.info',
+	siteId: 1
+});
+
 function renderRouteConfigV3(routes, contextPath) {
-  // Resolve route config object in React Router v3.
-  const children = []; // children component list
+	// Resolve route config object in React Router v3.
+	const children = []; // Children component list
 
-  const renderRoute = (item, routeContextPath) => {
-    let newContextPath;
-    if (/^\//.test(item.path)) {
-      newContextPath = item.path;
-    } else {
-      newContextPath = `${routeContextPath}/${item.path}`;
-    }
-    newContextPath = newContextPath.replace(/\/+/g, '/');
-    if (item.component && item.childRoutes) {
-      const childRoutes = renderRouteConfigV3(item.childRoutes, newContextPath);
-      children.push(
-        <Route
-          key={newContextPath}
-          render={props => <item.component {...props}>{childRoutes}</item.component>}
-          path={newContextPath}
-        />
-      );
-    } else if (item.component) {
-      children.push(<Route key={newContextPath} component={item.component} path={newContextPath} exact />);
-    } else if (item.childRoutes) {
-      item.childRoutes.forEach(r => renderRoute(r, newContextPath));
-    }
-  };
+	const renderRoute = (item, routeContextPath) => {
+		let newContextPath;
+		if (/^\//.test(item.path)) {
+			newContextPath = item.path;
+		} else {
+			newContextPath = `${routeContextPath}/${item.path}`;
+		}
+		newContextPath = newContextPath.replace(/\/+/g, '/');
+		if (item.component && item.childRoutes) {
+			const childRoutes = renderRouteConfigV3(item.childRoutes, newContextPath);
+			children.push(
+				<Route
+					key={newContextPath}
+					render={props => <item.component {...props}>{childRoutes}</item.component>}
+					path={newContextPath}
+				/>
+			);
+		} else if (item.component) {
+			children.push(<Route key={newContextPath} component={item.component} path={newContextPath} exact/>);
+		} else if (item.childRoutes) {
+			item.childRoutes.forEach(r => renderRoute(r, newContextPath));
+		}
+	};
 
-  routes.forEach(item => renderRoute(item, contextPath));
+	routes.forEach(item => renderRoute(item, contextPath));
 
-  // Use Switch so that only the first matched route is rendered.
-  return <Switch>{children}</Switch>;
+	// Use Switch so that only the first matched route is rendered.
+	return <Switch>{children}</Switch>;
 }
 
 export default class Root extends React.Component {
-  static propTypes = {
-    store: PropTypes.object.isRequired,
-    routeConfig: PropTypes.array.isRequired,
-  };
-  render() {
-    const children = renderRouteConfigV3(this.props.routeConfig, '/');
-    return (
-      <Provider store={this.props.store}>
-        <ConnectedRouter history={history}>{children}</ConnectedRouter>
-      </Provider>
-    );
-  }
+	static propTypes = {
+		store: PropTypes.object.isRequired,
+		routeConfig: PropTypes.array.isRequired
+	};
+
+	render() {
+		const children = renderRouteConfigV3(this.props.routeConfig, '/');
+		return (
+			<Provider store={this.props.store}>
+				<ConnectedRouter history={piwik.connectToHistory(history)}>{children}</ConnectedRouter>
+			</Provider>
+		);
+	}
 }
