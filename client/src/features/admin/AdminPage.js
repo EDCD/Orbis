@@ -21,37 +21,48 @@ export class AdminPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			admin: getCookie('admin') || false,
-			users: []
+			admin: JSON.parse(getCookie('admin')) || false,
+			users: [],
+			ships: []
 		};
 		this.checkAdmin = this.checkAdmin.bind(this);
 		this.getUsers = this.getUsers.bind(this);
-		this.setFormApi = this.setFormApi.bind(this);
+		this.setUserFormApi = this.setUserFormApi.bind(this);
+		this.setShipFormApi = this.setShipFormApi.bind(this);
 		this.updateUser = this.updateUser.bind(this);
+		this.updateShip = this.updateShip.bind(this);
+		this.renderShips = this.renderShips.bind(this);
 	}
 
 	componentDidMount() {
 		this.checkAdmin();
 		this.getUsers();
+		this.getShips();
 	}
 
 	async checkAdmin() {
 		const res = await fetch('/api/checkauth/admin', {
 			method: 'GET',
+			redirect: 'manual',
 			credentials: 'include'
 		});
-		const json = await res.json();
-		if (json && json.status === 'Login successful!') {
-			this.setState({admin: true});
-			setCookie('admin', true);
-		} else {
-			setCookie('admin', false);
+		try {
+			const json = await res.json();
+			if (json && json.status === 'Login successful!') {
+				this.setState({admin: true});
+				setCookie('admin', true);
+			} else {
+				this.setState({admin: false});
+				setCookie('admin', false);
+			}
+		} catch (e) {
 			this.setState({admin: false});
+			setCookie('admin', false);
 		}
 	}
 
 	async updateUser() {
-		const state = this.formApi.getState();
+		const state = this.userFormApi.getState();
 		const {values} = state;
 
 		const res = await fetch('/api/admin/user/update', {
@@ -80,8 +91,55 @@ export class AdminPage extends Component {
 		}
 	}
 
-	setFormApi(formApi) {
-		this.formApi = formApi;
+	async getShips() {
+		const res = await fetch('/api/admin/ships', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				order: 'ASC',
+				field: 'updatedAt',
+				search: {
+					key: 'title',
+					value: ''
+				}
+			}),
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json) {
+			this.setState({ships: json.rows});
+		}
+	}
+
+	async updateShip() {
+		const state = this.shipFormApi.getState();
+		const {values} = state;
+		console.log(values);
+		const res = await fetch('/api/admin/ship/update', {
+			method: 'POST',
+			body: JSON.stringify(values),
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json) {
+			console.log(json);
+		}
+		this.getShips();
+	}
+
+	setUserFormApi(formApi) {
+		this.userFormApi = formApi;
+	}
+
+	setShipFormApi(formApi) {
+		this.shipFormApi = formApi;
 	}
 
 	renderUsers() {
@@ -94,7 +152,7 @@ export class AdminPage extends Component {
 						onCloseClicked={() => this.setState({modalVisible: ''})} title={user.username}
 					>
 						<div>
-							<Form initialValues={user} getApi={this.setFormApi}>
+							<Form initialValues={user} getApi={this.setUserFormApi}>
 								<label>Username: </label><br/>
 								<Text field="username"/>
 								<br/>
@@ -130,6 +188,40 @@ export class AdminPage extends Component {
 		);
 	}
 
+	renderShips() {
+		return (
+			this.state.ships.map(ship => (
+				<div key={ship.id} className="admin-ship">
+					<p onClick={() => this.setState({modalVisible: ship.id})}>{ship.title}</p>
+					<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === ship.id}
+						hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
+						onCloseClicked={() => this.setState({modalVisible: ''})} title={ship.username}
+					>
+						<div>
+							<Form initialValues={ship} getApi={this.setShipFormApi}>
+								<label>Title: </label><br/>
+								<Text field="title"/>
+								<br/>
+								<label>Description: </label><br/>
+								<Text field="description"/>
+								<br/>
+								<br/>
+								<label>ID: </label><br/>
+								<Text readOnly field="id"/>
+								<br/>
+								<br/>
+								<label>Delete? </label>
+								<Checkbox field="delete"/>
+							</Form>
+							<button onClick={this.updateShip}>Update Ship</button>
+						</div>
+					</SkyLightStateless>
+				</div>
+			)
+			)
+		);
+	}
+
 	render() {
 		this.renderUsers = this.renderUsers.bind(this);
 		return (
@@ -137,9 +229,17 @@ export class AdminPage extends Component {
 				<div className="admin-admin-page">
 					{this.state.admin === true ? (
 						<div>
-							<h1>Users</h1>
-							<div className="admin-users">
-								{this.renderUsers()}
+							<div>
+								<h1>Users</h1>
+								<div className="admin-users">
+									{this.renderUsers()}
+								</div>
+							</div>
+							<div>
+								<h1>Ships</h1>
+								<div className="admin-ships">
+									{this.renderShips()}
+								</div>
 							</div>
 						</div>
 					) :
