@@ -1,7 +1,5 @@
 console.log('Hello from sw.js');
 
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js');
-
 if (workbox) {
 	console.log(`Yay! Workbox is loaded 🎉`);
 	workbox.routing.registerRoute(
@@ -38,8 +36,10 @@ if (workbox) {
 	);
 	workbox.routing.registerRoute(
 		/api/,
-		new workbox.strategies.NetworkOnly({})
+		new workbox.strategies.NetworkFirst({})
 	);
+	workbox.googleAnalytics.initialize();
+
 } else {
 	console.log(`Boo! Workbox didn't load 😬`);
 }

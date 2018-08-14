@@ -7,7 +7,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const {InjectManifest} = require('workbox-webpack-plugin');
+
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
@@ -279,7 +280,12 @@ module.exports = {
 		new ManifestPlugin({
 			fileName: 'asset-manifest.json'
 		}),
-		new WorkboxPlugin.GenerateSW({
+		new InjectManifest({
+			swSrc: './src/sw.js',
+			importWorkboxFrom: 'cdn',
+			swDest: 'service-worker.js'
+		}),
+		/*new WorkboxPlugin.GenerateSW({
 			// Exclude images from the precache
 			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
 			navigateFallback: PUBLIC_URL + 'index.html',
@@ -307,12 +313,12 @@ module.exports = {
 				// Match any same-origin request that contains 'api'.
 				urlPattern: /api/,
 				// Apply a network-first strategy.
-				handler: 'networkOnly'
+				handler: 'networkFirst'
 			}, {
 				// Match any same-origin request that contains 'imgproxy'.
 				urlPattern: /imgproxy/,
 				// Apply a network-first strategy.
-				handler: 'networkFirst',
+				handler: 'cacheFirst',
 				options: {
 					// Fall back to the cache after 10 seconds.
 					networkTimeoutSeconds: 10,
@@ -335,7 +341,7 @@ module.exports = {
 					plugins: []
 				}
 			}]
-		}),
+		}),*/
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
 		// solution that requires the user to opt into importing specific locales.
