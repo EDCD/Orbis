@@ -61,12 +61,14 @@ const users = require('./routes/users');
 const builds = require('./routes/builds');
 const votes = require('./routes/votes');
 const webhooks = require('./routes/webhooks');
+const admin = require('./routes/admin');
 
 app.use('/api', index);
 app.use('/api/builds', builds);
 app.use('/api/users', users);
 app.use('/api/likes', votes);
 app.use('/api/webhook', webhooks);
+app.use('/api/admin', admin);
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
