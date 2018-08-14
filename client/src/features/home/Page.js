@@ -9,19 +9,27 @@ import SocialCard from './ShipCard';
 import Search from './Search';
 import {deleteCookie, getCookie, setCookie} from '../../common/utils';
 
+let params;
+
 export class Page extends React.Component {
 	constructor(props) {
 		super(props);
+		const search = props.location.search; // Could be '?foo=bar'
+		params = new URLSearchParams(search);
 		this.state = {
 			loggedIn: Boolean(getCookie('accessToken')),
 			builds: [],
 			data: [],
 			loading: false,
-			offset: 0,
+			offset: params.get('page') * 10 || 0,
 			perPage: 10,
 			pageLoaded: false,
 			loaded: false,
-			search: {key: '', value: '', sort: {field: 'createdAt', order: 'ASC'}}
+			search: {
+				key: params.get('key') || '',
+				value: params.get('val') || '',
+				sort: {field: params.get('field') || 'createdAt', order: params.get('order') || 'ASC'}
+			}
 		};
 		this.handlePageClick = this.handlePageClick.bind(this);
 	}
@@ -75,6 +83,8 @@ export class Page extends React.Component {
 						data: data.rows,
 						pageCount: Math.ceil(data.count / this.state.perPage),
 						loaded: true
+					}, () => {
+						this.props.history.push(`/?page=${Math.ceil(this.state.offset / this.state.perPage)}&key=${this.state.search.key}&val=${this.state.search.value}&field=${this.state.search.sort.field}&order=${this.state.search.sort.order}`, this.state);
 					});
 				});
 		});
@@ -86,6 +96,7 @@ export class Page extends React.Component {
 			const offset = Math.ceil(selected * this.state.perPage);
 			this.setState({offset}, () => {
 				this.loadBuilds(this.state.search);
+				this.props.history.push(`/?page=${data.selected}&key=${this.state.search.key}&val=${this.state.search.value}&field=${this.state.search.sort.field}&order=${this.state.search.sort.order}`, this.state);
 			});
 		});
 	}
@@ -114,7 +125,7 @@ export class Page extends React.Component {
 		return (
 			<Layout>
 				<h1>Latest builds</h1>
-				<Search loadBuilds={this.loadBuilds}/>
+				<Search state={this.state.search} loadBuilds={this.loadBuilds}/>
 				<div className="builds-container">
 					{this.state.data.length > 0 || this.state.loaded || this.state.loading ? this.state.data.map((e, index) => {
 						e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
@@ -141,6 +152,7 @@ export class Page extends React.Component {
 					pageCount={this.state.pageCount}
 					marginPagesDisplayed={2}
 					pageRangeDisplayed={5}
+					initialPage={parseInt(params.get('page')) || 0}
 					onPageChange={this.handlePageClick}
 					containerClassName="pagination"
 					subContainerClassName="pages pagination"

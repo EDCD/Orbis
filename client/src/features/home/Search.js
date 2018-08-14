@@ -5,13 +5,14 @@ import {DebounceInput} from 'react-debounce-input';
 
 export default class Search extends Component {
 	static propTypes = {
-		loadBuilds: PropTypes.func.isRequired
+		loadBuilds: PropTypes.func.isRequired,
+		state: PropTypes.any.isRequired
 	};
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			search: {key: 'title', value: '', sort: {field: 'createdAt', order: 'ASC'}}
+			search: props.state || {key: 'title', value: '', sort: {field: 'createdAt', order: 'ASC'}}
 		};
 		this.searchChangeHandler = this.searchChangeHandler.bind(this);
 		this.sortFieldChangeHandler = this.sortFieldChangeHandler.bind(this);
@@ -82,7 +83,7 @@ export default class Search extends Component {
 				<div id="search-by">
 					<label>Search:</label>
 					<br/>
-					<select onChange={this.searchFieldChangeHandler}>
+					<select defaultValue={this.state.search.key} onChange={this.searchFieldChangeHandler}>
 						<option>title</option>
 						<option>description</option>
 					</select>
@@ -91,12 +92,13 @@ export default class Search extends Component {
 					<label>Search for:</label>
 					<DebounceInput
 						minLength={2}
+						value={this.state.search.value}
 						debounceTimeout={300}
 						onChange={this.searchChangeHandler}/>
 				</div>
 				<div id="sort-field">
 					<label>Sort by: </label>
-					<select onChange={this.sortFieldChangeHandler}>
+					<select defaultValue={this.state.search.sort.field} onChange={this.sortFieldChangeHandler}>
 						<option>createdAt</option>
 						<option>updatedAt</option>
 						<option>likes</option>
@@ -106,7 +108,7 @@ export default class Search extends Component {
 				</div>
 				<div id="sort-order">
 					<label>Sort order:</label>
-					<select onChange={this.sortOrderChangeHandler}>
+					<select defaultValue={this.state.search.sort.order} onChange={this.sortOrderChangeHandler}>
 						<option>ASC</option>
 						<option>DESC</option>
 					</select>
