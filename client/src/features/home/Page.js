@@ -85,7 +85,7 @@ export class Page extends React.Component {
 			const selected = data.selected;
 			const offset = Math.ceil(selected * this.state.perPage);
 			this.setState({offset}, () => {
-				this.loadBuilds();
+				this.loadBuilds(this.state.search);
 			});
 		});
 	}
