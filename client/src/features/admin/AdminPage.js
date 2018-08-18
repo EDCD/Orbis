@@ -20,8 +20,16 @@ export class AdminPage extends Component {
 
 	constructor(props) {
 		super(props);
+		let admin = false;
+		try {
+			admin = JSON.parse(getCookie('admin'));
+		} catch (err) {
+			if (err.message !== 'Unexpected end of JSON input') {
+				console.error(err);
+			}
+		}
 		this.state = {
-			admin: JSON.parse(getCookie('admin')) || false,
+			admin: admin || false,
 			users: [],
 			ships: []
 		};
