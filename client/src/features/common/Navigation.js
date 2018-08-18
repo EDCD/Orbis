@@ -25,8 +25,9 @@ export default class Navigation extends Component {
 		if (json && json.status === 'Login successful!') {
 			this.setState({loggedIn: true});
 			setCookie('accessToken', json.accessToken);
+			setCookie('admin', json.admin);
 		} else {
-			deleteCookie('accessToken');
+			setCookie('admin', json.admin);
 			this.setState({loggedIn: false});
 		}
 	}

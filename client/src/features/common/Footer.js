@@ -1,8 +1,23 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {getCookie} from '../../common/utils';
 
 export default class Footer extends React.Component {
+
+	checkAdmin() {
+		let admin = false;
+		try {
+			admin = JSON.parse(getCookie('admin'));
+		} catch (err) {
+			if (err.message !== 'Unexpected end of JSON input') {
+				console.error(err);
+			}
+		}
+		return admin;
+	}
+
 	render() {
+		this.checkAdmin = this.checkAdmin.bind(this);
 		return (
 			<div className="footer-root">
 				<div className="container">
@@ -31,6 +46,14 @@ export default class Footer extends React.Component {
 					<a className="link" href="https://fontawesome.com/license">
 						Other icons by FontAwesome
 					</a>
+					{this.checkAdmin() ? (
+						<div>
+							<span className="spacer">·</span>
+							<Link className="link" to="/admin">
+								Admin
+							</Link>
+						</div>
+					) : undefined}
 				</div>
 			</div>
 		);

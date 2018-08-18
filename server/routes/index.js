@@ -30,11 +30,11 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/checkauth', isAuthenticated, (req, res) => {
-	return res.status(200).json({status: 'Login successful!', accessToken: req.kauth.grant.access_token.token});
+	return res.status(200).json({status: 'Login successful!', accessToken: req.kauth.grant.access_token.token, admin: req.user.admin});
 });
 
 router.get('/checkauth/admin', keycloak.protect('Admin'), (req, res) => {
-	return res.status(200).json({status: 'Login successful!', accessToken: req.kauth.grant.access_token.token});
+	return res.status(200).json({status: 'Login successful!', accessToken: req.kauth.grant.access_token.token, admin: req.user.admin});
 });
 
 module.exports = router;
