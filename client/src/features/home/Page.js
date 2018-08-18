@@ -28,7 +28,7 @@ export class Page extends React.Component {
 			search: {
 				key: params.get('key') || '',
 				value: params.get('val') || '',
-				sort: {field: params.get('field') || 'createdAt', order: params.get('order') || 'ASC'}
+				sort: {field: params.get('field') || 'createdAt', order: params.get('order') || 'DESC'}
 			}
 		};
 		this.handlePageClick = this.handlePageClick.bind(this);
