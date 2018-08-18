@@ -127,7 +127,7 @@ export class Page extends React.Component {
 				<h1>Latest builds</h1>
 				<Search state={this.state.search} loadBuilds={this.loadBuilds}/>
 				<div className="builds-container">
-					{this.state.data.length > 0 || this.state.loaded || this.state.loading ? this.state.data.map((e, index) => {
+					{this.state.data.length > 0 || this.state.loaded || !this.state.loading ? this.state.data.map((e, index) => {
 						e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
 						e.content = e.description;
 						return (
