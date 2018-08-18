@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router-dom';
-import {Form, Text, Checkbox, Select, Option} from 'informed';
+import {Form, Text, Checkbox, Select, Option, asField} from 'informed';
 import {connect} from 'react-redux';
 import * as actions from './redux/actions';
 import {getCookie, setCookie} from '../../common/utils';
@@ -14,6 +15,37 @@ const modalStyles = {
 	color: '#ffffff',
 	height: '60vh'
 };
+
+const DatePicker = asField(({fieldState, fieldApi, ...props}) => {
+	const {value} = fieldState;
+	const {setValue, setTouched} = fieldApi;
+	const {onChange, onBlur, forwardedRef, ...rest} = props;
+	return (
+		<React.Fragment>
+			<DayPickerInput
+				{...rest}
+				ref={forwardedRef}
+				value={!value && value !== 0 ? '' : value}
+				onDayChange={e => {
+					setValue(e);
+					if (onChange) {
+						onChange(e);
+					}
+				}}
+				onBlur={e => {
+					setTouched();
+					if (onBlur) {
+						onBlur(e);
+					}
+				}}
+				style={fieldState.error ? {border: 'solid 1px red'} : null}
+			/>
+			{fieldState.error ? (
+				<small style={{color: 'red'}}>{fieldState.error}</small>
+			) : null}
+		</React.Fragment>
+	);
+});
 
 export class AdminPage extends Component {
 	static propTypes = {};
@@ -31,21 +63,27 @@ export class AdminPage extends Component {
 		this.state = {
 			admin: admin || false,
 			users: [],
-			ships: []
+			ships: [],
+			announcements: []
 		};
 		this.checkAdmin = this.checkAdmin.bind(this);
 		this.getUsers = this.getUsers.bind(this);
 		this.setUserFormApi = this.setUserFormApi.bind(this);
 		this.setShipFormApi = this.setShipFormApi.bind(this);
 		this.updateUser = this.updateUser.bind(this);
+		this.addAnnouncement = this.addAnnouncement.bind(this);
 		this.updateShip = this.updateShip.bind(this);
+		this.updateAnnouncement = this.updateAnnouncement.bind(this);
 		this.renderShips = this.renderShips.bind(this);
+		this.renderAddAnnouncement = this.renderAddAnnouncement.bind(this);
+		this.setAnnounceFormApi = this.setAnnounceFormApi.bind(this);
 	}
 
 	componentDidMount() {
 		this.checkAdmin();
 		this.getUsers();
 		this.getShips();
+		this.getAnnouncements();
 	}
 
 	async checkAdmin() {
@@ -122,6 +160,37 @@ export class AdminPage extends Component {
 		}
 	}
 
+	async addAnnouncement() {
+		const state = this.announceFormApi.getState();
+		const {values} = state;
+		console.log(values);
+
+		const res = await fetch('/api/admin/announcement/add', {
+			method: 'POST',
+			body: JSON.stringify(values),
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json) {
+			console.log(json);
+		}
+	}
+
+	async getAnnouncements() {
+		const res = await fetch('/api/admin/announcements', {
+			method: 'GET',
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json) {
+			this.setState({announcements: json});
+		}
+	}
+
 	async updateShip() {
 		const state = this.shipFormApi.getState();
 		const {values} = state;
@@ -142,12 +211,78 @@ export class AdminPage extends Component {
 		this.getShips();
 	}
 
+	async updateAnnouncement() {
+		const state = this.announceFormApi.getState();
+		const {values} = state;
+		console.log(values);
+		const res = await fetch('/api/admin/announcement/delete', {
+			method: 'POST',
+			body: JSON.stringify(values),
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		});
+		const json = await res.json();
+		if (json) {
+			console.log(json);
+		}
+		this.getShips();
+	}
+
 	setUserFormApi(formApi) {
 		this.userFormApi = formApi;
 	}
 
+	setAnnounceFormApi(formApi) {
+		this.announceFormApi = formApi;
+	}
+
 	setShipFormApi(formApi) {
 		this.shipFormApi = formApi;
+	}
+
+	renderAddAnnouncement() {
+		return (
+			<div>
+				<Form getApi={this.setAnnounceFormApi}>
+					<label>Announcement text: </label><br/>
+					<Text field="message"/>
+					<br/>
+					<label>Announcement expiry: </label><br/>
+					<DatePicker
+						field="expiresAt"
+					/>
+					<button onClick={this.addAnnouncement}>Add announcement</button>
+				</Form>
+			</div>
+		);
+	}
+
+	renderAnnouncements() {
+		return this.state.announcements.map(announcement => (
+			<div key={announcement.id} className="admin-announcement">
+				<p onClick={() => this.setState({modalVisible: announcement.id})}>{announcement.message}</p>
+				<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === announcement.id}
+					hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
+					onCloseClicked={() => this.setState({modalVisible: ''})} title={announcement.message}
+				>
+					<div>
+						<Form initialValues={announcement} getApi={this.setAnnounceFormApi}>
+							<label>ID: </label><br/>
+							<Text readOnly field="id"/>
+							<br/>
+							<label>Message: </label><br/>
+							<Text readOnly field="message"/>
+						</Form>
+						<button onClick={this.updateAnnouncement}>Delete Announcement</button>
+					</div>
+				</SkyLightStateless>
+			</div>
+
+		)
+		);
 	}
 
 	renderUsers() {
@@ -232,12 +367,22 @@ export class AdminPage extends Component {
 
 	render() {
 		this.renderUsers = this.renderUsers.bind(this);
+		this.renderAnnouncements = this.renderAnnouncements.bind(this);
 		return (
 			<Layout>
 				<div className="admin-admin-page">
 					{this.state.admin === true ? (
 						<div>
 							<div>
+								<div>
+									<h1>Announcements</h1>
+									<div className="admin-announcements">
+										{this.renderAddAnnouncement()}
+									</div>
+									<div className="admin-announcements">
+										{this.renderAnnouncements()}
+									</div>
+								</div>
 								<h1>Users</h1>
 								<div className="admin-users">
 									{this.renderUsers()}

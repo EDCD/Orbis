@@ -2,7 +2,9 @@ const express = require('express');
 const models = require('../models');
 const {keycloak} = require('../keycloak');
 
-const {Ship, ShipVote, User} = models;
+const {Ship, ShipVote, User, Announcement} = models;
+
+console.log(Object.keys(models));
 
 const router = express.Router();
 
@@ -106,6 +108,39 @@ router.post('/ship/update', keycloak.protect('Admin'), (req, res) => {
 			}
 		});
 	return res.status(200).json({});
+});
+
+router.get('/announcements', keycloak.protect('Admin'), (req, res) => {
+	return Announcement.findAll()
+		.then(data => res.json(data))
+		.catch(err => {
+			console.error(err);
+			return res.json({});
+		});
+});
+
+router.post('/announcement/add', keycloak.protect('Admin'), async (req, res) => {
+	if (!req.body) {
+		return res.status(400).json({});
+	}
+	const announcement = await Announcement.create(req.body);
+	return res.status(200).json({created: true, announcement});
+});
+
+router.post('/announcement/delete', keycloak.protect('Admin'), async (req, res) => {
+	const body = req.body;
+	if (!req.body || !body.id) {
+		return res.status(400).json({});
+	}
+	const announcement = await Announcement.find({
+		where: {
+			id: req.body.id
+		}
+	});
+	if (announcement) {
+		await announcement.destroy();
+	}
+	return res.status(200).json({deleted: true});
 });
 
 module.exports = router;
