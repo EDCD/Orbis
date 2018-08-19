@@ -6,13 +6,16 @@
 }
 
 .announce {
-	position: relative;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 3em;
-	line-height: 3em;
-	text-align: center;
 	background-color: @bg;
 	color: @warning;
+}
+
+.announce-container {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-evenly;
+	& > * {
+		border: 1px @primary dotted;
+		padding: 10px;
+	}
 }

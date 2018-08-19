@@ -77,6 +77,7 @@ export class AdminPage extends Component {
 		this.renderShips = this.renderShips.bind(this);
 		this.renderAddAnnouncement = this.renderAddAnnouncement.bind(this);
 		this.setAnnounceFormApi = this.setAnnounceFormApi.bind(this);
+		this.setNewAnnounceFormApi = this.setNewAnnounceFormApi.bind(this);
 	}
 
 	componentDidMount() {
@@ -161,7 +162,7 @@ export class AdminPage extends Component {
 	}
 
 	async addAnnouncement() {
-		const state = this.announceFormApi.getState();
+		const state = this.newAnnounceFormApi.getState();
 		const {values} = state;
 		console.log(values);
 
@@ -228,7 +229,7 @@ export class AdminPage extends Component {
 		if (json) {
 			console.log(json);
 		}
-		this.getShips();
+		this.getAnnouncements();
 	}
 
 	setUserFormApi(formApi) {
@@ -239,6 +240,10 @@ export class AdminPage extends Component {
 		this.announceFormApi = formApi;
 	}
 
+	setNewAnnounceFormApi(formApi) {
+		this.newAnnounceFormApi = formApi;
+	}
+
 	setShipFormApi(formApi) {
 		this.shipFormApi = formApi;
 	}
@@ -246,7 +251,7 @@ export class AdminPage extends Component {
 	renderAddAnnouncement() {
 		return (
 			<div>
-				<Form getApi={this.setAnnounceFormApi}>
+				<Form getApi={this.setNewAnnounceFormApi}>
 					<label>Announcement text: </label><br/>
 					<Text field="message"/>
 					<br/>

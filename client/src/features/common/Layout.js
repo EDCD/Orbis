@@ -33,9 +33,16 @@ export default class Layout extends Component {
 	}
 
 	renderAnnouncements() {
+		if (this.state.announcements.length === 0) {
+			return (
+				<div className="announce">
+					<p>No announcements</p>
+				</div>
+			);
+		}
 		return this.state.announcements.map(announce => (
-			<div className="announce">
-				<span>{announce.message}</span>
+			<div key={announce.id} className="announce">
+				<p>{announce.message}</p>
 			</div>
 		));
 	}
@@ -44,7 +51,11 @@ export default class Layout extends Component {
 		return (
 			<div className="layout-container">
 				<Header/>
-				{this.renderAnnouncements()}
+				<h1>Announcements</h1>
+				<div className="announce-container">
+					{this.renderAnnouncements()}
+				</div>
+				<hr/>
 				{this.props.children}
 				<Footer/>
 			</div>
