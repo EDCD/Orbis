@@ -1,4 +1,33 @@
 @import '../../styles/mixins';
 
-.container {
+.build-container {
+}
+
+.build {
+}
+
+.build-image {
+	width: 250px;
+}
+
+.build-header {
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: center;
+	align-items: center;
+
+	& > * {
+		padding: 10px;
+	}
+}
+
+.module-container {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	border: 1px @primary solid;
+	& > * {
+		border: 1px @primary dotted;
+		padding: 20px;
+	}
 }

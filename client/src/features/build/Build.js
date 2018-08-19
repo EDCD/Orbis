@@ -59,7 +59,6 @@ export class Build extends Component {
 		this.checkLogged();
 		this.props.actions.getBuild({id: this.props.match.params.id})
 			.then(data => {
-				console.log(data)
 				return this.setState({build: [data]}, () => {
 					this.setState({coriolisLink: this.state.build[0].coriolisShip.url || this.getCoriolisLink()});
 				});
@@ -71,66 +70,76 @@ export class Build extends Component {
 		return (
 			<Layout>
 				<div>
-					<div className="container">
-						{this.state.build[0] ? (
-							<div>
+					{this.state.build[0] ? (
+						<div className="build-container">
+							<div className="build-header">
 								<h1>
-                  Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+									Build: {this.state.build[0].title} by {this.state.build[0].author.username}
 								</h1>
 								<p>{this.state.build[0].description}</p>
-								{this.state.build[0] && this.state.build[0].allowedToEdit ? (
-									<Link to={`/build/${this.props.match.params.id}/edit`}>
-                    Edit Build Info
-									</Link>
-								) : ''}
-
-								<br/>
-								<a target="_blank" rel="noopener noreferrer" href={this.state.coriolisLink}>
-                  Edit Build on Coriolis
-								</a>
-								{this.state.build && this.state.build.length > 0 ? this.state.build.map(item => (
-									<article key={item.id} className="build">
-										<IdealImage placeholder={{lqip: item.proxiedImage.replace('{OPTIONS}', '20x')}} shouldAutoDownload={() => true}
-											height={250} width={400} srcSet={[
-												{width: 200, src: item.proxiedImage.replace('{OPTIONS}', '200x125')},
-												{width: 400, src: item.proxiedImage.replace('{OPTIONS}', '400x250')}
-											]}/>
-										<div>
-											<div>
-												<p>Armour: {Math.round(item.coriolisShip.armour)}</p>
-												<p>Shield: {Math.round(item.coriolisShip.shield)}</p>
-												<p>Top Speed: {Math.round(item.coriolisShip.topBoost)}</p>
-												<p>
-                          Hull Thermal Res:{' '}
-													{Math.round(item.coriolisShip.hullThermRes * 100)}%
-												</p>
-												<p>
-                          Hull Explosive Res:{' '}
-													{Math.round(item.coriolisShip.hullExplRes * 100)}%
-												</p>
-												<p>
-                          Hull Kinetic Res:{' '}
-													{Math.round(item.coriolisShip.shieldKinRes * 100)}%
-												</p>
-												<p>
-                          Shield Thermal Res:{' '}
-													{Math.round(item.coriolisShip.shieldThermRes * 100)}%
-												</p>
-												<p>
-                          Shield Explosive Res:{' '}
-													{Math.round(item.coriolisShip.shieldExplRes * 100)}%
-												</p>
-												<p>
-                          Shield Kinetic Res:{' '}
-													{Math.round(item.coriolisShip.shieldKinRes * 100)}%
-												</p>
-											</div>
-										</div>
-									</article>
-								)) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
+								<IdealImage className="build-image"
+									placeholder={{lqip: this.state.build[0].proxiedImage.replace('{OPTIONS}', '20x')}}
+									shouldAutoDownload={() => true}
+									height={250} width={400} srcSet={[
+										{width: 200, src: this.state.build[0].proxiedImage.replace('{OPTIONS}', '200x125')},
+										{width: 400, src: this.state.build[0].proxiedImage.replace('{OPTIONS}', '400x250')}
+									]}/>
 							</div>
-						) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
-					</div>
+							{this.state.build[0] && this.state.build[0].allowedToEdit ? (
+								<Link to={`/build/${this.props.match.params.id}/edit`}>
+									Edit Build Info
+								</Link>
+							) : ''}
+
+							<br/>
+							<a target="_blank" rel="noopener noreferrer" href={this.state.coriolisLink}>
+								Edit Build on Coriolis
+							</a>
+							{this.state.build && this.state.build.length > 0 ? this.state.build.map(item => (
+								<article key={item.id} className="build">
+									<div>
+										<p>Armour: {Math.round(item.coriolisShip.armour)}</p>
+										<p>Shield: {Math.round(item.coriolisShip.shield)}</p>
+										<p>Top Speed: {Math.round(item.coriolisShip.topBoost)}</p>
+										<p>
+											Hull Thermal Res:{' '}
+											{Math.round(item.coriolisShip.hullThermRes * 100)}%
+										</p>
+										<p>
+											Hull Explosive Res:{' '}
+											{Math.round(item.coriolisShip.hullExplRes * 100)}%
+										</p>
+										<p>
+											Hull Kinetic Res:{' '}
+											{Math.round(item.coriolisShip.shieldKinRes * 100)}%
+										</p>
+										<p>
+											Shield Thermal Res:{' '}
+											{Math.round(item.coriolisShip.shieldThermRes * 100)}%
+										</p>
+										<p>
+											Shield Explosive Res:{' '}
+											{Math.round(item.coriolisShip.shieldExplRes * 100)}%
+										</p>
+										<p>
+											Shield Kinetic Res:{' '}
+											{Math.round(item.coriolisShip.shieldKinRes * 100)}%
+										</p>
+									</div>
+									{item.coriolisShip.costList.map(module => (
+										<div className="module-container">
+											<p>Module: {module.m.id}</p>
+											<p>Enabled: {module.m.enabled === 1 ? 'yes' : 'no'}</p>
+											<p>Power usage: {module.m.power}</p>
+											{Object.keys(module).map(e =>
+												typeof module[e] !== 'object' ? <p>{e}: {module[e]}</p> : undefined
+											)}
+										</div>
+									))}
+								</article>
+							)) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
+						</div>
+					) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
 				</div>
 			</Layout>
 		);
