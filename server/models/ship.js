@@ -36,6 +36,9 @@ module.exports = (sequelize, DataType) => {
 			Ship: {
 				type: DataType.STRING
 			},
+			url: {
+				type: DataType.STRING
+			},
 			description: {
 				type: DataType.STRING
 			},

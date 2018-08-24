@@ -6,6 +6,43 @@ import Layout from '../common/Layout';
 import * as actions from './redux/actions';
 import ReactLoading from 'react-loading';
 import IdealImage from 'react-ideal-image';
+import {Modules} from 'coriolis-data/dist/index';
+
+console.log(Modules);
+
+/**
+ * Finds the module with the specific group and ID
+ * @param  {String} grp           Module group (pp - power plant, pl - pulse laser etc)
+ * @param  {String} id            The module ID
+ * @return {Object}               The module or null
+ */
+export function findModule(grp, id) {
+	// See if it's a standard module
+	if (Modules.standard[grp]) {
+		let standardmod = Modules.standard[grp].find(e => e.id === id);
+		if (standardmod !== null) {
+			return standardmod;
+		}
+	}
+
+	// See if it's an internal module
+	if (Modules.internal[grp]) {
+		let internalmod = Modules.internal[grp].find(e => e.id === id);
+		if (internalmod !== null) {
+			return internalmod;
+		}
+	}
+
+	// See if it's a hardpoint module
+	if (Modules.hardpoints[grp]) {
+		let hardpointmod = Modules.hardpoints[grp].find(e => e.id === id);
+		if (hardpointmod !== null) {
+			return hardpointmod;
+		}
+	}
+
+	return null;
+}
 
 export class Build extends Component {
 	constructor(props) {
@@ -60,7 +97,7 @@ export class Build extends Component {
 		this.props.actions.getBuild({id: this.props.match.params.id})
 			.then(data => {
 				return this.setState({build: [data]}, () => {
-					this.setState({coriolisLink: this.state.build[0].coriolisShip.url || this.getCoriolisLink()});
+					this.setState({coriolisLink: this.state.build[0].url || this.getCoriolisLink()});
 				});
 			});
 	}
@@ -126,16 +163,26 @@ export class Build extends Component {
 											{Math.round(item.coriolisShip.shieldKinRes * 100)}%
 										</p>
 									</div>
-									{item.coriolisShip.costList.map(module => (
-										<div className="module-container">
-											<p>Module: {module.m.id}</p>
-											<p>Enabled: {module.m.enabled === 1 ? 'yes' : 'no'}</p>
-											<p>Power usage: {module.m.power}</p>
-											{Object.keys(module).map(e =>
-												typeof module[e] !== 'object' ? <p>{e}: {module[e]}</p> : undefined
-											)}
-										</div>
-									))}
+									{item.coriolisShip.costList.map(module => {
+										if (!module || !module.m || module.type === 'SHIP') {
+											return null;
+										}
+										let mod = Object.assign({}, findModule(module.m.grp, module.m.id), module);
+										console.log(mod)
+										return (
+											module && module.m ?
+												<div className="module-container">
+													<p>Module: {mod.symbol}</p>
+													<p>Enabled: {mod.enabled === 1 ? 'yes' : 'no'}</p>
+													<p>Power usage: {mod.power}</p>
+													{Object.keys(mod).map(e =>
+														typeof module[e] !== 'object' ? <p>{e}: {module[e]}</p> : undefined
+													)}
+												</div> :
+												null
+										);
+									}
+									)}
 								</article>
 							)) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
 						</div>

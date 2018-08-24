@@ -35,7 +35,7 @@
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
     "sequelize": "^4.38.0",
-    "sequelize-cli": "^4.0.0",
+    "sequelize-cli": "^4.1.1",
     "serve-favicon": "~2.5.0",
     "shortid": "^2.2.12",
     "sqlite3": "^4.0.2",

@@ -103,19 +103,19 @@ export class Page extends React.Component {
 
 	getCoriolisLink(index) {
 		return [
-			'https://beta.coriolis.io/outfit/',
-			this.state.data[index].coriolisShip.id,
-			'?code=',
-			'A',
-			this.state.data[index].coriolisShip.serialized.standard,
-			this.state.data[index].coriolisShip.serialized.hardpoints,
-			this.state.data[index].coriolisShip.serialized.internal,
-			'.',
-			this.state.data[index].coriolisShip.serialized.enabled,
-			'.',
-			this.state.data[index].coriolisShip.serialized.priorities,
-			'.',
-			this.state.data[index].coriolisShip.serialized.modifications
+			// 'https://beta.coriolis.io/outfit/',
+			// this.state.data[index].coriolisShip.id,
+			// '?code=',
+			// 'A',
+			// this.state.data[index].coriolisShip.serialized.standard,
+			// this.state.data[index].coriolisShip.serialized.hardpoints,
+			// this.state.data[index].coriolisShip.serialized.internal,
+			// '.',
+			// this.state.data[index].coriolisShip.serialized.enabled,
+			// '.',
+			// this.state.data[index].coriolisShip.serialized.priorities,
+			// '.',
+			// this.state.data[index].coriolisShip.serialized.modifications
 		].join('');
 	}
 
@@ -128,7 +128,7 @@ export class Page extends React.Component {
 				<Search state={this.state.search} loadBuilds={this.loadBuilds}/>
 				<div className="builds-container">
 					{this.state.data.length > 0 || this.state.loaded || !this.state.loading ? this.state.data.map((e, index) => {
-						e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.coriolisShip.id}.jpg`;
+						e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.Ship}.jpg`;
 						e.content = e.description;
 						return (
 							<div key={e.id} className="build-item">
@@ -137,7 +137,7 @@ export class Page extends React.Component {
 									content={e}
 									loggedIn={this.state.loggedIn}
 									likes={e.likes}
-									coriolisLink={e.coriolisShip.url || this.getCoriolisLink(index)}
+									coriolisLink={e.url || this.getCoriolisLink(index)}
 									likeIsClicked={false}
 									repostIsClicked={false}
 								/>

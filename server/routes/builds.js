@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'likes', 'proxiedImage', 'coriolisShip']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'Ship', 'likes', 'proxiedImage']
 	};
 	if (search && search.key && search.value) {
 		query.where = {};
@@ -52,7 +52,7 @@ const allowedUpdates = ['imageURL', 'description', 'title'];
 router.get('/:id', (req, res) =>
 	Ship.find({
 		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'proxiedImage', 'coriolisShip']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage', 'coriolisShip']
 	})
 		.then(ships => {
 			if (!ships) {
