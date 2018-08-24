@@ -8,8 +8,6 @@ import ReactLoading from 'react-loading';
 import IdealImage from 'react-ideal-image';
 import {Modules} from 'coriolis-data/dist/index';
 
-console.log(Modules);
-
 /**
  * Finds the module with the specific group and ID
  * @param  {String} grp           Module group (pp - power plant, pl - pulse laser etc)

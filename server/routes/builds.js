@@ -23,8 +23,6 @@ const {Op} = require('sequelize');
 
 router.post('/', (req, res) => {
 	let {order, field, search} = req.body;
-	console.log(field);
-	console.log(order);
 	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
