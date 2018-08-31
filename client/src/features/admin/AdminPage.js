@@ -3,12 +3,13 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router-dom';
-import {Form, Text, Checkbox, Select, Option, asField} from 'informed';
+import {asField, Checkbox, Form, Option, Select, Text} from 'informed';
 import {connect} from 'react-redux';
 import * as actions from './redux/actions';
 import {getCookie, setCookie} from '../../common/utils';
 import Layout from '../common/Layout';
 import {SkyLightStateless} from 'react-skylight';
+import ReactPaginate from 'react-paginate';
 
 const modalStyles = {
 	backgroundColor: '#1e1e1e',
@@ -64,6 +65,9 @@ export class AdminPage extends Component {
 			admin: admin || false,
 			users: [],
 			ships: [],
+			perPage: 20,
+			shipPageCount: 0,
+			shipOffset: 0,
 			announcements: []
 		};
 		this.checkAdmin = this.checkAdmin.bind(this);
@@ -78,6 +82,7 @@ export class AdminPage extends Component {
 		this.renderAddAnnouncement = this.renderAddAnnouncement.bind(this);
 		this.setAnnounceFormApi = this.setAnnounceFormApi.bind(this);
 		this.setNewAnnounceFormApi = this.setNewAnnounceFormApi.bind(this);
+		this.handleShipPageClick = this.handleShipPageClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -147,6 +152,8 @@ export class AdminPage extends Component {
 			},
 			body: JSON.stringify({
 				order: 'ASC',
+				pageSize: this.state.perPage,
+				offset: this.state.shipOffset,
 				field: 'updatedAt',
 				search: {
 					key: 'title',
@@ -157,7 +164,7 @@ export class AdminPage extends Component {
 		});
 		const json = await res.json();
 		if (json) {
-			this.setState({ships: json.rows});
+			this.setState({ships: json.rows, shipPageCount: Math.ceil(json.count / this.state.perPage)});
 		}
 	}
 
@@ -209,7 +216,7 @@ export class AdminPage extends Component {
 		if (json) {
 			console.log(json);
 		}
-		this.getShips();
+		this.getShips(this.state.shipOffset);
 	}
 
 	async updateAnnouncement() {
@@ -336,37 +343,64 @@ export class AdminPage extends Component {
 		);
 	}
 
+	handleShipPageClick(data) {
+		this.setState({loading: true}, () => {
+			const selected = data.selected;
+			const offset = Math.ceil(selected * this.state.perPage);
+			this.setState({shipOffset: offset}, () => {
+				this.getShips(this.state.shipOffset);
+			});
+		});
+	}
+
 	renderShips() {
 		return (
-			this.state.ships.map(ship => (
-				<div key={ship.id} className="admin-ship">
-					<p onClick={() => this.setState({modalVisible: ship.id})}>{ship.title}</p>
-					<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === ship.id}
-						hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-						onCloseClicked={() => this.setState({modalVisible: ''})} title={ship.username}
-					>
-						<div>
-							<Form initialValues={ship} getApi={this.setShipFormApi}>
-								<label>Title: </label><br/>
-								<Text field="title"/>
-								<br/>
-								<label>Description: </label><br/>
-								<Text field="description"/>
-								<br/>
-								<br/>
-								<label>ID: </label><br/>
-								<Text readOnly field="id"/>
-								<br/>
-								<br/>
-								<label>Delete? </label>
-								<Checkbox field="delete"/>
-							</Form>
-							<button onClick={this.updateShip}>Update Ship</button>
-						</div>
-					</SkyLightStateless>
-				</div>
-			)
-			)
+			<div>
+				{this.state.ships.map(ship => (
+					<div key={ship.id} className="admin-ship">
+						<p onClick={() => this.setState({modalVisible: ship.id})}>{ship.title}</p>
+						<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === ship.id}
+							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
+							onCloseClicked={() => this.setState({modalVisible: ''})} title={ship.username}
+						>
+							<div>
+								<Form initialValues={ship} getApi={this.setShipFormApi}>
+									<label>Title: </label><br/>
+									<Text field="title"/>
+									<br/>
+									<label>Description: </label><br/>
+									<Text field="description"/>
+									<br/>
+									<br/>
+									<label>ID: </label><br/>
+									<Text readOnly field="id"/>
+									<br/>
+									<br/>
+									<label>Image: </label><br/>
+									<Text field="imageURL"/>
+									<br/>
+									<br/>
+									<label>Delete? </label>
+									<Checkbox field="delete"/>
+								</Form>
+								<button onClick={this.updateShip}>Update Ship</button>
+							</div>
+						</SkyLightStateless>
+					</div>
+				))}
+				<ReactPaginate previousLabel="Previous"
+					nextLabel="Next"
+					breakLabel="..."
+					breakClassName="break"
+					pageCount={this.state.shipPageCount}
+					marginPagesDisplayed={2}
+					pageRangeDisplayed={5}
+					initialPage={0}
+					onPageChange={this.handleShipPageClick}
+					containerClassName="pagination"
+					subContainerClassName="pages pagination"
+					activeClassName="active danger"/>
+			</div>
 		);
 	}
 
