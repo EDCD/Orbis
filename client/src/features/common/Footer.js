@@ -11,9 +11,6 @@ export default class Footer extends React.Component {
 				admin = JSON.parse(getCookie('admin'));
 			}
 		} catch (err) {
-			if (err.message !== 'Unexpected end of JSON input') {
-				console.error(err);
-			}
 			setCookie('admin', false);
 		}
 		return admin;
