@@ -56,7 +56,7 @@ router.post('/ships', keycloak.protect('Admin'), (req, res) => {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'likes', 'proxiedImage', 'coriolisShip']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'imageURL', 'description', 'author', 'likes', 'proxiedImage']
 	};
 	if (search && search.key && search.value) {
 		query.where = {};
