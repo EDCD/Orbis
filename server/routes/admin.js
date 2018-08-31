@@ -1,11 +1,11 @@
 const express = require('express');
 const models = require('../models');
 const {keycloak} = require('../keycloak');
+const {Op} = require('sequelize');
 
 const {Ship, ShipVote, User, Announcement} = models;
 
 console.log(Object.keys(models));
-
 const router = express.Router();
 
 function isAuthenticated(req, res, next) {
