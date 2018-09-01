@@ -68,6 +68,8 @@ export class AdminPage extends Component {
 			perPage: 20,
 			shipPageCount: 0,
 			shipOffset: 0,
+			userOffset: 0,
+			userPageCount: 0,
 			announcements: []
 		};
 		this.checkAdmin = this.checkAdmin.bind(this);
@@ -83,6 +85,7 @@ export class AdminPage extends Component {
 		this.setAnnounceFormApi = this.setAnnounceFormApi.bind(this);
 		this.setNewAnnounceFormApi = this.setNewAnnounceFormApi.bind(this);
 		this.handleShipPageClick = this.handleShipPageClick.bind(this);
+		this.handleUserPageClick = this.handleUserPageClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -134,12 +137,26 @@ export class AdminPage extends Component {
 
 	async getUsers() {
 		const res = await fetch('/api/admin/users', {
-			method: 'GET',
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				order: 'ASC',
+				pageSize: this.state.perPage,
+				offset: this.state.userOffset,
+				field: 'updatedAt',
+				search: {
+					key: 'title',
+					value: ''
+				}
+			}),
 			credentials: 'include'
 		});
 		const json = await res.json();
 		if (json) {
-			this.setState({users: json});
+			this.setState({users: json.rows, userPageCount: Math.ceil(json.count / this.state.perPage)});
 		}
 	}
 
@@ -153,7 +170,7 @@ export class AdminPage extends Component {
 			body: JSON.stringify({
 				order: 'ASC',
 				pageSize: this.state.perPage,
-				offset: this.state.shipOffset,
+				offset: this.state.userOffset,
 				field: 'updatedAt',
 				search: {
 					key: 'title',
@@ -299,47 +316,60 @@ export class AdminPage extends Component {
 
 	renderUsers() {
 		return (
-			this.state.users.map(user => (
-				<div key={user.id} className="admin-user">
-					<p onClick={() => this.setState({modalVisible: user.id})}>{user.username}</p>
-					<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === user.id}
-						hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-						onCloseClicked={() => this.setState({modalVisible: ''})} title={user.username}
-					>
-						<div>
-							<Form initialValues={user} getApi={this.setUserFormApi}>
-								<label>Username: </label><br/>
-								<Text field="username"/>
-								<br/>
-								<label>Badges: </label><br/>
-								<Select field="badges" id="select-status">
-									<Option value="" disabled>
+			<div className="admin-flex">
+				{this.state.users.map(user => (
+					<div key={user.id} className="admin-user">
+						<p onClick={() => this.setState({modalVisible: user.id})}>{user.username}</p>
+						<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === user.id}
+							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
+							onCloseClicked={() => this.setState({modalVisible: ''})} title={user.username}
+						>
+							<div>
+								<Form initialValues={user} getApi={this.setUserFormApi}>
+									<label>Username: </label><br/>
+									<Text field="username"/>
+									<br/>
+									<label>Badges: </label><br/>
+									<Select field="badges" id="select-status">
+										<Option value="" disabled>
 											Select One...
-									</Option>
-									<Option value="Master">Master</Option>
-									<Option value="Dangerous">Dangerous</Option>
-									<Option value="Deadly">Deadly</Option>
-									<Option value="Elite">Elite</Option>
-								</Select>
-								<br/>
-								<label>ID: </label><br/>
-								<Text readOnly field="id"/>
-								<br/>
-								<label>Keycloak ID: </label><br/>
-								<Text readOnly field="keycloakId"/>
-								<br/>
-								<label>Email: </label><br/>
-								<Text field="email"/>
-								<br/>
-								<label>Admin: </label>
-								<Checkbox field="admin" defaultValue={user.admin}/>
-							</Form>
-							<button onClick={this.updateUser}>Update User</button>
-						</div>
-					</SkyLightStateless>
-				</div>
-			)
-			)
+										</Option>
+										<Option value="Master">Master</Option>
+										<Option value="Dangerous">Dangerous</Option>
+										<Option value="Deadly">Deadly</Option>
+										<Option value="Elite">Elite</Option>
+									</Select>
+									<br/>
+									<label>ID: </label><br/>
+									<Text readOnly field="id"/>
+									<br/>
+									<label>Keycloak ID: </label><br/>
+									<Text readOnly field="keycloakId"/>
+									<br/>
+									<label>Email: </label><br/>
+									<Text field="email"/>
+									<br/>
+									<label>Admin: </label>
+									<Checkbox field="admin" defaultValue={user.admin}/>
+								</Form>
+								<button type="submit" onClick={this.updateUser}>Update User</button>
+							</div>
+						</SkyLightStateless>
+					</div>
+				))}
+				<ReactPaginate previousLabel="Previous"
+					nextLabel="Next"
+					breakLabel="..."
+					breakClassName="break"
+					pageCount={this.state.userPageCount}
+					marginPagesDisplayed={2}
+					pageRangeDisplayed={5}
+					initialPage={0}
+					onPageChange={this.handleUserPageClick}
+					containerClassName="pagination"
+					subContainerClassName="pages pagination"
+					activeClassName="active danger"/>
+			</div>
 		);
 	}
 
@@ -353,9 +383,19 @@ export class AdminPage extends Component {
 		});
 	}
 
+	handleUserPageClick(data) {
+		this.setState({loading: true}, () => {
+			const selected = data.selected;
+			const offset = Math.ceil(selected * this.state.perPage);
+			this.setState({userOffset: offset}, () => {
+				this.getShips(this.state.userOffset);
+			});
+		});
+	}
+
 	renderShips() {
 		return (
-			<div>
+			<div className="admin-flex">
 				{this.state.ships.map(ship => (
 					<div key={ship.id} className="admin-ship">
 						<p onClick={() => this.setState({modalVisible: ship.id})}>{ship.title}</p>
@@ -411,23 +451,22 @@ export class AdminPage extends Component {
 			<Layout>
 				<div className="admin-admin-page">
 					{this.state.admin === true ? (
-						<div>
-							<div>
-								<div>
-									<h1>Announcements</h1>
-									<div className="admin-announcements">
-										{this.renderAddAnnouncement()}
-									</div>
-									<div className="admin-announcements">
-										{this.renderAnnouncements()}
-									</div>
+						<div className="admin-flex">
+							<div className="admin-flex">
+								<h1>Announcements</h1>
+								{this.renderAddAnnouncement()}
+								<div className="admin-announcements">
+									{this.renderAnnouncements()}
 								</div>
+								<br/>
+							</div>
+							<div className="admin-flex">
 								<h1>Users</h1>
 								<div className="admin-users">
 									{this.renderUsers()}
 								</div>
 							</div>
-							<div>
+							<div className="admin-flex">
 								<h1>Ships</h1>
 								<div className="admin-ships">
 									{this.renderShips()}

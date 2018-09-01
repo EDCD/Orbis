@@ -1,9 +1,9 @@
 @import '../../styles/mixins';
 
 .builds-container {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
 }
 
 .build-item {
@@ -11,45 +11,45 @@
 }
 
 .pagination {
-  text-align: center;
+	text-align: center;
 
-right: 50%;
+	right: 50%;
 }
 
 .pagination ul {
-  display: inline-block;
+	display: inline-block;
 
-  padding-left: 15px;
+	padding-left: 15px;
 
-  padding-right: 15px;
+	padding-right: 15px;
 }
 
 .pagination li {
-  display: inline-block;
-  padding-left: 10px;
-  cursor: pointer;
-  padding-right: 10px;
+	display: inline-block;
+	padding-left: 10px;
+	cursor: pointer;
+	padding-right: 10px;
 }
 
 .pagination .break a {
-  cursor: default;
+	cursor: default;
 }
 
 .active {
-  border: none;
-  text-transform: capitalize;
-  vertical-align: middle;
-  padding: 0.5em;
-  cursor: pointer;
-  background-color: @primary;
-  outline: none;
+	border: none;
+	text-transform: capitalize;
+	vertical-align: middle;
+	padding: 0.5em;
+	cursor: pointer;
+	background-color: @primary;
+	outline: none;
 
-  &.danger {
-    color: red;
-  }
+	&.danger {
+		color: red;
+	}
 
-  &.disabled {
-    cursor: not-allowed;
-    background-color: @disabled;
-  }
+	&.disabled {
+		cursor: not-allowed;
+		background-color: @disabled;
+	}
 }

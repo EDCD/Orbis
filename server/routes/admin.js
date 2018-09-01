@@ -17,8 +17,8 @@ function isAuthenticated(req, res, next) {
 	});
 }
 
-router.get('/users', keycloak.protect('Admin'), (req, res) => {
-	return User.findAll()
+router.post('/users', keycloak.protect('Admin'), (req, res) => {
+	return User.findAndCountAll()
 		.then(data => res.json(data))
 		.catch(err => {
 			console.error(err);
