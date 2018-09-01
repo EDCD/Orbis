@@ -18,6 +18,7 @@
     "classnames": "^2.2.6",
     "coriolis-data": "github:edcd/coriolis-data",
     "css-loader": "0.28.7",
+    "d3": "^5.7.0",
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
     "enzyme": "^3.3.0",

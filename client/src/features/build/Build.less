@@ -1,9 +1,20 @@
 @import '../../styles/mixins';
 
 .build-container {
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: center;
 }
 
-.build {
+.build-details {
+	display: flex;
+	flex-flow: row wrap;
+	padding: 20px;
+	& > p {
+		border: 1px solid @primary;
+		padding: 10px;
+		margin: auto;
+	}
 }
 
 .build-image {
@@ -25,6 +36,7 @@
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
+	padding: 10px;
 	border: 1px @primary solid;
 	& > * {
 		border: 1px @primary dotted;
