@@ -41,6 +41,9 @@ if (workbox) {
 					maxEntries: 20,
 					// Cache for a maximum of a week
 					maxAgeSeconds: 7 * 24 * 60 * 60
+				}),
+				new workbox.cacheableResponse.Plugin({
+					statuses: [200]
 				})
 			]
 		})
