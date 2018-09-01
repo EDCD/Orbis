@@ -82,6 +82,7 @@ app.get('/build/:id/og', (req, res) =>
 			html += `<meta name="og:url" content="${uri}"/>`;
 			html += `<meta property="og:type" content="website"/>`;
 			html += `<meta name="twitter:card" content="summary_large_image">`;
+			html += `<link type="application/json+oembed" href="https://orbis.zone/api/oembed.json" />`;
 			html += `<meta http-equiv="refresh" content="0;url='${uri}'"/>`;
 			html += `</head>`;
 			html += `<body/>`;
@@ -94,28 +95,15 @@ app.get('/build/:id/og', (req, res) =>
 		})
 );
 
-app.get('/build/:id/oembed', (req, res) =>
-	Ship.find({
-		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage', 'coriolisShip']
-	})
-		.then(ship => {
-			if (!ship) {
-				return res.json({});
-			}
-			const json = {
-				author_name: 'It\'s time to dock',
-				author_url: 'https://orbis.zone',
-				provider_name: 'Orbis.zone is the build repository for Coriolis.io.',
-				provider_url: 'https://orbis.zone'
-			};
-			return res.send(json);
-		})
-		.catch(err => {
-			console.error(err);
-			res.status(500).end();
-		})
-);
+app.get('/api/oembed.json', (req, res) => {
+	const json = {
+		author_name: 'It\'s time to dock',
+		author_url: 'https://orbis.zone',
+		provider_name: 'Orbis.zone is the build repository for Coriolis.io.',
+		provider_url: 'https://orbis.zone'
+	};
+	return res.send(json);
+});
 
 app.use('/api', index);
 app.use('/api/builds', builds);

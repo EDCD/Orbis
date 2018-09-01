@@ -70,35 +70,6 @@ router.get('/:id', (req, res) =>
 		})
 );
 
-router.get('/:id/og', (req, res) =>
-	Ship.find({
-		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage', 'coriolisShip']
-	})
-		.then(ship => {
-			if (!ship) {
-				return res.json({});
-			}
-			const uri = req.protocol + '://' + req.get('host') + req.originalUrl.replace('/og', '');
-			let html = '<!doctype html>\n';
-			html += `<html><head>`;
-			html += `<meta name="author" content="${ship.author.username}"/>`;
-			html += `<meta name="og:title" content="${ship.title}"/>`;
-			html += `<meta name="og:description" content="${ship.description}"/>`;
-			html += `<meta name="og:image" content="${ship.imageURL}"/>`;
-			html += `<meta http-equiv="refresh" content="0;url='${uri}'"/>`;
-			html += `</head>`;
-			html += `<body/>`;
-			html += `</html>`;
-			console.log(html)
-			return res.send(html);
-		})
-		.catch(err => {
-			console.error(err);
-			res.status(500).end();
-		})
-);
-
 function isAuthenticated(req, res, next) {
 	if (req.user || req.session) {
 		return next();
