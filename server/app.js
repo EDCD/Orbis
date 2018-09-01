@@ -79,6 +79,8 @@ app.get('/build/:id/og', (req, res) =>
 			html += `<meta name="og:title" content="${ship.title}"/>`;
 			html += `<meta name="og:description" content="${ship.description}"/>`;
 			html += `<meta name="og:image" content="${ship.imageURL}"/>`;
+			html += `<meta name="og:url" content="${uri}"/>`;
+			html += `<meta property="og:type" content="website"/>`;
 			html += `<meta http-equiv="refresh" content="0;url='${uri}'"/>`;
 			html += `</head>`;
 			html += `<body/>`;
