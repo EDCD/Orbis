@@ -66,7 +66,7 @@ const admin = require('./routes/admin');
 app.get('/build/:id/og', (req, res) =>
 	Ship.find({
 		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage', 'coriolisShip']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage']
 	})
 		.then(ship => {
 			if (!ship) {
