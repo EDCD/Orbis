@@ -1,6 +1,8 @@
 console.log('Hello from sw.js');
 
 if (workbox) {
+	workbox.skipWaiting();
+	workbox.clientsClaim();
 	console.log(`Yay! Workbox is loaded 🎉`);
 	workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 	workbox.routing.registerRoute(
