@@ -18,7 +18,22 @@ function isAuthenticated(req, res, next) {
 }
 
 router.post('/users', keycloak.protect('Admin'), (req, res) => {
-	return User.findAndCountAll()
+	let {order, field, search} = req.body;
+	console.log(field);
+	console.log(order);
+	const query = {
+		order: [[field || 'createdAt', order || 'DESC']],
+		limit: req.body.pageSize,
+		offset: req.body.offset,
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'imageURL', 'description', 'author', 'likes', 'proxiedImage']
+	};
+	if (search && search.key && search.value) {
+		query.where = {};
+		query.where[search.key] = {
+			[Op.iLike]: `%${search.value}%`
+		};
+	}
+	return User.findAndCountAll(query)
 		.then(data => res.json(data))
 		.catch(err => {
 			console.error(err);
