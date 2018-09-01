@@ -388,7 +388,7 @@ export class AdminPage extends Component {
 			const selected = data.selected;
 			const offset = Math.ceil(selected * this.state.perPage);
 			this.setState({userOffset: offset}, () => {
-				this.getShips(this.state.userOffset);
+				this.getUsers(this.state.userOffset);
 			});
 		});
 	}
