@@ -24,8 +24,7 @@ router.post('/users', keycloak.protect('Admin'), (req, res) => {
 	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
-		offset: req.body.offset,
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'imageURL', 'description', 'author', 'likes', 'proxiedImage']
+		offset: req.body.offset
 	};
 	if (search && search.key && search.value) {
 		query.where = {};
