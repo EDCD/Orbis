@@ -26,7 +26,7 @@ export class Page extends React.Component {
 			pageLoaded: false,
 			loaded: false,
 			search: {
-				key: params.get('key') || '',
+				key: params.get('key') || 'title',
 				value: params.get('val') || '',
 				sort: {field: params.get('field') || 'createdAt', order: params.get('order') || 'DESC'}
 			}
