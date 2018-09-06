@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'Ship', 'likes', 'proxiedImage']
+		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'Ship', 'likes', 'url', 'proxiedImage']
 	};
 	if (search && search.key && search.value) {
 		query.where = {};

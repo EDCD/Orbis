@@ -152,11 +152,11 @@ export class Page extends React.Component {
 					pageCount={this.state.pageCount}
 					marginPagesDisplayed={2}
 					pageRangeDisplayed={5}
-					initialPage={parseInt(params.get('page')) || 0}
-					onPageChange={this.handlePageClick}
+					initialPage={parseInt(params.get('page'), 10) || 0}
 					containerClassName="pagination"
 					subContainerClassName="pages pagination"
 					activeClassName="active danger"/>
+					onPageChange={this.handlePageClick}
 			</Layout>
 		);
 	}
