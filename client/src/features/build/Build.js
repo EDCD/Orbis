@@ -95,7 +95,7 @@ export class Build extends Component {
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.checkLogged();
 		this.props.actions.getBuild({id: this.props.match.params.id})
 			.then(data => {

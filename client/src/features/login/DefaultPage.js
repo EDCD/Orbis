@@ -28,7 +28,7 @@ export class DefaultPage extends Component {
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.checkLogged();
 	}
 
