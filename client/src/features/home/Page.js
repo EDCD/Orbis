@@ -28,7 +28,10 @@ export class Page extends React.Component {
 			search: {
 				key: params.get('key') || 'title',
 				value: params.get('val') || '',
-				sort: {field: params.get('field') || 'createdAt', order: params.get('order') || 'DESC'}
+				sort: {
+					field: params.get('field') || 'createdAt',
+					order: params.get('order') || 'DESC'
+				}
 			}
 		};
 		this.handlePageClick = this.handlePageClick.bind(this);
@@ -52,13 +55,14 @@ export class Page extends React.Component {
 	componentDidMount() {
 		this.checkLogged();
 		this.setState({pageLoaded: false}, () => {
-			this.props.actions.getBuilds({
-				pageSize: this.state.perPage,
-				offset: this.state.offset,
-				search: this.state.search,
-				field: this.state.search.sort.field,
-				order: this.state.search.sort.order
-			})
+			this.props.actions
+				.getBuilds({
+					pageSize: this.state.perPage,
+					offset: this.state.offset,
+					search: this.state.search,
+					field: this.state.search.sort.field,
+					order: this.state.search.sort.order
+				})
 				.then(data => {
 					return this.setState({
 						data: data.rows,
@@ -71,21 +75,34 @@ export class Page extends React.Component {
 
 	loadBuilds(search) {
 		this.setState({loaded: false, search}, () => {
-			this.props.actions.getBuilds({
-				pageSize: this.state.perPage,
-				offset: this.state.offset,
-				search: this.state.search,
-				field: this.state.search.sort.field,
-				order: this.state.search.sort.order
-			})
+			this.props.actions
+				.getBuilds({
+					pageSize: this.state.perPage,
+					offset: this.state.offset,
+					search: this.state.search,
+					field: this.state.search.sort.field,
+					order: this.state.search.sort.order
+				})
 				.then(data => {
-					return this.setState({
-						data: data.rows,
-						pageCount: Math.ceil(data.count / this.state.perPage),
-						loaded: true
-					}, () => {
-						this.props.history.push(`/?page=${Math.ceil(this.state.offset / this.state.perPage)}&key=${this.state.search.key}&val=${this.state.search.value}&field=${this.state.search.sort.field}&order=${this.state.search.sort.order}`, this.state);
-					});
+					return this.setState(
+						{
+							data: data.rows,
+							pageCount: Math.ceil(data.count / this.state.perPage),
+							loaded: true
+						},
+						() => {
+							this.props.history.push(
+								`/?page=${Math.ceil(
+									this.state.offset / this.state.perPage
+								)}&key=${this.state.search.key}&val=${
+									this.state.search.value
+								}&field=${this.state.search.sort.field}&order=${
+									this.state.search.sort.order
+								}`,
+								this.state
+							);
+						}
+					);
 				});
 		});
 	}
@@ -96,7 +113,14 @@ export class Page extends React.Component {
 			const offset = Math.ceil(selected * this.state.perPage);
 			this.setState({offset}, () => {
 				this.loadBuilds(this.state.search);
-				this.props.history.push(`/?page=${data.selected}&key=${this.state.search.key}&val=${this.state.search.value}&field=${this.state.search.sort.field}&order=${this.state.search.sort.order}`, this.state);
+				this.props.history.push(
+					`/?page=${data.selected}&key=${this.state.search.key}&val=${
+						this.state.search.value
+					}&field=${this.state.search.sort.field}&order=${
+						this.state.search.sort.order
+					}`,
+					this.state
+				);
 			});
 		});
 	}
@@ -127,25 +151,36 @@ export class Page extends React.Component {
 				<h1>Latest builds</h1>
 				<Search state={this.state.search} loadBuilds={this.loadBuilds}/>
 				<div className="builds-container">
-					{this.state.data.length > 0 || this.state.loaded || !this.state.loading ? this.state.data.map((e, index) => {
-						e.imageURL = e.proxiedImage || `https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${e.Ship}.jpg`;
-						e.content = e.description;
-						return (
-							<div key={e.id} className="build-item">
-								<SocialCard
-									key={e.id}
-									content={e}
-									loggedIn={this.state.loggedIn}
-									likes={e.likes}
-									coriolisLink={e.url || this.getCoriolisLink(index)}
-									likeIsClicked={false}
-									repostIsClicked={false}
-								/>
-							</div>
-						);
-					}) : <ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>}
+					{this.state.data.length > 0 ||
+					this.state.loaded ||
+					!this.state.loading ? (
+							this.state.data.map((e, index) => {
+								e.imageURL =
+								e.proxiedImage ||
+								`https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/${
+									e.Ship
+								}.jpg`;
+								e.content = e.description;
+								return (
+									<div key={e.id} className="build-item">
+										<SocialCard
+											key={e.id}
+											content={e}
+											loggedIn={this.state.loggedIn}
+											likes={e.likes}
+											coriolisLink={e.url || this.getCoriolisLink(index)}
+											likeIsClicked={false}
+											repostIsClicked={false}
+										/>
+									</div>
+								);
+							})
+						) : (
+							<ReactLoading type="cylon" color="#FF8C0D" height={50} width={50}/>
+						)}
 				</div>
-				<ReactPaginate previousLabel="Previous"
+				<ReactPaginate
+					previousLabel="Previous"
 					nextLabel="Next"
 					breakLabel="..."
 					breakClassName="break"
@@ -157,7 +192,7 @@ export class Page extends React.Component {
 					subContainerClassName="pages pagination"
 					activeClassName="active danger"
 					onPageChange={this.handlePageClick}
-					/>
+				/>
 			</Layout>
 		);
 	}
@@ -177,4 +212,7 @@ function mapDispatchToProps(dispatch) {
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Page);
