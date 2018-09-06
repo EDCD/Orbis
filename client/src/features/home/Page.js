@@ -155,8 +155,9 @@ export class Page extends React.Component {
 					initialPage={parseInt(params.get('page'), 10) || 0}
 					containerClassName="pagination"
 					subContainerClassName="pages pagination"
-					activeClassName="active danger"/>
+					activeClassName="active danger"
 					onPageChange={this.handlePageClick}
+					/>
 			</Layout>
 		);
 	}
