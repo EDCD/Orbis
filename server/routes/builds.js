@@ -27,7 +27,19 @@ router.post('/', (req, res) => {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'Ship', 'likes', 'url', 'proxiedImage']
+		attributes: [
+			'id',
+			'updatedAt',
+			'createdAt',
+			'shortid',
+			'title',
+			'description',
+			'author',
+			'Ship',
+			'likes',
+			'url',
+			'proxiedImage'
+		]
 	};
 	if (search && search.key && search.value) {
 		query.where = {};
@@ -50,7 +62,19 @@ const allowedUpdates = ['imageURL', 'description', 'title'];
 router.get('/:id', (req, res) =>
 	Ship.find({
 		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage', 'coriolisShip']
+		attributes: [
+			'id',
+			'updatedAt',
+			'createdAt',
+			'shortid',
+			'title',
+			'description',
+			'author',
+			'imageURL',
+			'url',
+			'proxiedImage',
+			'coriolisShip'
+		]
 	})
 		.then(ships => {
 			if (!ships) {
@@ -58,7 +82,7 @@ router.get('/:id', (req, res) =>
 			}
 			ships.allowedToEdit = false;
 			if (req.user) {
-				if (req.user.id === ships.id) {
+				if (req.user.id === ships.author.id) {
 					ships.allowedToEdit = true;
 				}
 			}
@@ -133,19 +157,21 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 				}
 				ship[update] = data.updates[update];
 				if (update === 'imageURL') {
-					ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/{OPTIONS}/${data.updates[update]}`;
+					ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/{OPTIONS}/${
+						data.updates[update]
+					}`;
 				}
 				console.log(data.updates[update]);
 			}
-			return ship.save()
-				.then(ship => res.json({
+			return ship.save().then(ship =>
+				res.json({
 					success: true,
 					id: ship.id,
 					body: data,
 					ship: 'created',
 					link: `https://orbis.zone/build/${ship.shortid}`
 				})
-				);
+			);
 		}
 		return res.status(403).json({});
 	}
@@ -167,43 +193,50 @@ router.post('/add', keycloak.protect(), addLimiter, async (req, res) => {
 	});
 });
 
-router.post('/add/batch', keycloak.protect(), batchAddLimiter, async (req, res) => {
-	if (!req.body) {
-		return res.status(400).end();
+router.post(
+	'/add/batch',
+	keycloak.protect(),
+	batchAddLimiter,
+	async (req, res) => {
+		if (!req.body) {
+			return res.status(400).end();
+		}
+		let promises = [];
+		const data = JSON.parse(JSON.stringify(req.body));
+		for (const build in data) {
+			data[build].author = req.user;
+			promises.push(
+				Ship.findOrCreate({
+					where: {
+						author: {
+							username: req.user.username
+						},
+						title: data[build].title,
+						ShipName: data[build].ShipName,
+						description: data[build].description
+					},
+					defaults: data[build]
+				})
+			);
+		}
+		return Promise.all(promises)
+			.then(datas => {
+				const returnObj = [];
+				for (const s of datas) {
+					returnObj.push({
+						success: true,
+						id: s.id,
+						ship: 'created',
+						link: `https://orbis.zone/build/${s.shortid}`
+					});
+				}
+				return res.json({totalCreated: returnObj.length, data: returnObj});
+			})
+			.catch(err => {
+				console.error(err);
+				return res.status(500).json({error: err.message});
+			});
 	}
-	let promises = [];
-	const data = JSON.parse(JSON.stringify(req.body));
-	for (const build in data) {
-		data[build].author = req.user;
-		promises.push(Ship.findOrCreate({
-			where: {
-				author: {
-					username: req.user.username
-				},
-				title: data[build].title,
-				ShipName: data[build].ShipName,
-				description: data[build].description
-			},
-			defaults: data[build]
-		}));
-	}
-	return Promise.all(promises)
-		.then(datas => {
-			const returnObj = [];
-			for (const s of datas) {
-				returnObj.push({
-					success: true,
-					id: s.id,
-					ship: 'created',
-					link: `https://orbis.zone/build/${s.shortid}`
-				});
-			}
-			return res.json({totalCreated: returnObj.length, data: returnObj});
-		})
-		.catch(err => {
-			console.error(err);
-			return res.status(500).json({error: err.message});
-		});
-});
+);
 
 module.exports = router;
