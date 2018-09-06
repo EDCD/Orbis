@@ -21,6 +21,8 @@ const batchAddLimiter = new RateLimit({
 
 const {Op} = require('sequelize');
 
+const isAdmin = req => req.user.admin === true;
+
 router.post('/', (req, res) => {
 	let {order, field, search} = req.body;
 	const query = {
@@ -82,7 +84,8 @@ router.get('/:id', (req, res) =>
 			}
 			ships.allowedToEdit = false;
 			if (req.user) {
-				if (req.user.id === ships.author.id) {
+				const isadmin = isAdmin(req);
+				if (req.user.id === ships.author.id || isadmin) {
 					ships.allowedToEdit = true;
 				}
 			}
@@ -103,8 +106,6 @@ function isAuthenticated(req, res, next) {
 		error: 'User not authenticated'
 	});
 }
-
-const isAdmin = req => req.user.admin === true;
 
 router.delete('/:id', keycloak.protect(), async (req, res) => {
 	const data = req.params;
