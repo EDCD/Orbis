@@ -12,7 +12,7 @@ export default class UiButton extends Component {
 	};
 
 	render() {
-		const classes = cx('ui-button', {clicked: this.props.isClicked});
+		const classes = cx('ui-button', {clicked: this.props.isClicked === 'yes'});
 		return (
 			<button
 				disabled={!this.props.loggedIn}

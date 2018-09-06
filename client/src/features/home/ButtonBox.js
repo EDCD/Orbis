@@ -87,7 +87,7 @@ export default class ButtonBox extends Component {
 					id="upvote"
 					loggedIn={this.props.loggedIn}
 					number={this.state.likes}
-					isClicked={this.state.buttonClicked === 1}
+					isClicked={this.state.buttonClicked === 1 ? 'yes' : 'no'}
 					onClick={this.updateLikes}
 				/>
 				<UiButton
@@ -96,7 +96,7 @@ export default class ButtonBox extends Component {
 					id="downvote"
 					loggedIn={this.props.loggedIn}
 					number={this.state.likes}
-					isClicked={this.state.buttonClicked === 0}
+					isClicked={this.state.buttonClicked === 0 ? 'yes' : 'no'}
 					onClick={this.updateLikes}
 				/>
 				<VoteCounter text="votes" number={this.state.likes}/>
