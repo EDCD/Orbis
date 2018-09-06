@@ -18,9 +18,6 @@ module.exports = (sequelize, DataType) => {
 			coriolisShip: {
 				type: DataType.JSONB
 			},
-			coriolisURL: {
-				type: DataType.STRING
-			},
 			ShipName: {
 				type: DataType.STRING
 			},
