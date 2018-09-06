@@ -21,7 +21,7 @@ export default class UiButton extends Component {
 				type="button"
 				onClick={this.props.onClick}
 			>
-				<span>{this.props.icon} </span>
+				{this.props.icon}
 			</button>
 		);
 	}

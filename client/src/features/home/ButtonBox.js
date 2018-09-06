@@ -21,6 +21,7 @@ export default class ButtonBox extends Component {
 			upvote: false,
 			downvote: false,
 			shake: false,
+			buttonClicked: null,
 			likes: this.props.likes
 		};
 	}
@@ -41,6 +42,7 @@ export default class ButtonBox extends Component {
 		const state = {};
 
 		state[e.target.id] = true;
+		state.buttonClicked = e.target.id === 'upvote' ? 1 : -1;
 		const data = await request.post(`/api/likes`).send(vote);
 		state.likes = data.body.count;
 		this.setState(state);
@@ -85,7 +87,7 @@ export default class ButtonBox extends Component {
 					id="upvote"
 					loggedIn={this.props.loggedIn}
 					number={this.state.likes}
-					isClicked={this.state.likeIsClicked}
+					isClicked={this.state.buttonClicked === 1}
 					onClick={this.updateLikes}
 				/>
 				<UiButton
@@ -94,7 +96,7 @@ export default class ButtonBox extends Component {
 					id="downvote"
 					loggedIn={this.props.loggedIn}
 					number={this.state.likes}
-					isClicked={this.state.likeIsClicked}
+					isClicked={this.state.buttonClicked === 0}
 					onClick={this.updateLikes}
 				/>
 				<VoteCounter text="votes" number={this.state.likes}/>
