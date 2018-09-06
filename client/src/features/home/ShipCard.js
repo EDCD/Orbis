@@ -1,17 +1,16 @@
 import React, {Component} from 'react';
 import UiCard from './UiCard';
-
+import PropTypes from 'prop-types';
 import ButtonBox from './ButtonBox';
 
 export default class ShipCard extends Component {
-	static propTypes = {};
-
-	constructor(props) {
-		super(props);
-		this.state = {
-			loggedIn: false
-		};
-	}
+	static propTypes = {
+		content: PropTypes.any.isRequired,
+		likeIsClicked: PropTypes.bool.isRequired,
+		loggedIn: PropTypes.bool.isRequired,
+		coriolisLink: PropTypes.string.isRequired,
+		likes: PropTypes.number.isRequired
+	};
 
 	render() {
 		return (
