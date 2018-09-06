@@ -42,7 +42,7 @@ export default class ButtonBox extends Component {
 		const state = {};
 
 		state[e.target.id] = true;
-		state.buttonClicked = e.target.id === 'upvote' ? 1 : -1;
+		state.buttonClicked = e.target.id === 'upvote' ? 1 : 0;
 		const data = await request.post(`/api/likes`).send(vote);
 		state.likes = data.body.count;
 		this.setState(state);
