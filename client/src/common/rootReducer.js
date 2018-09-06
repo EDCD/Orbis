@@ -21,9 +21,9 @@ const reducerMap = {
 	build: buildReducer,
 	login: loginReducer,
 	register: registerReducer,
-  about: aboutReducer,
-  contact: contactReducer,
-  admin: adminReducer
+	about: aboutReducer,
+	contact: contactReducer,
+	admin: adminReducer
 };
 
 export default combineReducers(reducerMap);

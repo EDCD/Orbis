@@ -10,7 +10,7 @@ const sessionStore = new SequelizeStore({
 	expiration: 7 * 24 * 60 * 60 * 1000
 });
 
-const keycloak = new Keycloak({store: sessionStore/*, scope: 'offline_access'*/}, null);
+const keycloak = new Keycloak({store: sessionStore/* , scope: 'offline_access' */}, null);
 
 const getUserInfo = (req, res, next) => {
 	if (req.user) {
@@ -39,7 +39,7 @@ const getUserInfo = (req, res, next) => {
 };
 
 module.exports = {keycloak, getUserInfo};
-// const rp = require('request-promise-native');
+// Const rp = require('request-promise-native');
 //
 // class Keycloak {
 // 	constructor(baseUrl, clientId, realm, username, password, clientSecret, managementRealmId) {

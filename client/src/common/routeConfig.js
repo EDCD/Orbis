@@ -17,9 +17,9 @@ const childRoutes = [
 	buildRoute,
 	loginRoute,
 	registerRoute,
-  aboutRoute,
-  contactRoute,
-  adminRoute
+	aboutRoute,
+	contactRoute,
+	adminRoute
 ];
 
 const routes = [{

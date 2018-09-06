@@ -24,7 +24,7 @@ describe('Root', () => {
 		const store = configStore();
 
 		shallow(
-			<Root store={store} routeConfig={routes} />
+			<Root store={store} routeConfig={routes}/>
 		);
 	});
 });

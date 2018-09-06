@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  AdminPage,
+	AdminPage
 } from './';
 
 export default {
-  path: 'admin',
-  name: 'Admin',
-  childRoutes: [
-    { path: '', name: 'Admin', component: AdminPage, isIndex: true },
-  ],
+	path: 'admin',
+	name: 'Admin',
+	childRoutes: [
+		{path: '', name: 'Admin', component: AdminPage, isIndex: true}
+	]
 };

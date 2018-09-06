@@ -285,7 +285,7 @@ module.exports = {
 			importWorkboxFrom: 'cdn',
 			swDest: 'service-worker.js'
 		}),
-		/*new WorkboxPlugin.GenerateSW({
+		/* New WorkboxPlugin.GenerateSW({
 			// Exclude images from the precache
 			exclude: [/\.(?:png|jpg|jpeg|svg)$/],
 			navigateFallback: PUBLIC_URL + 'index.html',
@@ -341,7 +341,7 @@ module.exports = {
 					plugins: []
 				}
 			}]
-		}),*/
+		}), */
 		// Moment.js is an extremely popular library that bundles large locale files
 		// by default due to how Webpack interprets its code. This is a practical
 		// solution that requires the user to opt into importing specific locales.

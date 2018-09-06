@@ -8,7 +8,7 @@ describe('home/Page', () => {
 			home: {},
 			actions: {}
 		};
-		const renderedComponent = shallow(<Page {...props} />);
+		const renderedComponent = shallow(<Page {...props}/>);
 
 		expect(renderedComponent.find('.home-page').length).toBe(1);
 	});

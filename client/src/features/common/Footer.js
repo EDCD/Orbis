@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import {getCookie, setCookie} from '../../common/utils';
 
 export default class Footer extends React.Component {
-
 	checkAdmin() {
 		let admin = false;
 		try {

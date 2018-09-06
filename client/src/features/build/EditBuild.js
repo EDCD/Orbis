@@ -44,9 +44,9 @@ export class EditBuild extends Component {
 			.withCredentials()
 			.then(res => {
 				if (res.body && res.body.success === true) {
-					this.props.history.push('/')
+					this.props.history.push('/');
 				}
-			})
+			});
 	}
 
 	async submit() {
@@ -61,7 +61,7 @@ export class EditBuild extends Component {
 		return this.props.actions.updateBuild({updates, shipId: this.state.build[0].id})
 			.then(() => {
 				this.setState({message: 'Build updated.'});
-			})
+			});
 	}
 
 	componentDidMount() {
@@ -79,18 +79,19 @@ export class EditBuild extends Component {
 						<h1>
 							{this.state.build ? <span>
                 Build: {this.state.build[0].title} by {this.state.build[0].author.username}
-              </span> : 'Loading'}
+                           </span> : 'Loading'}
 						</h1>
 					</div>
 					{this.state.build ? this.state.build.map(item => (
 						<div>
 							<Form initialValues={{imageURL: item.imageURL, description: item.description, title: item.title}}
-										className={'formContainer'} getApi={this.setFormApi} onSubmit={this.submit}>
-								<div className={'formGroup flexSmall wrapper'}>
-									<label className={'label'} htmlFor="imageURL">
+								className="formContainer" getApi={this.setFormApi} onSubmit={this.submit}
+							>
+								<div className="formGroup flexSmall wrapper">
+									<label className="label" htmlFor="imageURL">
 										Image URL:
 										<Text
-											className={'input'}
+											className="input"
 											id="imageURL"
 											value={item.imageURL}
 											type="text"
@@ -98,32 +99,32 @@ export class EditBuild extends Component {
 										/>
 									</label>
 								</div>
-								<div className={'formGroup'}>
-									<label className={'label'} htmlFor="title">
+								<div className="formGroup">
+									<label className="label" htmlFor="title">
 										Title:
 										<TextArea
-											className={'input'}
+											className="input"
 											id="title"
 											type="text"
 											field="title"
 										/>
 									</label>
 								</div>
-								<div className={'formGroup'}>
-									<label className={'label'} htmlFor="desc">
+								<div className="formGroup">
+									<label className="label" htmlFor="desc">
 										Description:
 										<TextArea
-											className={'input'}
+											className="input"
 											id="desc"
 											type="text"
 											field="description"
 										/>
 									</label>
 								</div>
-								<div className={'formGroup'}>
+								<div className="formGroup">
 									<p style={{textAlign: 'center'}} hidden={!this.state.message}>{this.state.message}</p>
 									<button
-										className={'button'}
+										className="button"
 										onClick={this.handleClick}
 										type="submit"
 									>
@@ -131,7 +132,7 @@ export class EditBuild extends Component {
 									</button>
 									<br/>
 									<button
-										className={'button'}
+										className="button"
 										onClick={this.handleDelete}
 									>
 										Delete Build

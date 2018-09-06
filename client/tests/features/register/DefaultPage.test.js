@@ -9,7 +9,7 @@ describe('register/DefaultPage', () => {
 			actions: {}
 		};
 		const renderedComponent = shallow(
-			<DefaultPage {...props} />
+			<DefaultPage {...props}/>
 		);
 
 		expect(

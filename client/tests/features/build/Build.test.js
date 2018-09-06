@@ -9,7 +9,7 @@ describe('build/Build', () => {
 			actions: {}
 		};
 		const renderedComponent = shallow(
-			<Build {...props} />
+			<Build {...props}/>
 		);
 
 		expect(

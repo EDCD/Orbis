@@ -107,8 +107,8 @@ export class CoriolisLogo extends Svg {
 		return (
 			<g transform="translate(1,1)">
 				<path stroke="#0a8bd6" transform="rotate(45 15 15)"
-							d="m4,4 l 11,-4 l 11,4 l 4,11 l -4,11 l -11,4 l -11,-4 l -4,-11 l 4,-11 l 22,0 l 0,22 l -22,0 z"
-							strokeWidth="1" fill="#000000"/>
+					d="m4,4 l 11,-4 l 11,4 l 4,11 l -4,11 l -11,4 l -11,-4 l -4,-11 l 4,-11 l 22,0 l 0,22 l -22,0 z"
+					strokeWidth="1" fill="#000000"/>
 				<rect height="3" width="10" y="13.5" x="10" strokeWidth="1" stroke="#0a8bd6"/>
 			</g>
 		);
@@ -335,8 +335,8 @@ export class OrbisIcon extends Svg {
 				<path
 					d="m702.66 178.87-173.25 190.21 15.625 13.721 170.9-190.4zm-31.01-31.714-202.41 169.1 16.418 14.417 198.76-170.43z"/>
 				<rect transform="matrix(-.7071 -.7071 .7071 -.7071 429.34 1036.2)" x="387.09" y="420.77"
-							width="84.379"
-							height="16.859"/>
+					width="84.379"
+					height="16.859"/>
 			</g>);
 	}
 }
