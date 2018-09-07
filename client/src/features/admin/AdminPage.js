@@ -12,7 +12,7 @@ import {SkyLightStateless} from 'react-skylight';
 import request from 'superagent';
 import Users from './Users';
 import Ships from './Ships';
-import {autoBind} from 'react-extras';
+import {autoBind, Choose} from 'react-extras';
 
 const modalStyles = {
 	backgroundColor: '#1e1e1e',
@@ -315,7 +315,13 @@ export class AdminPage extends Component {
 		return (
 			<Layout>
 				<div className="admin-admin-page">
-					{this.state.admin === true ? (
+					<Choose.When condition={!this.state.admin}>
+						<div>
+							<p>Access denied.</p>
+							<Link to="/">Go home?</Link>
+						</div>
+					</Choose.When>
+					<Choose.When condition={this.state.admin}>
 						<div className="admin-flex">
 							<div className="admin-flex">
 								<h1>Announcements</h1>
@@ -329,23 +335,20 @@ export class AdminPage extends Component {
 								<h1>Users</h1>
 								<div className="admin-users">
 									<Users users={this.state.users} pageCount={this.state.userPageCount}
-										handleUserPageClick={this.handleUserPageClick} updateUser={this.updateUser} setUserFormApi={this.setUserFormApi}/>
+										handleUserPageClick={this.handleUserPageClick} updateUser={this.updateUser}
+										setUserFormApi={this.setUserFormApi}/>
 								</div>
 							</div>
 							<div className="admin-flex">
 								<h1>Ships</h1>
 								<div className="admin-ships">
 									<Ships ships={this.state.ships} pageCount={this.state.shipPageCount}
-										handleShipPageClick={this.handleShipPageClick} updateShip={this.updateShip} setShipFormApi={this.setShipFormApi}/>
+										handleShipPageClick={this.handleShipPageClick} updateShip={this.updateShip}
+										setShipFormApi={this.setShipFormApi}/>
 								</div>
 							</div>
 						</div>
-					) : (
-						<div>
-							<p>Access denied.</p>
-							<Link to="/">Go home?</Link>
-						</div>
-					)}
+					</Choose.When>
 				</div>
 			</Layout>
 		);
