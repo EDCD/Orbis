@@ -15,6 +15,7 @@ export default class Users extends Component {
 		users: PropTypes.arrayOf(PropTypes.any).isRequired,
 		handleUserPageClick: PropTypes.func.isRequired,
 		pageCount: PropTypes.number.isRequired,
+		updateUser: PropTypes.func.isRequired,
 		setUserFormApi: PropTypes.func.isRequired
 	};
 
@@ -74,7 +75,7 @@ export default class Users extends Component {
 									<label>Admin: </label>
 									<Checkbox field="admin" defaultValue={user.admin}/>
 								</Form>
-								<button type="submit" onClick={this.updateUser}>
+								<button type="submit" onClick={this.props.updateUser}>
 									Update User
 								</button>
 							</div>

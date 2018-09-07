@@ -9,9 +9,9 @@ import * as actions from './redux/actions';
 import {getCookie, setCookie} from '../../common/utils';
 import Layout from '../common/Layout';
 import {SkyLightStateless} from 'react-skylight';
-import ReactPaginate from 'react-paginate';
+import request from 'superagent';
 import Users from './Users';
-
+import Ships from './Ships';
 import * as autoBind from 'auto-bind';
 
 const modalStyles = {
@@ -86,13 +86,12 @@ export class AdminPage extends Component {
 	}
 
 	async checkAdmin() {
-		const res = await fetch('/api/checkauth/admin', {
-			method: 'GET',
-			redirect: 'manual',
-			credentials: 'include'
-		});
+		const res = await request
+			.get('/api/checkauth/admin')
+			.redirects(0)
+			.withCredentials();
 		try {
-			const json = await res.json();
+			const json = res.body;
 			if (json && json.status === 'Login successful!') {
 				this.setState({admin: true});
 				setCookie('admin', true);
@@ -109,30 +108,21 @@ export class AdminPage extends Component {
 	async updateUser() {
 		const state = this.userFormApi.getState();
 		const {values} = state;
+		const res = await request
+			.post('/api/admin/user/update')
+			.send(values)
+			.withCredentials();
 
-		const res = await fetch('/api/admin/user/update', {
-			method: 'POST',
-			body: JSON.stringify(values),
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const json = res.body;
 		if (json) {
-			console.log(json);
+			this.getUsers(this.state.userOffset);
 		}
 	}
 
 	async getUsers() {
-		const res = await fetch('/api/admin/users', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
+		const res = await request
+			.post('/api/admin/users')
+			.send({
 				order: 'ASC',
 				pageSize: this.state.perPage,
 				offset: this.state.userOffset,
@@ -141,10 +131,10 @@ export class AdminPage extends Component {
 					key: 'title',
 					value: ''
 				}
-			}),
-			credentials: 'include'
-		});
-		const json = await res.json();
+			})
+			.withCredentials();
+
+		const json = res.body;
 		if (json) {
 			this.setState({
 				users: json.rows,
@@ -154,25 +144,21 @@ export class AdminPage extends Component {
 	}
 
 	async getShips() {
-		const res = await fetch('/api/admin/ships', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
+		const res = await request
+			.post('/api/admin/ships')
+			.send({
 				order: 'ASC',
 				pageSize: this.state.perPage,
-				offset: this.state.userOffset,
+				offset: this.state.shipOffset,
 				field: 'updatedAt',
 				search: {
 					key: 'title',
 					value: ''
 				}
-			}),
-			credentials: 'include'
-		});
-		const json = await res.json();
+			})
+			.withCredentials();
+
+		const json = res.body;
 		if (json) {
 			this.setState({
 				ships: json.rows,
@@ -185,17 +171,12 @@ export class AdminPage extends Component {
 		const state = this.newAnnounceFormApi.getState();
 		const {values} = state;
 		console.log(values);
+		const res = await request
+			.post('/api/admin/announcement/add')
+			.send(values)
+			.withCredentials();
 
-		const res = await fetch('/api/admin/announcement/add', {
-			method: 'POST',
-			body: JSON.stringify(values),
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const json = res.body;
 		if (json) {
 			console.log(json);
 		}
@@ -203,11 +184,10 @@ export class AdminPage extends Component {
 	}
 
 	async getAnnouncements() {
-		const res = await fetch('/api/admin/announcements', {
-			method: 'GET',
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const res = await request
+			.get('/api/admin/announcements')
+			.withCredentials();
+		const json = res.body;
 		if (json) {
 			this.setState({announcements: json});
 		}
@@ -216,17 +196,13 @@ export class AdminPage extends Component {
 	async updateShip() {
 		const state = this.shipFormApi.getState();
 		const {values} = state;
-		console.log(values);
-		const res = await fetch('/api/admin/ship/update', {
-			method: 'POST',
-			body: JSON.stringify(values),
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const res = await request
+			.post('/api/admin/ship/update')
+			.send(values)
+			.withCredentials();
+
+		const json = res.body;
+
 		if (json) {
 			console.log(json);
 		}
@@ -237,16 +213,13 @@ export class AdminPage extends Component {
 		const state = this.announceFormApi.getState();
 		const {values} = state;
 		console.log(values);
-		const res = await fetch('/api/admin/announcement/delete', {
-			method: 'POST',
-			body: JSON.stringify(values),
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const res = await request
+			.post('/api/admin/announcement/delete')
+			.send(values)
+			.withCredentials();
+
+		const json = res.body;
+
 		if (json) {
 			console.log(json);
 		}
@@ -318,79 +291,6 @@ export class AdminPage extends Component {
 		));
 	}
 
-	renderUsers() {
-		return (
-			<div className="admin-flex">
-				{this.state.users.map(user => (
-					<div key={user.id} className="admin-user">
-						<p onClick={() => this.setState({modalVisible: user.id})}>
-							{user.username}
-						</p>
-						<SkyLightStateless
-							dialogStyles={modalStyles}
-							isVisible={this.state.modalVisible === user.id}
-							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-							onCloseClicked={() => this.setState({modalVisible: ''})}
-							title={user.username}
-						>
-							<div>
-								<Form initialValues={user} getApi={this.setUserFormApi}>
-									<label>Username: </label>
-									<br/>
-									<Text field="username"/>
-									<br/>
-									<label>Badges: </label>
-									<br/>
-									<Select field="badges" id="select-status">
-										<Option value="" disabled>
-											Select One...
-										</Option>
-										<Option value="Master">Master</Option>
-										<Option value="Dangerous">Dangerous</Option>
-										<Option value="Deadly">Deadly</Option>
-										<Option value="Elite">Elite</Option>
-									</Select>
-									<br/>
-									<label>ID: </label>
-									<br/>
-									<Text readOnly field="id"/>
-									<br/>
-									<label>Keycloak ID: </label>
-									<br/>
-									<Text readOnly field="keycloakId"/>
-									<br/>
-									<label>Email: </label>
-									<br/>
-									<Text field="email"/>
-									<br/>
-									<label>Admin: </label>
-									<Checkbox field="admin" defaultValue={user.admin}/>
-								</Form>
-								<button type="submit" onClick={this.updateUser}>
-									Update User
-								</button>
-							</div>
-						</SkyLightStateless>
-					</div>
-				))}
-				<ReactPaginate
-					previousLabel="Previous"
-					nextLabel="Next"
-					breakLabel="..."
-					breakClassName="break"
-					pageCount={this.state.userPageCount}
-					marginPagesDisplayed={2}
-					pageRangeDisplayed={5}
-					initialPage={0}
-					onPageChange={this.handleUserPageClick}
-					containerClassName="pagination"
-					subContainerClassName="pages pagination"
-					activeClassName="active danger"
-				/>
-			</div>
-		);
-	}
-
 	handleShipPageClick(data) {
 		this.setState({loading: true}, () => {
 			const selected = data.selected;
@@ -411,68 +311,6 @@ export class AdminPage extends Component {
 		});
 	}
 
-	renderShips() {
-		return (
-			<div className="admin-flex">
-				{this.state.ships.map(ship => (
-					<div key={ship.id} className="admin-ship">
-						<p onClick={() => this.setState({modalVisible: ship.id})}>
-							{ship.title}
-						</p>
-						<SkyLightStateless
-							dialogStyles={modalStyles}
-							isVisible={this.state.modalVisible === ship.id}
-							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-							onCloseClicked={() => this.setState({modalVisible: ''})}
-							title={ship.username}
-						>
-							<div>
-								<Form initialValues={ship} getApi={this.setShipFormApi}>
-									<label>Title: </label>
-									<br/>
-									<Text field="title"/>
-									<br/>
-									<label>Description: </label>
-									<br/>
-									<Text field="description"/>
-									<br/>
-									<br/>
-									<label>ID: </label>
-									<br/>
-									<Text readOnly field="id"/>
-									<br/>
-									<br/>
-									<label>Image: </label>
-									<br/>
-									<Text field="imageURL"/>
-									<br/>
-									<br/>
-									<label>Delete? </label>
-									<Checkbox field="delete"/>
-								</Form>
-								<button onClick={this.updateShip}>Update Ship</button>
-							</div>
-						</SkyLightStateless>
-					</div>
-				))}
-				<ReactPaginate
-					previousLabel="Previous"
-					nextLabel="Next"
-					breakLabel="..."
-					breakClassName="break"
-					pageCount={this.state.shipPageCount}
-					marginPagesDisplayed={2}
-					pageRangeDisplayed={5}
-					initialPage={0}
-					onPageChange={this.handleShipPageClick}
-					containerClassName="pagination"
-					subContainerClassName="pages pagination"
-					activeClassName="active danger"
-				/>
-			</div>
-		);
-	}
-
 	render() {
 		return (
 			<Layout>
@@ -491,12 +329,15 @@ export class AdminPage extends Component {
 								<h1>Users</h1>
 								<div className="admin-users">
 									<Users users={this.state.users} pageCount={this.state.userPageCount}
-										handleUserPageClick={this.handleUserPageClick} setUserFormApi={this.setUserFormApi}/>
+										handleUserPageClick={this.handleUserPageClick} updateUser={this.updateUser} setUserFormApi={this.setUserFormApi}/>
 								</div>
 							</div>
 							<div className="admin-flex">
 								<h1>Ships</h1>
-								<div className="admin-ships">{this.renderShips()}</div>
+								<div className="admin-ships">
+									<Ships ships={this.state.ships} pageCount={this.state.shipPageCount}
+										handleShipPageClick={this.handleShipPageClick} updateShip={this.updateShip} setShipFormApi={this.setShipFormApi}/>
+								</div>
 							</div>
 						</div>
 					) : (
