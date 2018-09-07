@@ -9,9 +9,9 @@ import IdealImage from 'react-ideal-image';
 import {Modules} from 'coriolis-data/dist/index';
 import {getLanguage} from '../../i18n/Language';
 
-const {translate, formats} = getLanguage();
+const {translate, formats, units} = getLanguage();
 
-const blackListProps = ['edid', 'grp', 'id', 'type', 'eddbid', 'priority', 'inccost', 'enabled', 'symbol', 'discountedcost', 'fuelmul', ''];
+const whiteListProps = ['health', 'power', 'mass', ''];
 
 /**
  * Finds the module with the specific group and ID
@@ -175,13 +175,13 @@ export class Build extends Component {
 										module && module.m ?
 											<div className="module-container">
 												<p>Module: {mod.class}{mod.rating} {translate(mod.grp)}</p>
-												<p>Enabled: {mod.enabled === 1 ? 'yes' : 'no'}</p>
-												<p>Power usage: {mod.power}</p>
-												{Object.keys(mod).map(e =>
-													typeof module[e] !== 'object' && !blackListProps.includes(e.toLowerCase()) ? <p>{e}: {module[e]}</p> : undefined
-												)}
+												<p>Enabled: {mod.enabled === 1 ? 'Yes' : 'No'}</p>
+												{mod.power ? <p>Power usage: {mod.power}{units.MW}</p> : ''}
+												{mod.mass ? <p>Mass: {mod.mass}{units.T}</p> : ''}
+												{mod.priority ? <p>Priority: {mod.priority}</p> : ''}
+												<p>Engineering: {mod.m.blueprint && mod.m.blueprint.name && mod.m.blueprint.grade ? `${mod.m.blueprint.name} @ grade ${mod.m.blueprint.grade}` : 'No engineering'}</p>
 											</div> :
-											null
+											''
 									);
 								}
 								)}
