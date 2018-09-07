@@ -10,6 +10,8 @@ import {getCookie, setCookie} from '../../common/utils';
 import Layout from '../common/Layout';
 import {SkyLightStateless} from 'react-skylight';
 import ReactPaginate from 'react-paginate';
+import Users from './Users';
+
 import * as autoBind from 'auto-bind';
 
 const modalStyles = {
@@ -487,7 +489,10 @@ export class AdminPage extends Component {
 							</div>
 							<div className="admin-flex">
 								<h1>Users</h1>
-								<div className="admin-users">{this.renderUsers()}</div>
+								<div className="admin-users">
+									<Users users={this.state.users} pageCount={this.state.userPageCount}
+										handleUserPageClick={this.handleUserPageClick} setUserFormApi={this.setUserFormApi}/>
+								</div>
 							</div>
 							<div className="admin-flex">
 								<h1>Ships</h1>
