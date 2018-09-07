@@ -322,26 +322,20 @@ export class AdminPage extends Component {
 							<div className="admin-flex">
 								<h1>Announcements</h1>
 								{this.renderAddAnnouncement()}
-								<div className="admin-announcements">
-									{this.renderAnnouncements()}
-								</div>
+								{this.renderAnnouncements()}
 								<br/>
 							</div>
 							<div className="admin-flex">
 								<h1>Users</h1>
-								<div className="admin-users">
-									<Users users={this.state.users} pageCount={this.state.userPageCount}
-										handleUserPageClick={this.handleUserPageClick} updateUser={this.updateUser}
-										setUserFormApi={this.setUserFormApi}/>
-								</div>
+								<Users users={this.state.users} pageCount={this.state.userPageCount}
+									handleUserPageClick={this.handleUserPageClick} updateUser={this.updateUser}
+									setUserFormApi={this.setUserFormApi}/>
 							</div>
 							<div className="admin-flex">
 								<h1>Ships</h1>
-								<div className="admin-ships">
-									<Ships ships={this.state.ships} pageCount={this.state.shipPageCount}
-										handleShipPageClick={this.handleShipPageClick} updateShip={this.updateShip}
-										setShipFormApi={this.setShipFormApi}/>
-								</div>
+								<Ships ships={this.state.ships} pageCount={this.state.shipPageCount}
+									handleShipPageClick={this.handleShipPageClick} updateShip={this.updateShip}
+									setShipFormApi={this.setShipFormApi}/>
 							</div>
 						</div>
 					</Choose.When>

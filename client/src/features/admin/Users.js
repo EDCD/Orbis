@@ -29,20 +29,20 @@ export default class Users extends Component {
 
 	render() {
 		return (
-			<div className="admin-flex">
-				{this.props.users.map(user => (
-					<div key={user.id} className="admin-user">
-						<p onClick={() => this.setState({modalVisible: user.id})}>
-							{user.username}
-						</p>
-						<SkyLightStateless
-							dialogStyles={modalStyles}
-							isVisible={this.state.modalVisible === user.id}
-							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-							onCloseClicked={() => this.setState({modalVisible: ''})}
-							title={user.username}
-						>
-							<div>
+			<div>
+				<div className="admin-users">
+					{this.props.users.map(user => (
+						<div key={user.id} className="admin-user" onClick={() => this.setState({modalVisible: user.id})}>
+							<span>
+								{user.username}
+							</span>
+							<SkyLightStateless
+								dialogStyles={modalStyles}
+								isVisible={this.state.modalVisible === user.id}
+								hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
+								onCloseClicked={() => this.setState({modalVisible: ''})}
+								title={user.username}
+							>
 								<Form initialValues={user} getApi={this.props.setUserFormApi}>
 									<label>Username: </label>
 									<br/>
@@ -78,10 +78,10 @@ export default class Users extends Component {
 								<button type="submit" onClick={this.props.updateUser}>
 									Update User
 								</button>
-							</div>
-						</SkyLightStateless>
-					</div>
-				))}
+							</SkyLightStateless>
+						</div>
+					))}
+				</div>
 				<ReactPaginate
 					previousLabel="Previous"
 					nextLabel="Next"

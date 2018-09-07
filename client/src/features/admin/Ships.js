@@ -29,48 +29,50 @@ export default class Ships extends Component {
 
 	render() {
 		return (
-			<div className="admin-flex">
-				{this.props.ships.map(ship => (
-					<div key={ship.id} className="admin-ship">
-						<p onClick={() => this.setState({modalVisible: ship.id})}>
-							{ship.title}
-						</p>
-						<SkyLightStateless
-							dialogStyles={modalStyles}
-							isVisible={this.state.modalVisible === ship.id}
-							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-							onCloseClicked={() => this.setState({modalVisible: ''})}
-							title={ship.username}
-						>
-							<div>
-								<Form initialValues={ship} getApi={this.props.setShipFormApi}>
-									<label>Title: </label>
-									<br/>
-									<Text field="title"/>
-									<br/>
-									<label>Description: </label>
-									<br/>
-									<Text field="description"/>
-									<br/>
-									<br/>
-									<label>ID: </label>
-									<br/>
-									<Text readOnly field="id"/>
-									<br/>
-									<br/>
-									<label>Image: </label>
-									<br/>
-									<Text field="imageURL"/>
-									<br/>
-									<br/>
-									<label>Delete? </label>
-									<Checkbox field="delete"/>
-								</Form>
-								<button type="button" onClick={this.props.updateShip}>Update Ship</button>
-							</div>
-						</SkyLightStateless>
-					</div>
-				))}
+			<div>
+				<div className="admin-ships">
+					{this.props.ships.map(ship => (
+						<div key={ship.id} className="admin-ship">
+							<p onClick={() => this.setState({modalVisible: ship.id})}>
+								{ship.title}
+							</p>
+							<SkyLightStateless
+								dialogStyles={modalStyles}
+								isVisible={this.state.modalVisible === ship.id}
+								hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
+								onCloseClicked={() => this.setState({modalVisible: ''})}
+								title={ship.username}
+							>
+								<div>
+									<Form initialValues={ship} getApi={this.props.setShipFormApi}>
+										<label>Title: </label>
+										<br/>
+										<Text field="title"/>
+										<br/>
+										<label>Description: </label>
+										<br/>
+										<Text field="description"/>
+										<br/>
+										<br/>
+										<label>ID: </label>
+										<br/>
+										<Text readOnly field="id"/>
+										<br/>
+										<br/>
+										<label>Image: </label>
+										<br/>
+										<Text field="imageURL"/>
+										<br/>
+										<br/>
+										<label>Delete? </label>
+										<Checkbox field="delete"/>
+									</Form>
+									<button type="button" onClick={this.props.updateShip}>Update Ship</button>
+								</div>
+							</SkyLightStateless>
+						</div>
+					))}
+				</div>
 				<ReactPaginate
 					previousLabel="Previous"
 					nextLabel="Next"
