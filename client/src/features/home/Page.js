@@ -8,6 +8,7 @@ import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
 import Search from './Search';
 import {deleteCookie, getCookie, setCookie} from '../../common/utils';
+import * as autoBind from 'auto-bind';
 
 let params;
 
@@ -34,7 +35,7 @@ export class Page extends React.Component {
 				}
 			}
 		};
-		this.handlePageClick = this.handlePageClick.bind(this);
+		autoBind.react(this);
 	}
 
 	async checkLogged() {
@@ -144,8 +145,6 @@ export class Page extends React.Component {
 	}
 
 	render() {
-		this.loadBuilds = this.loadBuilds.bind(this);
-		this.getCoriolisLink = this.getCoriolisLink.bind(this);
 		return (
 			<Layout>
 				<h1>Latest builds</h1>

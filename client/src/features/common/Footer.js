@@ -1,8 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {getCookie, setCookie} from '../../common/utils';
+import * as autoBind from 'auto-bind';
 
 export default class Footer extends React.Component {
+	constructor(props) {
+		super(props);
+		autoBind.react(this);
+	}
 	checkAdmin() {
 		let admin = false;
 		try {
@@ -16,7 +21,6 @@ export default class Footer extends React.Component {
 	}
 
 	render() {
-		this.checkAdmin = this.checkAdmin.bind(this);
 		return (
 			<div className="footer-root">
 				<div className="container">

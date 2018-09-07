@@ -6,6 +6,7 @@ import * as actions from './redux/actions';
 import {Link} from 'react-router-dom';
 import {Form, Text} from 'informed';
 import Layout from '../common/Layout';
+import * as autoBind from 'auto-bind';
 
 const Label = props => {
 	const {htmlFor, ...otherProps} = props;
@@ -34,8 +35,7 @@ export class DefaultPage extends Component {
 			loggedIn: false
 
 		};
-		this.handleClick = this.handleClick.bind(this);
-		this.setFormApi = this.setFormApi.bind(this);
+		autoBind.react(this);
 	}
 
 	setFormApi(formApi) {
@@ -91,7 +91,6 @@ export class DefaultPage extends Component {
 	}
 
 	render() {
-		this.submit = this.submit.bind(this);
 		return (
 			<Layout>
 				<div className="register-root">

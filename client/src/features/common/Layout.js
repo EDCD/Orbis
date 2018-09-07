@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Header, Footer} from './index';
 import PropTypes from 'prop-types';
 import {deleteCookie, setCookie} from '../../common/utils';
+import * as autoBind from 'auto-bind';
 
 export default class Layout extends Component {
 	static propTypes = {
@@ -13,8 +14,7 @@ export default class Layout extends Component {
 		this.state = {
 			announcements: []
 		};
-		this.getAnnouncements = this.getAnnouncements.bind(this);
-		this.renderAnnouncements = this.renderAnnouncements.bind(this);
+		autoBind.react(this);
 	}
 
 	componentDidMount() {

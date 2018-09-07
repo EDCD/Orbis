@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import * as actions from './redux/actions';
 import {Form, Text, TextArea} from 'informed';
 import request from 'superagent';
+import * as autoBind from 'auto-bind';
 
 export class EditBuild extends Component {
 	static propTypes = {};
@@ -14,10 +15,7 @@ export class EditBuild extends Component {
 		this.state = {
 			loggedIn: false
 		};
-		this.submit = this.submit.bind(this);
-		this.handleClick = this.handleClick.bind(this);
-		this.setFormApi = this.setFormApi.bind(this);
-		this.handleDelete = this.handleDelete.bind(this);
+		autoBind.react(this);
 	}
 
 	setFormApi(formApi) {

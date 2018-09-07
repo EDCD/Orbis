@@ -10,6 +10,7 @@ import {getCookie, setCookie} from '../../common/utils';
 import Layout from '../common/Layout';
 import {SkyLightStateless} from 'react-skylight';
 import ReactPaginate from 'react-paginate';
+import * as autoBind from 'auto-bind';
 
 const modalStyles = {
 	backgroundColor: '#1e1e1e',
@@ -72,20 +73,7 @@ export class AdminPage extends Component {
 			userPageCount: 0,
 			announcements: []
 		};
-		this.checkAdmin = this.checkAdmin.bind(this);
-		this.getUsers = this.getUsers.bind(this);
-		this.setUserFormApi = this.setUserFormApi.bind(this);
-		this.setShipFormApi = this.setShipFormApi.bind(this);
-		this.updateUser = this.updateUser.bind(this);
-		this.addAnnouncement = this.addAnnouncement.bind(this);
-		this.updateShip = this.updateShip.bind(this);
-		this.updateAnnouncement = this.updateAnnouncement.bind(this);
-		this.renderShips = this.renderShips.bind(this);
-		this.renderAddAnnouncement = this.renderAddAnnouncement.bind(this);
-		this.setAnnounceFormApi = this.setAnnounceFormApi.bind(this);
-		this.setNewAnnounceFormApi = this.setNewAnnounceFormApi.bind(this);
-		this.handleShipPageClick = this.handleShipPageClick.bind(this);
-		this.handleUserPageClick = this.handleUserPageClick.bind(this);
+		autoBind.react(this);
 	}
 
 	componentDidMount() {
@@ -484,8 +472,6 @@ export class AdminPage extends Component {
 	}
 
 	render() {
-		this.renderUsers = this.renderUsers.bind(this);
-		this.renderAnnouncements = this.renderAnnouncements.bind(this);
 		return (
 			<Layout>
 				<div className="admin-admin-page">
