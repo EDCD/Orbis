@@ -27,6 +27,7 @@ const DatePicker = asField(({fieldState, fieldApi, ...props}) => {
 				{...rest}
 				ref={forwardedRef}
 				value={!value && value !== 0 ? '' : value}
+				style={fieldState.error ? {border: 'solid 1px red'} : null}
 				onDayChange={e => {
 					setValue(e);
 					if (onChange) {
@@ -39,7 +40,6 @@ const DatePicker = asField(({fieldState, fieldApi, ...props}) => {
 						onBlur(e);
 					}
 				}}
-				style={fieldState.error ? {border: 'solid 1px red'} : null}
 			/>
 			{fieldState.error ? (
 				<small style={{color: 'red'}}>{fieldState.error}</small>
@@ -156,7 +156,10 @@ export class AdminPage extends Component {
 		});
 		const json = await res.json();
 		if (json) {
-			this.setState({users: json.rows, userPageCount: Math.ceil(json.count / this.state.perPage)});
+			this.setState({
+				users: json.rows,
+				userPageCount: Math.ceil(json.count / this.state.perPage)
+			});
 		}
 	}
 
@@ -181,7 +184,10 @@ export class AdminPage extends Component {
 		});
 		const json = await res.json();
 		if (json) {
-			this.setState({ships: json.rows, shipPageCount: Math.ceil(json.count / this.state.perPage)});
+			this.setState({
+				ships: json.rows,
+				shipPageCount: Math.ceil(json.count / this.state.perPage)
+			});
 		}
 	}
 
@@ -203,6 +209,7 @@ export class AdminPage extends Component {
 		if (json) {
 			console.log(json);
 		}
+		this.getAnnouncements();
 	}
 
 	async getAnnouncements() {
@@ -276,14 +283,14 @@ export class AdminPage extends Component {
 		return (
 			<div>
 				<Form getApi={this.setNewAnnounceFormApi}>
-					<label>Announcement text: </label><br/>
+					<label>Announcement text: </label>
+					<br/>
 					<Text field="message"/>
 					<br/>
-					<label>Announcement expiry: </label><br/>
-					<DatePicker
-						field="expiresAt"
-					/>
-					<button onClick={this.addAnnouncement}>Add announcement</button>
+					<label>Announcement expiry: </label>
+					<br/>
+					<DatePicker field="expiresAt"/>
+					<button type="button" onClick={this.addAnnouncement}>Add announcement</button>
 				</Form>
 			</div>
 		);
@@ -292,26 +299,33 @@ export class AdminPage extends Component {
 	renderAnnouncements() {
 		return this.state.announcements.map(announcement => (
 			<div key={announcement.id} className="admin-announcement">
-				<p onClick={() => this.setState({modalVisible: announcement.id})}>{announcement.message}</p>
-				<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === announcement.id}
+				<p onClick={() => this.setState({modalVisible: announcement.id})}>
+					{announcement.message}
+				</p>
+				<SkyLightStateless
+					dialogStyles={modalStyles}
+					isVisible={this.state.modalVisible === announcement.id}
 					hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-					onCloseClicked={() => this.setState({modalVisible: ''})} title={announcement.message}
+					title={announcement.message}
+					onCloseClicked={() => this.setState({modalVisible: ''})}
 				>
 					<div>
 						<Form initialValues={announcement} getApi={this.setAnnounceFormApi}>
-							<label>ID: </label><br/>
+							<label>ID: </label>
+							<br/>
 							<Text readOnly field="id"/>
 							<br/>
-							<label>Message: </label><br/>
+							<label>Message: </label>
+							<br/>
 							<Text readOnly field="message"/>
 						</Form>
-						<button onClick={this.updateAnnouncement}>Delete Announcement</button>
+						<button type="button" onClick={this.updateAnnouncement}>
+							Delete Announcement
+						</button>
 					</div>
 				</SkyLightStateless>
 			</div>
-
-		)
-		);
+		));
 	}
 
 	renderUsers() {
@@ -319,17 +333,24 @@ export class AdminPage extends Component {
 			<div className="admin-flex">
 				{this.state.users.map(user => (
 					<div key={user.id} className="admin-user">
-						<p onClick={() => this.setState({modalVisible: user.id})}>{user.username}</p>
-						<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === user.id}
+						<p onClick={() => this.setState({modalVisible: user.id})}>
+							{user.username}
+						</p>
+						<SkyLightStateless
+							dialogStyles={modalStyles}
+							isVisible={this.state.modalVisible === user.id}
 							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-							onCloseClicked={() => this.setState({modalVisible: ''})} title={user.username}
+							onCloseClicked={() => this.setState({modalVisible: ''})}
+							title={user.username}
 						>
 							<div>
 								<Form initialValues={user} getApi={this.setUserFormApi}>
-									<label>Username: </label><br/>
+									<label>Username: </label>
+									<br/>
 									<Text field="username"/>
 									<br/>
-									<label>Badges: </label><br/>
+									<label>Badges: </label>
+									<br/>
 									<Select field="badges" id="select-status">
 										<Option value="" disabled>
 											Select One...
@@ -340,24 +361,30 @@ export class AdminPage extends Component {
 										<Option value="Elite">Elite</Option>
 									</Select>
 									<br/>
-									<label>ID: </label><br/>
+									<label>ID: </label>
+									<br/>
 									<Text readOnly field="id"/>
 									<br/>
-									<label>Keycloak ID: </label><br/>
+									<label>Keycloak ID: </label>
+									<br/>
 									<Text readOnly field="keycloakId"/>
 									<br/>
-									<label>Email: </label><br/>
+									<label>Email: </label>
+									<br/>
 									<Text field="email"/>
 									<br/>
 									<label>Admin: </label>
 									<Checkbox field="admin" defaultValue={user.admin}/>
 								</Form>
-								<button type="submit" onClick={this.updateUser}>Update User</button>
+								<button type="submit" onClick={this.updateUser}>
+									Update User
+								</button>
 							</div>
 						</SkyLightStateless>
 					</div>
 				))}
-				<ReactPaginate previousLabel="Previous"
+				<ReactPaginate
+					previousLabel="Previous"
 					nextLabel="Next"
 					breakLabel="..."
 					breakClassName="break"
@@ -368,7 +395,8 @@ export class AdminPage extends Component {
 					onPageChange={this.handleUserPageClick}
 					containerClassName="pagination"
 					subContainerClassName="pages pagination"
-					activeClassName="active danger"/>
+					activeClassName="active danger"
+				/>
 			</div>
 		);
 	}
@@ -398,25 +426,34 @@ export class AdminPage extends Component {
 			<div className="admin-flex">
 				{this.state.ships.map(ship => (
 					<div key={ship.id} className="admin-ship">
-						<p onClick={() => this.setState({modalVisible: ship.id})}>{ship.title}</p>
-						<SkyLightStateless dialogStyles={modalStyles} isVisible={this.state.modalVisible === ship.id}
+						<p onClick={() => this.setState({modalVisible: ship.id})}>
+							{ship.title}
+						</p>
+						<SkyLightStateless
+							dialogStyles={modalStyles}
+							isVisible={this.state.modalVisible === ship.id}
 							hideOnOverlayClicked={() => this.setState({modalVisible: ''})}
-							onCloseClicked={() => this.setState({modalVisible: ''})} title={ship.username}
+							onCloseClicked={() => this.setState({modalVisible: ''})}
+							title={ship.username}
 						>
 							<div>
 								<Form initialValues={ship} getApi={this.setShipFormApi}>
-									<label>Title: </label><br/>
+									<label>Title: </label>
+									<br/>
 									<Text field="title"/>
 									<br/>
-									<label>Description: </label><br/>
+									<label>Description: </label>
+									<br/>
 									<Text field="description"/>
 									<br/>
 									<br/>
-									<label>ID: </label><br/>
+									<label>ID: </label>
+									<br/>
 									<Text readOnly field="id"/>
 									<br/>
 									<br/>
-									<label>Image: </label><br/>
+									<label>Image: </label>
+									<br/>
 									<Text field="imageURL"/>
 									<br/>
 									<br/>
@@ -428,7 +465,8 @@ export class AdminPage extends Component {
 						</SkyLightStateless>
 					</div>
 				))}
-				<ReactPaginate previousLabel="Previous"
+				<ReactPaginate
+					previousLabel="Previous"
 					nextLabel="Next"
 					breakLabel="..."
 					breakClassName="break"
@@ -439,7 +477,8 @@ export class AdminPage extends Component {
 					onPageChange={this.handleShipPageClick}
 					containerClassName="pagination"
 					subContainerClassName="pages pagination"
-					activeClassName="active danger"/>
+					activeClassName="active danger"
+				/>
 			</div>
 		);
 	}
@@ -462,23 +501,19 @@ export class AdminPage extends Component {
 							</div>
 							<div className="admin-flex">
 								<h1>Users</h1>
-								<div className="admin-users">
-									{this.renderUsers()}
-								</div>
+								<div className="admin-users">{this.renderUsers()}</div>
 							</div>
 							<div className="admin-flex">
 								<h1>Ships</h1>
-								<div className="admin-ships">
-									{this.renderShips()}
-								</div>
+								<div className="admin-ships">{this.renderShips()}</div>
 							</div>
 						</div>
-					) :
+					) : (
 						<div>
 							<p>Access denied.</p>
 							<Link to="/">Go home?</Link>
 						</div>
-					}
+					)}
 				</div>
 			</Layout>
 		);
