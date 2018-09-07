@@ -82,6 +82,7 @@ router.get('/:id', (req, res) =>
 			if (!ships) {
 				return res.json({});
 			}
+			ships = JSON.parse(JSON.stringify(ships));
 			ships.allowedToEdit = false;
 			if (req.user) {
 				const isadmin = isAdmin(req);

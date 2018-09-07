@@ -66,13 +66,28 @@ const admin = require('./routes/admin');
 app.get('/build/:id/og', (req, res) =>
 	Ship.find({
 		where: {shortid: req.params.id},
-		attributes: ['id', 'updatedAt', 'createdAt', 'shortid', 'title', 'description', 'author', 'imageURL', 'url', 'proxiedImage']
+		attributes: [
+			'id',
+			'updatedAt',
+			'createdAt',
+			'shortid',
+			'title',
+			'description',
+			'author',
+			'imageURL',
+			'url',
+			'proxiedImage'
+		]
 	})
 		.then(ship => {
 			if (!ship) {
 				return res.json({});
 			}
-			const uri = req.protocol + '://' + req.get('host') + req.originalUrl.replace('/og', '');
+			const uri =
+				req.protocol +
+				'://' +
+				req.get('host') +
+				req.originalUrl.replace('/og', '');
 			let html = '<!doctype html>\n';
 			html += `<html><head>`;
 			html += `<meta name="author" content="${ship.author.username}"/>`;
@@ -94,6 +109,26 @@ app.get('/build/:id/og', (req, res) =>
 			res.status(500).end();
 		})
 );
+
+app.get('/og', (req, res) => {
+	const uri =
+		req.protocol + '://' + req.get('host') + req.originalUrl.replace('/og', '');
+	let html = '<!doctype html>\n';
+	html += `<html><head>`;
+	html += `<meta name="author" content="Willyb321"/>`;
+	html += `<meta name="og:title" content="Orbis.zone"/>`;
+	html += `<meta name="og:description" content="It's time to dock"/>`;
+	html += `<meta name="og:image" content="https://orbis.zone/orbis.png"/>`;
+	html += `<meta name="og:url" content="${uri}"/>`;
+	html += `<meta property="og:type" content="website"/>`;
+	html += `<meta name="twitter:card" content="summary_large_image">`;
+	html += `<link type="application/json+oembed" href="https://orbis.zone/api/oembed.json" />`;
+	html += `<meta http-equiv="refresh" content="0;url='${uri}'"/>`;
+	html += `</head>`;
+	html += `<body/>`;
+	html += `</html>`;
+	return res.send(html);
+});
 
 app.get('/api/oembed.json', (req, res) => {
 	const json = {
