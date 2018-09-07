@@ -292,22 +292,18 @@ export class AdminPage extends Component {
 	}
 
 	handleShipPageClick(data) {
-		this.setState({loading: true}, () => {
-			const selected = data.selected;
-			const offset = Math.ceil(selected * this.state.perPage);
-			this.setState({shipOffset: offset}, () => {
-				this.getShips(this.state.shipOffset);
-			});
+		const selected = data.selected;
+		const offset = Math.ceil(selected * this.state.perPage);
+		this.setState({shipOffset: offset}, () => {
+			this.getShips(this.state.shipOffset);
 		});
 	}
 
 	handleUserPageClick(data) {
-		this.setState({loading: true}, () => {
-			const selected = data.selected;
-			const offset = Math.ceil(selected * this.state.perPage);
-			this.setState({userOffset: offset}, () => {
-				this.getUsers(this.state.userOffset);
-			});
+		const selected = data.selected;
+		const offset = Math.ceil(selected * this.state.perPage);
+		this.setState({userOffset: offset}, () => {
+			this.getUsers(this.state.userOffset);
 		});
 	}
 
