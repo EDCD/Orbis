@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {getCookie, setCookie} from '../../common/utils';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 export default class Footer extends React.Component {
 	constructor(props) {
 		super(props);
-		autoBind.react(this);
+		autoBind(this);
 	}
 	checkAdmin() {
 		let admin = false;

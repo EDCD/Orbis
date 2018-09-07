@@ -8,7 +8,7 @@ import ReactLoading from 'react-loading';
 import IdealImage from 'react-ideal-image';
 import {Modules} from 'coriolis-data/dist/index';
 import {getLanguage} from '../../i18n/Language';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 const {translate, formats, units} = getLanguage();
 
 const whiteListProps = ['health', 'power', 'mass', ''];
@@ -55,7 +55,7 @@ export class Build extends Component {
 			loggedIn: false,
 			coriolisLink: ''
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	async checkLogged() {

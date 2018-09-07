@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import UiButton from './UiButton';
 import VoteCounter from './VoteCounter';
 import request from 'superagent';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 export default class ButtonBox extends Component {
 	static propTypes = {
@@ -25,7 +25,7 @@ export default class ButtonBox extends Component {
 			buttonClicked: null,
 			likes: this.props.likes
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	toggle(index) {

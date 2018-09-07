@@ -6,7 +6,7 @@ import * as actions from './redux/actions';
 import {Link} from 'react-router-dom';
 import {Form, Text} from 'informed';
 import Layout from '../common/Layout';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 const Label = props => {
 	const {htmlFor, ...otherProps} = props;
@@ -35,7 +35,7 @@ export class DefaultPage extends Component {
 			loggedIn: false
 
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	setFormApi(formApi) {

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Header, Footer} from './index';
 import PropTypes from 'prop-types';
 import {deleteCookie, setCookie} from '../../common/utils';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 export default class Layout extends Component {
 	static propTypes = {
@@ -14,7 +14,7 @@ export default class Layout extends Component {
 		this.state = {
 			announcements: []
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	componentDidMount() {

@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import * as actions from './redux/actions';
 import {Form, Text, TextArea} from 'informed';
 import request from 'superagent';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 export class EditBuild extends Component {
 	static propTypes = {};
@@ -15,7 +15,7 @@ export class EditBuild extends Component {
 		this.state = {
 			loggedIn: false
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	setFormApi(formApi) {

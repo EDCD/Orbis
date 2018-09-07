@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {DebounceInput} from 'react-debounce-input';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 export default class Search extends Component {
 	static propTypes = {
@@ -15,7 +15,7 @@ export default class Search extends Component {
 		this.state = {
 			search: props.state || {key: 'title', value: '', sort: {field: 'createdAt', order: 'ASC'}}
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	searchChangeHandler(e) {

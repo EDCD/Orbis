@@ -12,7 +12,7 @@ import {SkyLightStateless} from 'react-skylight';
 import request from 'superagent';
 import Users from './Users';
 import Ships from './Ships';
-import * as autoBind from 'auto-bind';
+import {autoBind} from 'react-extras';
 
 const modalStyles = {
 	backgroundColor: '#1e1e1e',
@@ -75,7 +75,7 @@ export class AdminPage extends Component {
 			userPageCount: 0,
 			announcements: []
 		};
-		autoBind.react(this);
+		autoBind(this);
 	}
 
 	componentDidMount() {
