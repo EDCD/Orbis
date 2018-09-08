@@ -174,7 +174,7 @@ export class Build extends Component {
 								</div>
 								{item.coriolisShip.costList.map(module => {
 									if (!module || !module.m || module.type === 'SHIP') {
-										return null;
+										return '';
 									}
 									let mod = Object.assign({}, findModule(module.m.grp, module.m.id), module);
 									console.log(mod);
@@ -182,7 +182,7 @@ export class Build extends Component {
 										module && module.m ?
 											<div className="module-container">
 												<p>Module: {mod.class}{mod.rating} {mod.m.name || translate(mod.grp)}</p>
-												<p>Enabled: {mod.enabled === 1 ? 'Yes' : 'No'}</p>
+												<p>Enabled: {mod.enabled === 1 || mod.m.grp === 'bh' ? 'Yes' : 'No'}</p>
 												{mod.power ? <p>Power usage: {mod.power}{units.MW} ({formats.pct1(mod.power / item.coriolisShip.powerAvailable)})</p> : ''}
 												{mod.mass ? <p>Mass: {mod.mass}{units.T}</p> : ''}
 												{mod.priority ? <p>Priority: {mod.priority}</p> : ''}
