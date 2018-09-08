@@ -138,32 +138,38 @@ export class Build extends Component {
 						{this.state.build && this.state.build.length > 0 ? this.state.build.map(item => (
 							<div key={item.id} className="build">
 								<div className="build-details">
-									<p>Armour: {Math.round(item.coriolisShip.armour)}</p>
-									<p>Shield: {Math.round(item.coriolisShip.shield)} {units.MJ}</p>
-									<p>Top Speed: {Math.round(item.coriolisShip.topBoost)} {units['m/s']}</p>
+									<p>Armour: {formats.int(item.coriolisShip.armour)}</p>
+									<p>Shield: {formats.int(item.coriolisShip.shield)} {units.MJ}</p>
+									<p>Top Speed: {formats.int(item.coriolisShip.topBoost)} {units['m/s']}</p>
 									<p>
 										Hull Thermal Res:{' '}
-										{Math.round(item.coriolisShip.hullThermRes * 100)}%
+										{formats.int(item.coriolisShip.hullThermRes * 100)}%
 									</p>
 									<p>
 										Hull Explosive Res:{' '}
-										{Math.round(item.coriolisShip.hullExplRes * 100)}%
+										{formats.int(item.coriolisShip.hullExplRes * 100)}%
 									</p>
 									<p>
 										Hull Kinetic Res:{' '}
-										{Math.round(item.coriolisShip.shieldKinRes * 100)}%
+										{formats.int(item.coriolisShip.shieldKinRes * 100)}%
 									</p>
+									{item.coriolisShip.hullCausRes >= 0 ? (
+										<p>
+											Hull Caustic Res:{' '}
+											{formats.int(item.coriolisShip.hullCausRes * 100)}%
+										</p>
+									) : ''}
 									<p>
 										Shield Thermal Res:{' '}
-										{Math.round(item.coriolisShip.shieldThermRes * 100)}%
+										{formats.int(item.coriolisShip.shieldThermRes * 100)}%
 									</p>
 									<p>
 										Shield Explosive Res:{' '}
-										{Math.round(item.coriolisShip.shieldExplRes * 100)}%
+										{formats.int(item.coriolisShip.shieldExplRes * 100)}%
 									</p>
 									<p>
 										Shield Kinetic Res:{' '}
-										{Math.round(item.coriolisShip.shieldKinRes * 100)}%
+										{formats.int(item.coriolisShip.shieldKinRes * 100)}%
 									</p>
 								</div>
 								{item.coriolisShip.costList.map(module => {
@@ -177,7 +183,7 @@ export class Build extends Component {
 											<div className="module-container">
 												<p>Module: {mod.class}{mod.rating} {mod.m.name || translate(mod.grp)}</p>
 												<p>Enabled: {mod.enabled === 1 ? 'Yes' : 'No'}</p>
-												{mod.power ? <p>Power usage: {mod.power}{units.MW}</p> : ''}
+												{mod.power ? <p>Power usage: {mod.power}{units.MW} ({formats.pct1(mod.power / item.coriolisShip.powerAvailable)})</p> : ''}
 												{mod.mass ? <p>Mass: {mod.mass}{units.T}</p> : ''}
 												{mod.priority ? <p>Priority: {mod.priority}</p> : ''}
 												<p>Engineering: {mod.m.blueprint && mod.m.blueprint.name && mod.m.blueprint.grade ? `${mod.m.blueprint.name} @ grade ${mod.m.blueprint.grade}` : 'No engineering'}</p>
