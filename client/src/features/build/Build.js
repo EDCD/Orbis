@@ -139,8 +139,8 @@ export class Build extends Component {
 							<div key={item.id} className="build">
 								<div className="build-details">
 									<p>Armour: {Math.round(item.coriolisShip.armour)}</p>
-									<p>Shield: {Math.round(item.coriolisShip.shield)}</p>
-									<p>Top Speed: {Math.round(item.coriolisShip.topBoost)}</p>
+									<p>Shield: {Math.round(item.coriolisShip.shield)} {units.MJ}</p>
+									<p>Top Speed: {Math.round(item.coriolisShip.topBoost)} {units['m/s']}</p>
 									<p>
 										Hull Thermal Res:{' '}
 										{Math.round(item.coriolisShip.hullThermRes * 100)}%
