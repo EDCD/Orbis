@@ -9,6 +9,7 @@ import IdealImage from 'react-ideal-image';
 import {Modules} from 'coriolis-data/dist/index';
 import {getLanguage} from '../../i18n/Language';
 import {autoBind} from 'react-extras';
+
 const {translate, formats, units} = getLanguage();
 
 const whiteListProps = ['health', 'power', 'mass', ''];
@@ -113,7 +114,7 @@ export class Build extends Component {
 					<div className="">
 						<div className="build-header">
 							<h1>
-									Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+								Build: {this.state.build[0].title} by {this.state.build[0].author.username}
 							</h1>
 							<p>{this.state.build[0].description}</p>
 							<IdealImage className="build-image"
@@ -126,13 +127,13 @@ export class Build extends Component {
 						</div>
 						{this.state.build[0] && this.state.build[0].allowedToEdit ? (
 							<Link to={`/build/${this.props.match.params.id}/edit`}>
-									Edit Build Info
+								Edit Build Info
 							</Link>
 						) : ''}
 
 						<br/>
 						<a target="_blank" rel="noopener noreferrer" href={this.state.coriolisLink}>
-								Edit Build on Coriolis
+							Edit Build on Coriolis
 						</a>
 						{this.state.build && this.state.build.length > 0 ? this.state.build.map(item => (
 							<div key={item.id} className="build">
@@ -141,27 +142,27 @@ export class Build extends Component {
 									<p>Shield: {Math.round(item.coriolisShip.shield)}</p>
 									<p>Top Speed: {Math.round(item.coriolisShip.topBoost)}</p>
 									<p>
-											Hull Thermal Res:{' '}
+										Hull Thermal Res:{' '}
 										{Math.round(item.coriolisShip.hullThermRes * 100)}%
 									</p>
 									<p>
-											Hull Explosive Res:{' '}
+										Hull Explosive Res:{' '}
 										{Math.round(item.coriolisShip.hullExplRes * 100)}%
 									</p>
 									<p>
-											Hull Kinetic Res:{' '}
+										Hull Kinetic Res:{' '}
 										{Math.round(item.coriolisShip.shieldKinRes * 100)}%
 									</p>
 									<p>
-											Shield Thermal Res:{' '}
+										Shield Thermal Res:{' '}
 										{Math.round(item.coriolisShip.shieldThermRes * 100)}%
 									</p>
 									<p>
-											Shield Explosive Res:{' '}
+										Shield Explosive Res:{' '}
 										{Math.round(item.coriolisShip.shieldExplRes * 100)}%
 									</p>
 									<p>
-											Shield Kinetic Res:{' '}
+										Shield Kinetic Res:{' '}
 										{Math.round(item.coriolisShip.shieldKinRes * 100)}%
 									</p>
 								</div>
@@ -174,7 +175,7 @@ export class Build extends Component {
 									return (
 										module && module.m ?
 											<div className="module-container">
-												<p>Module: {mod.class}{mod.rating} {translate(mod.grp)}</p>
+												<p>Module: {mod.class}{mod.rating} {mod.m.name || translate(mod.grp)}</p>
 												<p>Enabled: {mod.enabled === 1 ? 'Yes' : 'No'}</p>
 												{mod.power ? <p>Power usage: {mod.power}{units.MW}</p> : ''}
 												{mod.mass ? <p>Mass: {mod.mass}{units.T}</p> : ''}
