@@ -8,6 +8,6 @@ import Adapter from 'enzyme-adapter-react-16';
 configure({adapter: new Adapter(), disableLifecycleMethods: true});
 
 if (process.env.NODE_ENV === 'test') {
-	axios.defaults.baseURL = 'http://localhost';
+	axios.defaults.baseURL = 'https://orbis.zone';
 	axios.defaults.adapter = httpAdapter;
 }

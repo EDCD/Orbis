@@ -32,6 +32,7 @@ module.exports = (sequelize, DataType) => {
 			indexes: [
 				{fields: ['vote']},
 				{fields: ['shipId']},
+				{fields: ['shipId', 'userId']},
 				{fields: ['userId']}
 			],
 			freezeTableName: true
@@ -45,11 +46,12 @@ module.exports = (sequelize, DataType) => {
 				if (!ship) {
 					return;
 				}
-				ship.likes = await ShipVote.sum('vote', {
+				const votes = await ShipVote.sum('vote', {
 					where: {
 						shipId: ship.id
 					}
 				});
+				ship.likes = votes;
 				ship.save();
 			});
 	}
