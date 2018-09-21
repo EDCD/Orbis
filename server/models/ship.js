@@ -63,6 +63,7 @@ module.exports = (sequelize, DataType) => {
 			indexes: [
 				{fields: ['id']},
 				{fields: ['updatedAt']},
+				{fields: ['author']},
 				{fields: ['createdAt']},
 				{fields: ['shortid']},
 				{fields: ['Ship']},

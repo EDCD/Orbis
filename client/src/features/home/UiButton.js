@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default class UiButton extends Component {
 	static propTypes = {
-		isClicked: PropTypes.bool.isRequired,
+		isClicked: PropTypes.string.isRequired,
 		text: PropTypes.string.isRequired,
 		icon: PropTypes.string.isRequired,
 		loggedIn: PropTypes.bool.isRequired,

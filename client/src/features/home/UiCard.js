@@ -13,9 +13,8 @@ export default class UiCard extends Component {
 		return (
 			<div className="ui-card">
 				<div className="ui-card-img">
-					<IdealImage placeholder={{lqip: imageURL.replace('{OPTIONS}', '20x')}} shouldAutoDownload={() => true}
-						height={250} width={400} srcSet={[
-							{width: 200, src: imageURL.replace('{OPTIONS}', '200x125')},
+					<IdealImage placeholder={{lqip: imageURL.replace('{OPTIONS}', '20x')}}
+						height={500} width={800} srcSet={[
 							{width: 400, src: imageURL.replace('{OPTIONS}', '400x250')}
 						]}/>
 				</div>

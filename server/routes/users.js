@@ -3,7 +3,7 @@ const models = require('../models');
 const Op = require('sequelize').Op;
 
 const router = express.Router();
-const {User} = models;
+const {User, Ship} = models;
 
 router.post('/register', async (req, res) => {
 	if (!req.body) {
@@ -40,6 +40,36 @@ router.post('/register', async (req, res) => {
 	}
 
 	return res.json({success: true, user: 'created'});
+});
+
+router.get('/profile/:name', (req, res) => {
+	const username = req.params.name === 'me' && req.user ? req.user.username : req.params.name;
+	const query = {
+		where: {
+			'author.username': username
+		},
+		limit: req.query.pageSize,
+		offset: req.query.offset,
+		attributes: [
+			'id',
+			'updatedAt',
+			'createdAt',
+			'shortid',
+			'title',
+			'description',
+			'author',
+			'Ship',
+			'likes',
+			'url',
+			'proxiedImage'
+		]
+	};
+	return Ship.findAndCountAll(query)
+		.then(ships => res.json(ships))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
 });
 
 module.exports = router;

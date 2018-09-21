@@ -8,6 +8,7 @@ import registerReducer from '../features/register/redux/reducer';
 import aboutReducer from '../features/about/redux/reducer';
 import contactReducer from '../features/contact/redux/reducer';
 import adminReducer from '../features/admin/redux/reducer';
+import profileReducer from '../features/profile/redux/reducer';
 
 // NOTE 1: DO NOT CHANGE the 'reducerMap' name and the declaration pattern.
 // This is used for Rekit cmds to register new features, remove features, etc.
@@ -23,7 +24,8 @@ const reducerMap = {
 	register: registerReducer,
 	about: aboutReducer,
 	contact: contactReducer,
-	admin: adminReducer
+	admin: adminReducer,
+  profile: profileReducer
 };
 
 export default combineReducers(reducerMap);

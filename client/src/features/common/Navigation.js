@@ -8,7 +8,8 @@ export default class Navigation extends Component {
 	constructor() {
 		super();
 		this.state = {
-			loggedIn: Boolean(getCookie('accessToken'))
+			loggedIn: Boolean(getCookie('accessToken')),
+			user: {}
 		};
 	}
 
@@ -23,7 +24,7 @@ export default class Navigation extends Component {
 		});
 		const json = await res.json();
 		if (json && json.status === 'Login successful!') {
-			this.setState({loggedIn: true});
+			this.setState({loggedIn: true, user: json.user});
 			setCookie('accessToken', json.accessToken);
 			setCookie('admin', json.admin);
 		} else {
@@ -75,6 +76,15 @@ export default class Navigation extends Component {
 							<a className={cx(['menu-item-label'])} href="/api/logout">
 							Log out
 							</a>
+						</span>
+					</div>
+				</div>
+				<div hidden={!this.state.user} className={cx('r', 'menu')}>
+					<div className={cx(['menu-header'])}>
+						<span>
+							<Link className={cx(['menu-item-label'])} to={`/profile/${this.state.user.username}`}>
+							My profile
+							</Link>
 						</span>
 					</div>
 				</div>
