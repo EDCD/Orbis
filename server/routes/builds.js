@@ -59,6 +59,30 @@ router.post('/', (req, res) => {
 		});
 });
 
+router.get('/liked/:shipId', (req, res) => {
+	if (!req.user) {
+		return res.status(403).end();
+	}
+	return ShipVote.find({
+		where: {
+			shipId: req.params.shipId,
+			userId: req.user.keycloakId
+		},
+		attributes: ['vote']
+	})
+		.then(vote => {
+			if (!vote) {
+				return res.json({});
+			}
+			vote = JSON.parse(JSON.stringify(vote));
+			return res.json({vote: vote.vote});
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+});
+
 const allowedUpdates = ['imageURL', 'description', 'title'];
 
 router.get('/:id', (req, res) =>

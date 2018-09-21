@@ -24,14 +24,15 @@ router.post('/', isAuthenticated, (req, res) => {
 		userId: author.keycloakId,
 		shipId: req.body.shipId,
 		vote: req.body.vote
-	}).then(async created => {
-		const count = await ShipVote.sum('vote', {
-			where: {
-				shipId: req.body.shipId
-			}
-		});
-		return res.json({created, count});
 	})
+		.then(async created => {
+			const count = await ShipVote.sum('vote', {
+				where: {
+					shipId: req.body.shipId
+				}
+			});
+			return res.json({created, count});
+		})
 		.catch(err => {
 			console.error(err);
 			return res.status(500).end();

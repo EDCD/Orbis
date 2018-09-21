@@ -89,7 +89,8 @@ export class Page extends React.Component {
 						{
 							data: data.rows,
 							pageCount: Math.ceil(data.count / this.state.perPage),
-							loaded: true
+							loaded: true,
+							loading: false
 						},
 						() => {
 							this.props.history.push(
@@ -109,7 +110,7 @@ export class Page extends React.Component {
 	}
 
 	handlePageClick(data) {
-		this.setState({loading: true}, () => {
+		this.setState({loading: true, loaded: false}, () => {
 			const selected = data.selected;
 			const offset = Math.ceil(selected * this.state.perPage);
 			this.setState({offset}, () => {
@@ -150,9 +151,9 @@ export class Page extends React.Component {
 				<h1>Latest builds</h1>
 				<Search state={this.state.search} loadBuilds={this.loadBuilds}/>
 				<div className="builds-container">
-					{this.state.data.length > 0 ||
-					this.state.loaded ||
-					!this.state.loading ? (
+					{this.state.data.length > 0 &&
+					(this.state.loaded ||
+					!this.state.loading) ? (
 							this.state.data.map((e, index) => {
 								e.imageURL =
 								e.proxiedImage ||

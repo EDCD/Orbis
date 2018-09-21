@@ -17,15 +17,34 @@ export default class ButtonBox extends Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			likeIsClicked: props.likeIsClicked,
 			upvote: false,
 			downvote: false,
 			shake: false,
-			buttonClicked: null,
+			buttonClicked: -1,
 			likes: this.props.likes
 		};
 		autoBind(this);
+	}
+
+	async checkLike() {
+		const liked = await request.get(`/api/builds/liked/${this.props.id}`);
+		let upvoteOrDownvote = -1;
+		if (liked && liked.body && liked.body.vote && liked.body.vote === 1) {
+			upvoteOrDownvote = 1;
+		} else if (liked.body.vote === 0) {
+			upvoteOrDownvote = 0;
+		}
+		this.setState({
+			buttonClicked: upvoteOrDownvote
+		});
+		console.log(upvoteOrDownvote);
+	}
+
+	componentDidMount() {
+		this.checkLike();
 	}
 
 	toggle(index) {

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import UiCard from './UiCard';
 import PropTypes from 'prop-types';
 import ButtonBox from './ButtonBox';
+import request from 'superagent';
 
 export default class ShipCard extends Component {
 	static propTypes = {
