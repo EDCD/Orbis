@@ -9,7 +9,9 @@ export default class Navigation extends Component {
 		super();
 		this.state = {
 			loggedIn: Boolean(getCookie('accessToken')),
-			user: {}
+			user: {
+				username: getCookie('username') || undefined
+			}
 		};
 	}
 
@@ -27,6 +29,7 @@ export default class Navigation extends Component {
 			this.setState({loggedIn: true, user: json.user});
 			setCookie('accessToken', json.accessToken);
 			setCookie('admin', json.admin);
+			setCookie('username', json.user.username);
 		} else {
 			setCookie('admin', json.admin);
 			this.setState({loggedIn: false});
