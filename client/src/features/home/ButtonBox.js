@@ -30,6 +30,9 @@ export default class ButtonBox extends Component {
 	}
 
 	async checkLike() {
+		if (!this.props.loggedIn) {
+			return;
+		}
 		const liked = await request.get(`/api/builds/liked/${this.props.id}`);
 		let upvoteOrDownvote = -1;
 		if (liked && liked.body && liked.body.vote && liked.body.vote === 1) {

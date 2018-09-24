@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Header, Footer} from './index';
 import PropTypes from 'prop-types';
-import {deleteCookie, setCookie} from '../../common/utils';
 import {autoBind} from 'react-extras';
 
 export default class Layout extends Component {

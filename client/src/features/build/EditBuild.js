@@ -6,6 +6,7 @@ import * as actions from './redux/actions';
 import {Form, Text, TextArea} from 'informed';
 import request from 'superagent';
 import {autoBind} from 'react-extras';
+import {deleteCookie, setCookie} from '../../common/utils';
 
 export class EditBuild extends Component {
 	static propTypes = {};
@@ -23,13 +24,21 @@ export class EditBuild extends Component {
 	}
 
 	async checkLogged() {
-		const res = await fetch('/api/checkauth', {
-			method: 'GET',
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const res = await request
+			.get('/api/checkauth')
+			.withCredentials();
+		const json = res.body;
 		if (json && json.status === 'Login successful!') {
-			this.setState({loggedIn: true});
+			this.setState({loggedIn: true, user: json.user});
+			setCookie('accessToken', json.accessToken);
+			setCookie('admin', json.admin);
+			setCookie('username', json.user.username);
+		} else {
+			setCookie('admin', json.admin);
+			deleteCookie('accessToken');
+			deleteCookie('admin');
+			deleteCookie('username');
+			this.setState({loggedIn: false});
 		}
 	}
 

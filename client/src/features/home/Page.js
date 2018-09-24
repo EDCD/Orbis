@@ -3,12 +3,13 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import ReactLoading from 'react-loading';
 import ReactPaginate from 'react-paginate';
-import Layout from '../common/Layout';
+import Layout, {UserConsumer} from '../common/Layout';
 import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
 import Search from './Search';
 import {deleteCookie, getCookie, setCookie} from '../../common/utils';
 import {autoBind} from 'react-extras';
+import request from 'superagent';
 
 let params;
 
@@ -39,16 +40,20 @@ export class Page extends React.Component {
 	}
 
 	async checkLogged() {
-		const res = await fetch('/api/checkauth', {
-			method: 'GET',
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const res = await request
+			.get('/api/checkauth')
+			.withCredentials();
+		const json = res.body;
 		if (json && json.status === 'Login successful!') {
-			this.setState({loggedIn: true});
+			this.setState({loggedIn: true, user: json.user});
 			setCookie('accessToken', json.accessToken);
+			setCookie('admin', json.admin);
+			setCookie('username', json.user.username);
 		} else {
+			setCookie('admin', json.admin);
 			deleteCookie('accessToken');
+			deleteCookie('admin');
+			deleteCookie('username');
 			this.setState({loggedIn: false});
 		}
 	}

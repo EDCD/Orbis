@@ -32,6 +32,9 @@ export default class Navigation extends Component {
 			setCookie('username', json.user.username);
 		} else {
 			setCookie('admin', json.admin);
+			deleteCookie('accessToken');
+			deleteCookie('admin');
+			deleteCookie('username');
 			this.setState({loggedIn: false});
 		}
 	}

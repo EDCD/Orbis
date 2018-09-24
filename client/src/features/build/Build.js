@@ -9,6 +9,8 @@ import IdealImage from 'react-ideal-image';
 import {Modules} from 'coriolis-data/dist/index';
 import {getLanguage} from '../../i18n/Language';
 import {autoBind} from 'react-extras';
+import request from 'superagent';
+import {deleteCookie, setCookie} from '../../common/utils';
 
 const {translate, formats, units} = getLanguage();
 
@@ -60,13 +62,21 @@ export class Build extends Component {
 	}
 
 	async checkLogged() {
-		const res = await fetch('/api/checkauth', {
-			method: 'GET',
-			credentials: 'include'
-		});
-		const json = await res.json();
+		const res = await request
+			.get('/api/checkauth')
+			.withCredentials();
+		const json = res.body;
 		if (json && json.status === 'Login successful!') {
-			this.setState({loggedIn: true});
+			this.setState({loggedIn: true, user: json.user});
+			setCookie('accessToken', json.accessToken);
+			setCookie('admin', json.admin);
+			setCookie('username', json.user.username);
+		} else {
+			setCookie('admin', json.admin);
+			deleteCookie('accessToken');
+			deleteCookie('admin');
+			deleteCookie('username');
+			this.setState({loggedIn: false});
 		}
 	}
 
@@ -86,15 +96,6 @@ export class Build extends Component {
 			'.',
 			this.state.build[0].coriolisShip.serialized.modifications
 		].join('');
-	}
-
-	async getData() {
-		const resp = await fetch(`/api/builds/${this.props.match.params.id}`);
-		const data = await resp.json();
-		this.setState({build: [data]});
-		if (!data) {
-			throw new Error('Failed to load the builds feed.');
-		}
 	}
 
 	componentDidMount() {
