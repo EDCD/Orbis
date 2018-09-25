@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Header, Footer} from './index';
 import PropTypes from 'prop-types';
 import {autoBind} from 'react-extras';
+import request from 'superagent';
+import {deleteCookie, setCookie} from '../../common/utils';
 
 export default class Layout extends Component {
 	static propTypes = {
@@ -11,13 +13,33 @@ export default class Layout extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			announcements: []
+			announcements: [],
+			loggedIn: false
 		};
 		autoBind(this);
 	}
 
 	componentDidMount() {
 		this.getAnnouncements();
+	}
+
+	async checkLogged() {
+		const res = await request
+			.get('/api/checkauth')
+			.withCredentials();
+		const json = res.body;
+		if (json && json.status === 'Login successful!') {
+			this.setState({loggedIn: true, user: json.user});
+			setCookie('accessToken', json.accessToken);
+			setCookie('admin', json.admin);
+			setCookie('username', json.user.username);
+		} else {
+			setCookie('admin', json.admin);
+			deleteCookie('accessToken');
+			deleteCookie('admin');
+			deleteCookie('username');
+			this.setState({loggedIn: false});
+		}
 	}
 
 	async getAnnouncements() {
@@ -49,7 +71,7 @@ export default class Layout extends Component {
 	render() {
 		return (
 			<div className="layout-container">
-				<Header/>
+				<Header loggedIn={this.state.loggedIn}/>
 				<h1>Announcements</h1>
 				<div className="announce-container">
 					{this.renderAnnouncements()}

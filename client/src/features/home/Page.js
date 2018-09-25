@@ -1,9 +1,10 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
 import ReactPaginate from 'react-paginate';
-import Layout, {UserConsumer} from '../common/Layout';
+import Layout from '../common/Layout';
 import * as actions from './redux/actions';
 import SocialCard from './ShipCard';
 import Search from './Search';
@@ -14,6 +15,12 @@ import request from 'superagent';
 let params;
 
 export class Page extends React.Component {
+	static propTypes = {
+		location: PropTypes.object.isRequired,
+		history: PropTypes.object.isRequired,
+		actions: PropTypes.object.isRequired
+	};
+
 	constructor(props) {
 		super(props);
 		const search = props.location.search; // Could be '?foo=bar'
@@ -132,7 +139,7 @@ export class Page extends React.Component {
 		});
 	}
 
-	getCoriolisLink(index) {
+	getCoriolisLink() {
 		return [
 			// 'https://beta.coriolis.io/outfit/',
 			// this.state.data[index].coriolisShip.id,

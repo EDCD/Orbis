@@ -6,6 +6,11 @@ import logoUrl from './Orbis.png';
 import * as Svg from './Svg';
 
 export default class Header extends Component {
+	static propTypes = {
+		loggedIn: PropTypes.bool.isRequired
+	};
+
+
 	render() {
 		return (
 			<header className="header-container">
@@ -19,7 +24,7 @@ export default class Header extends Component {
 						</Link>
 					</div>
 				</div>
-				<Navigation/>
+				<Navigation loggedIn={this.props.loggedIn}/>
 			</header>
 		);
 	}

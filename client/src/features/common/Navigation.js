@@ -2,13 +2,18 @@ import React, {Component} from 'react';
 import cx from 'classnames';
 import {Link} from 'react-router-dom';
 import * as Svg from '../common/Svg';
+import PropTypes from 'prop-types';
 import {setCookie, getCookie, deleteCookie} from '../../common/utils';
 
 export default class Navigation extends Component {
-	constructor() {
-		super();
+	static propTypes = {
+		loggedIn: PropTypes.bool.isRequired
+	};
+
+	constructor(props) {
+		super(props);
 		this.state = {
-			loggedIn: Boolean(getCookie('accessToken')),
+			loggedIn: props.loggedIn,
 			user: {
 				username: getCookie('username') || undefined
 			}
@@ -16,7 +21,6 @@ export default class Navigation extends Component {
 	}
 
 	componentDidMount() {
-		this.checkLogged();
 	}
 
 	async checkLogged() {
@@ -37,13 +41,6 @@ export default class Navigation extends Component {
 			deleteCookie('username');
 			this.setState({loggedIn: false});
 		}
-	}
-
-	logout() {
-		return fetch('/api/logout', {
-			method: 'GET',
-			credentials: 'include'
-		}).then(() => this.setState({loggedIn: false}));
 	}
 
 	render() {
