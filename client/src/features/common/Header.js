@@ -10,7 +10,6 @@ export default class Header extends Component {
 		loggedIn: PropTypes.bool.isRequired
 	};
 
-
 	render() {
 		return (
 			<header className="header-container">

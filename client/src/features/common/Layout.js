@@ -21,6 +21,7 @@ export default class Layout extends Component {
 
 	componentDidMount() {
 		this.getAnnouncements();
+		this.checkLogged();
 	}
 
 	async checkLogged() {
