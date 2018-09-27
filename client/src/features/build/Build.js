@@ -115,7 +115,7 @@ export class Build extends Component {
 					<div className="">
 						<div className="build-header">
 							<h1>
-								Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+								Build: {this.state.build[0].title} by {this.state.build[0].username}
 							</h1>
 							<p>{this.state.build[0].description}</p>
 							<IdealImage className="build-image"

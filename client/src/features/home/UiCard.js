@@ -9,7 +9,7 @@ export default class UiCard extends Component {
 	};
 
 	render() {
-		const {imageURL, tag, title, content, author} = this.props.content;
+		const {imageURL, tag, title, content, username} = this.props.content;
 		return (
 			<div className="ui-card">
 				<div className="ui-card-img">
@@ -24,7 +24,7 @@ export default class UiCard extends Component {
 						<h3>{title}</h3>
 					</Link>
 					<p>{content}</p>
-					<p>- {author.username}</p>
+					<p>- {username}</p>
 				</div>
 			</div>
 		);

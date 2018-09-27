@@ -85,7 +85,7 @@ export class EditBuild extends Component {
 					<div>
 						<h1>
 							{this.state.build ? <span>
-                Build: {this.state.build[0].title} by {this.state.build[0].author.username}
+                Build: {this.state.build[0].title} by {this.state.build[0].username}
                            </span> : 'Loading'}
 						</h1>
 					</div>

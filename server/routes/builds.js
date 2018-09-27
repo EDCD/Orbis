@@ -1,8 +1,9 @@
 const express = require('express');
 const models = require('../models');
+const _ = require('lodash');
 const RateLimit = require('express-rate-limit');
 const {keycloak} = require('../keycloak');
-const {Ship, ShipVote} = models;
+const {Ship, ShipVote, sequelize} = models;
 const router = express.Router();
 
 const addLimiter = new RateLimit({
@@ -36,7 +37,7 @@ router.post('/', (req, res) => {
 			'shortid',
 			'title',
 			'description',
-			'author',
+			[sequelize.json('author.username'), 'username'],
 			'Ship',
 			'likes',
 			'url',
@@ -95,7 +96,7 @@ router.get('/:id', (req, res) =>
 			'shortid',
 			'title',
 			'description',
-			'author',
+			[sequelize.json('author.username'), 'username'],
 			'imageURL',
 			'url',
 			'proxiedImage',
