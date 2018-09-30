@@ -97,6 +97,7 @@ router.get('/:id', (req, res) =>
 			'title',
 			'description',
 			[sequelize.json('author.username'), 'username'],
+			[sequelize.json('author.id'), 'authorId'],
 			'imageURL',
 			'url',
 			'proxiedImage',
@@ -111,7 +112,7 @@ router.get('/:id', (req, res) =>
 			ships.allowedToEdit = false;
 			if (req.user) {
 				const isadmin = isAdmin(req);
-				if (req.user.id === ships.author.id || isadmin) {
+				if (req.user.id === ships.authorId || isadmin) {
 					ships.allowedToEdit = true;
 				}
 			}
