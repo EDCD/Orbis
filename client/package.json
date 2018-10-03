@@ -1,0 +1,33 @@
+{
+  "name": "client-vue",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0-rc.1",
+    "coriolis-data": "github:edcd/coriolis-data",
+    "d3": "^5.7.0",
+    "lodash": "^4.17.11",
+    "register-service-worker": "^1.0.0",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.1",
+    "vuetify": "^1.2.0",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/d3": "^5.0.0",
+    "@types/less": "^0.0.34",
+    "@vue/cli-plugin-babel": "^3.0.4",
+    "@vue/cli-plugin-pwa": "^3.0.4",
+    "@vue/cli-service": "^3.0.4",
+    "axios": "^0.18.0",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "vue-cli-plugin-axios": "^0.0.4",
+    "vue-cli-plugin-vuetify": "^0.2.0",
+    "vue-template-compiler": "^2.5.17"
+  }
+}

@@ -153,5 +153,5 @@ typings/
 # End of https://www.gitignore.io/api/intellij,node
 server/db*
 data/
-
+client/dist
 server/keycloak\.json
