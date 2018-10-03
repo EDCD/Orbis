@@ -17,6 +17,9 @@ const {ShipVote} = models;
 
 router.post('/', isAuthenticated, (req, res) => {
 	const author = req.user;
+	if (!author) {
+		return res.status(403).end();
+	}
 	if (!req.body) {
 		return res.status(400).end();
 	}

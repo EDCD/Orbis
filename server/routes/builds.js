@@ -26,6 +26,9 @@ const isAdmin = req => req.user.admin === true;
 
 router.post('/', (req, res) => {
 	let {order, field, search} = req.body;
+	if (!req.body.pageSize || req.body.pageSize > 100) {
+		req.body.pageSize = 10;
+	}
 	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
@@ -62,7 +65,7 @@ router.post('/', (req, res) => {
 
 router.get('/liked/:shipId', (req, res) => {
 	if (!req.user) {
-		return res.status(403).end();
+		return res.status(403).json({message: 'Not logged in'});
 	}
 	return ShipVote.find({
 		where: {

@@ -1,4 +1,3 @@
-import React from 'react';
 import * as EN from './en';
 import * as d3 from 'd3';
 
@@ -18,7 +17,8 @@ export function getLanguage() {
 	let d3Locale = d3.formatLocale(lang.formats);
 	let gen = d3Locale.format('');
 	const round = function (x, n) {
-		const ten_n = Math.pow(10, n); return Math.round(x * ten_n) / ten_n;
+		const ten_n = Math.pow(10, n);
+		return Math.round(x * ten_n) / ten_n;
 	};
 
 	if (lang === EN) {
@@ -49,21 +49,21 @@ export function getLanguage() {
 		},
 		translate,
 		units: {
-			CR: <u>{translate('CR')}</u>, // Credits
-			kg: <u>{translate('kg')}</u>, // Kilograms
-			kgs: <u>{translate('kg/s')}</u>, // Kilograms per second
-			km: <u>{translate('km')}</u>, // Kilometers
-			Ls: <u>{translate('Ls')}</u>, // Light Seconds
-			LY: <u>{translate('LY')}</u>, // Light Years
-			MJ: <u>{translate('MJ')}</u>, // Mega Joules
-			'm/s': <u>{translate('m/s')}</u>, // Meters per second
-			'°/s': <u>{translate('°/s')}</u>, // Degrees per second
-			MW: <u>{translate('MW')}</u>, // Mega Watts (same as Mega Joules per second)
-			mps: <u>{translate('m/s')}</u>, // Metres per second
-			ps: <u>{translate('/s')}</u>, // Per second
-			pm: <u>{translate('/min')}</u>, // Per minute
-			s: <u>{translate('secs')}</u>, // Seconds
-			T: <u>{translate('T')}</u> // Metric Tons
+			CR: translate('CR'), // Credits
+			kg: translate('kg'), // Kilograms
+			kgs: translate('kg/s'), // Kilograms per second
+			km: translate('km'), // Kilometers
+			Ls: translate('Ls'), // Light Seconds
+			LY: translate('LY'), // Light Years
+			MJ: translate('MJ'), // Mega Joules
+			'm/s': translate('m/s'), // Meters per second
+			'°/s': translate('°/s'), // Degrees per second
+			MW: translate('MW'), // Mega Watts (same as Mega Joules per second)
+			mps: translate('m/s'), // Metres per second
+			ps: translate('/s'), // Per second
+			pm: translate('/min'), // Per minute
+			s: translate('secs'), // Seconds
+			T: translate('T') // Metric Tons
 		}
 	};
 }
