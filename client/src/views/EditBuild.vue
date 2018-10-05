@@ -49,6 +49,7 @@
 						label="Build description"
 					></v-textarea>
 					<v-btn
+						:loading="loading"
 						:disabled="!valid || disabled"
 						@click="submit"
 					>
@@ -76,6 +77,7 @@
 				translate: lang.translate,
 				valid: true,
 				disabled: true,
+				loading: false,
 				imageURL: '',
 				description: '',
 				title: ''
@@ -95,12 +97,20 @@
 				return url.replace('{OPTIONS}', '1280x');
 			},
 
-			submit() {
+			async submit() {
 				if (this.$refs.form.validate()) {
 					// Native form submission is not yet supported
-					this.$axios.post('/api/builds/update', {
-						updates: this.updates
-					});
+					this.loading = true;
+					try {
+						await this.$axios.post('/api/builds/update', {
+							updates: this.updates,
+							id: this.ship.id
+						});
+					} catch (e) {
+						console.error(e);
+					}
+
+					this.loading = false;
 				}
 			},
 			clear() {
@@ -114,13 +124,13 @@
 
 			updates() {
 				const updates = {};
-				if (this.title) {
+				if (this.title && this.title !== this.ship.title) {
 					updates.title = this.title;
 				}
-				if (this.imageURL) {
+				if (this.imageURL && this.imageURL !== this.ship.imageURLi) {
 					updates.imageURL = this.imageURL;
 				}
-				if (this.description) {
+				if (this.description && this.description !== this.ship.description) {
 					updates.description = this.description;
 				}
 				return updates;
