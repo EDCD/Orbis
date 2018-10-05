@@ -16,8 +16,7 @@
 			<v-btn :to="orbisLink(id)" flat color="orange">View</v-btn>
 			<v-btn flat color="orange" target="_blank" :href="coriolisLink">View on Coriolis</v-btn>
 			<v-spacer>|</v-spacer>
-			<v-btn :disabled="!loggedIn" :flat="votes[dbId].vote === 1" @click="sendVote({id: dbId, type: 1})" color="orange">Upvote
-
+			<v-btn :disabled="!loggedIn" flat @click="sendVote({id: dbId, type: 1})" color="orange">Upvote
 			</v-btn>
 			<v-btn flat color="orange" disabled outline>Score: {{score}}</v-btn>
 			<v-btn :disabled="!loggedIn" @click="sendVote({id: dbId, type: -1})" flat color="blue">Downvote

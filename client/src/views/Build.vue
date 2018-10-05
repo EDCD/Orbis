@@ -24,7 +24,9 @@
 										</v-btn>
 									</div>
 									<div>
-										<v-btn color="primary" :to="`/builds/${$route.params.id}/edit`">Edit build details</v-btn>
+										<v-btn color="primary" v-if="ship.allowedToEdit" :to="`/builds/${$route.params.id}/edit`">Edit build
+											details
+										</v-btn>
 									</div>
 									<v-expansion-panel>
 										<v-expansion-panel-content
@@ -41,10 +43,10 @@
 					</v-layout>
 				</v-card>
 			</v-flex>
-			<v-flex v-if="this.ship">
+			<v-flex v-if="ship">
 				<div class="build">
 					<v-container grid-list-small fluid>
-						<v-layout row wrap justify-center>
+						<v-layout v-show="ship.coriolisShip.armour" row wrap justify-center>
 							<v-flex xs4>Armour: {{formats.int(ship.coriolisShip.armour)}}</v-flex>
 							<v-flex xs4>Shield: {{formats.int(ship.coriolisShip.shield)}} {{units.MJ}}</v-flex>
 							<v-flex xs4>Top Speed: {{formats.int(ship.coriolisShip.topBoost)}} {{units['m/s']}}</v-flex>
@@ -79,39 +81,9 @@
 						</v-layout>
 					</v-container>
 					<v-card :key="idx" v-for="(mod,idx) in modules">
-						<v-layout row wrap>
-							<v-flex xs12>
-								<v-card color="blue-grey darken-2" class="white--text">
-									<v-card-title primary-title>
-										<div class="headline">{{mod.class}}{{mod.rating}} {{mod.m.name || translate(mod.grp)}}</div>
-									</v-card-title>
-									<v-card-title>
-										<div>
-											<span>Enabled: {{mod.enabled === 1 || mod.m.grp === 'bh' ? 'Yes' : 'No'}}<br></span>
-											<span v-if="mod.power">
-											Power usage: {{mod.power}} {{units.MW}} ({{formats.pct1(mod.power /
-											ship.coriolisShip.powerAvailable)}})<br></span>
-											<span v-if="mod.mass">
-											Mass: {{mod.mass}}{{units.T}}
-												<br>
-										</span>
-											<span v-if="mod.priority">
-											Priority: {{mod.priority}}
-										<br>
-											</span>
-											<span v-if="mod.m.blueprint && mod.m.blueprint.name && mod.m.blueprint.grade">Engineering:
-											{{mod.m.blueprint.name}} @ grade {{mod.m.blueprint.grade}}
-											<br>
-											</span>
-											<span v-else>
-											No engineering
-												<br>
-										</span>
-										</div>
-									</v-card-title>
-								</v-card>
-							</v-flex>
-						</v-layout>
+						<Module :formats="formats.pct1(mod.power /
+											ship.coriolisShip.powerAvailable)" :mod="mod" :ship="ship" :translate="translate(mod.grp)"
+										:units="units"/>
 					</v-card>
 				</div>
 			</v-flex>
@@ -122,10 +94,12 @@
 <script>
 	import {getLanguage} from '../i18n/Language';
 	import {Modules} from 'coriolis-data/dist/index';
+	import Module from '../components/Module';
 
 	const lang = getLanguage();
 	export default {
-		components: {},
+		name: 'Build',
+		components: {Module},
 		data: () => {
 			return {
 				formats: lang.formats,
