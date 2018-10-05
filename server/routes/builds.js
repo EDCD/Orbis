@@ -101,7 +101,7 @@ router.get('/:id', (req, res) =>
 			'description',
 			[sequelize.json('author.username'), 'username'],
 			[sequelize.json('author.id'), 'authorId'],
-			'imageURL',
+				'imageURL',
 			'url',
 			'proxiedImage',
 			'coriolisShip'

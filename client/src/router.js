@@ -22,7 +22,7 @@ export default new Router({
 			component: () => import(/* webpackChunkName: "build" */ './views/Build.vue')
 		},
 		{
-			path: '/build/:id/edit',
+			path: '/edit/:id',
 			name: 'editbuild',
 			// Route level code-splitting
 			// this generates a separate chunk (build.[hash].js) for this route

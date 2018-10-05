@@ -2,7 +2,7 @@
 	<v-container grid-list-md text-xs-center>
 		<v-layout row justify-space-around wrap>
 			<v-flex :key="ship.id" x12 sm4 v-for="ship in builds">
-				<ship-card :description="ship.description" :coriolis-link="ship.url" :imageURL="ship.proxiedImage"
+				<ship-card :description="ship.description" :username="ship.username" :coriolis-link="ship.url" :imageURL="ship.proxiedImage"
 									 :title="ship.title" :id="ship.shortid" :db-id="ship.id" :likes="ship.likes"></ship-card>
 			</v-flex>
 		</v-layout>

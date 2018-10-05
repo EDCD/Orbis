@@ -24,7 +24,7 @@
 										</v-btn>
 									</div>
 									<div>
-										<v-btn color="primary" v-if="ship.allowedToEdit" :to="`/builds/${$route.params.id}/edit`">Edit build
+										<v-btn color="primary" v-if="ship.allowedToEdit" :to="`/edit/${$route.params.id}`">Edit build
 											details
 										</v-btn>
 									</div>

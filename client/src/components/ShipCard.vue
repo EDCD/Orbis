@@ -7,10 +7,13 @@
 		>
 		</v-img>
 		<v-card-title primary-title>
-			<div>
+			<v-layout column justify-start>
+				<v-flex justify-start	 align-content-start align-start>
 				<div class="headline">{{title}}</div>
-				<span class="grey--text">{{truncateText(description, 50)}}</span>
-			</div>
+				<div class="grey--text">{{truncateText(description, 50)}}</div>
+				<div class="grey--text">By {{username}}</div>
+				</v-flex>
+			</v-layout>
 		</v-card-title>
 		<v-card-actions>
 			<v-btn :to="orbisLink(id)" flat color="orange">View</v-btn>
@@ -79,6 +82,7 @@
 			coriolisLink: String,
 			imageURL: String,
 			id: String,
+			username: String,
 			likes: Number,
 			dbId: String,
 			description: String
