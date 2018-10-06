@@ -3,7 +3,7 @@ const models = require('../models');
 const Op = require('sequelize').Op;
 
 const router = express.Router();
-const {User, Ship} = models;
+const {User, Ship, sequelize} = models;
 
 router.post('/register', async (req, res) => {
 	if (!req.body) {
@@ -42,14 +42,19 @@ router.post('/register', async (req, res) => {
 	return res.json({success: true, user: 'created'});
 });
 
-router.get('/profile/:name', (req, res) => {
+router.post('/profile/:name', (req, res) => {
 	const username = req.params.name === 'me' && req.user ? req.user.username : req.params.name;
+	let {order, field, search} = req.body;
+	if (!req.body.pageSize || req.body.pageSize > 100) {
+		req.body.pageSize = 10;
+	}
 	const query = {
 		where: {
 			'author.username': username
 		},
-		limit: req.query.pageSize,
-		offset: req.query.offset,
+		order: [[field || 'createdAt', order || 'DESC']],
+		limit: req.body.pageSize,
+		offset: req.body.offset,
 		attributes: [
 			'id',
 			'updatedAt',
@@ -57,6 +62,7 @@ router.get('/profile/:name', (req, res) => {
 			'shortid',
 			'title',
 			'description',
+			[sequelize.json('author.username'), 'username'],
 			'author',
 			'Ship',
 			'likes',
@@ -64,6 +70,12 @@ router.get('/profile/:name', (req, res) => {
 			'proxiedImage'
 		]
 	};
+	if (search && search.key && search.value) {
+		query.where = {};
+		query.where[search.key] = {
+			[Op.iLike]: `%${search.value}%`
+		};
+	}
 	return Ship.findAndCountAll(query)
 		.then(ships => res.json(ships))
 		.catch(err => {

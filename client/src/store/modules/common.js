@@ -60,10 +60,7 @@ export default {
 			commit(types.BUILD_REQUEST, await axios.post('/api/builds', query));
 		},
 		async getProfile({commit}, query) {
-			const params = new URLSearchParams();
-			params.append('pageSize', query.pageSize);
-			params.append('offset', query.offset);
-			commit(types.PROFILE_REQUEST, await axios.get(`/api/users/profile/${query.username}`, params));
+			commit(types.PROFILE_REQUEST, await axios.post(`/api/users/profile/${query.username}`, query));
 		}
 	},
 	getters: {}

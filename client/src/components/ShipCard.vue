@@ -8,10 +8,10 @@
 		</v-img>
 		<v-card-title primary-title>
 			<v-layout column justify-start>
-				<v-flex justify-start	 align-content-start align-start>
-				<div class="headline">{{title}}</div>
-				<div class="grey--text">{{truncateText(description, 50)}}</div>
-				<div class="grey--text">By {{username}}</div>
+				<v-flex justify-start align-content-start align-start>
+					<div class="headline">{{title}}</div>
+					<div class="grey--text">{{truncateText(description, 50)}}</div>
+					<div class="grey--text">By {{username}}</div>
 				</v-flex>
 			</v-layout>
 		</v-card-title>
@@ -72,9 +72,9 @@
 				this.score = this.$store.state.Vote.counts[id];
 			}
 		},
-		mounted() {
+		async mounted() {
 			if (this.loggedIn) {
-				this.$store.dispatch('getVote', this.dbId);
+				await this.$store.dispatch('getVote', this.dbId);
 			}
 		},
 		props: {
