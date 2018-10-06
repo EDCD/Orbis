@@ -5,7 +5,7 @@
   "author": "willyb321 <wbwilliam7@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"(cd server && npm run dev)\" \"(cd client && npm start)\"",
+    "dev": "concurrently \"(cd server && npm run dev)\" \"(cd client && npm run serve)\"",
     "lint": "xo",
     "lint:fix": "xo --fix"
   },
@@ -22,6 +22,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-unicorn": "^5.0.0",
+    "eslint-plugin-vue": "^5.0.0-beta.3",
     "nodemon": "^1.18.3",
     "xo": "^0.21.1"
   }
