@@ -24,7 +24,7 @@
     "express": "^4.16.3",
     "express-rate-limit": "^2.12.1",
     "express-session": "^1.15.6",
-    "keycloak-connect": "^4.2.1",
+    "keycloak-connect": "^4.5.0",
     "lodash": "^4.17.11",
     "morgan": "^1.9.0",
     "openid-client": "^2.2.1",
