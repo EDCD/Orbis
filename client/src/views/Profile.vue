@@ -47,6 +47,9 @@
 				return Math.ceil(this.$store.state.Common.builds.count / this.pageSize);
 			},
 			offset() {
+				if (this.page === 1) {
+					return 0;
+				}
 				return Math.ceil(this.page * this.pageSize);
 			}
 		},
