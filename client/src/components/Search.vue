@@ -5,6 +5,7 @@
 				<v-text-field v-model="value" @keyup.enter="$emit('searchUpdate', search)" label="Search query"></v-text-field>
 				<v-spacer></v-spacer>
 				<v-select
+					@change="$emit('searchUpdate', search)"
 					:items="keys"
 					v-model="key"
 					label="Search for"
