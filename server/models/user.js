@@ -1,5 +1,4 @@
 'use strict';
-const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataType) => {
 	const User = sequelize.define('User', {
@@ -43,12 +42,6 @@ module.exports = (sequelize, DataType) => {
 		],
 		freezeTableName: true
 	});
-	User.generateHash = password => bcrypt.hash(password, bcrypt.genSaltSync(8));
 
-	function validPassword(password) {
-		return bcrypt.compare(password, this.password);
-	}
-
-	User.prototype.validPassword = validPassword;
 	return User;
 };
