@@ -39,7 +39,7 @@ export default new Router({
 		},
 
 		{
-			path: '/(.*)',
+			path: '*',
 			name: '404',
 			// Route level code-splitting
 			// this generates a separate chunk (build.[hash].js) for this route
