@@ -46,7 +46,7 @@
 			<v-flex v-if="ship">
 				<div class="build">
 					<v-container grid-list-small fluid>
-						<v-layout v-show="ship.coriolisShip.armour" row wrap justify-center>
+						<v-layout v-if="ship.coriolisShip" row wrap justify-center>
 							<v-flex xs4>Armour: {{formats.int(ship.coriolisShip.armour)}}</v-flex>
 							<v-flex xs4>Shield: {{formats.int(ship.coriolisShip.shield)}} {{units.MJ}}</v-flex>
 							<v-flex xs4>Top Speed: {{formats.int(ship.coriolisShip.topBoost)}} {{units['m/s']}}</v-flex>
