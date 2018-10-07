@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const sessionStore = new SequelizeStore({
 	db: sequelize,
 	checkExpirationInterval: 15 * 60 * 1000,
-	expiration: 7 * 24 * 60 * 60 * 1000
+	expiration: 30 * 24 * 60 * 60 * 1000
 });
 sessionStore.sync();
 
@@ -49,6 +49,7 @@ app.use(
 		resave: true,
 		cookie: {
 			httpOnly: false,
+			maxAge: 30 * 24 * 60 * 60 * 1000
 		},
 		proxy: true,
 		store: sessionStore
