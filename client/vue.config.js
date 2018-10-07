@@ -1,6 +1,8 @@
 module.exports = {
 	pwa: {
-		name: 'Orbis.zone'
+		name: 'Orbis.zone',
+		skipWaiting: true,
+		clientsClaim: true
 	},
 	devServer: {
 		proxy: 'http://localhost:3030',
