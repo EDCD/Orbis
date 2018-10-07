@@ -6,18 +6,14 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const models = require('./models');
-const {keycloak, getUserInfo} = require('./keycloak');
+const Keycloak = require('keycloak-connect');
+const {getUserInfo} = require('./keycloak');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./api-spec.json');
 
 const {sequelize, Ship} = models;
 
-const sessionStore = new SequelizeStore({
-	db: sequelize,
-	checkExpirationInterval: 15 * 60 * 1000,
-	expiration: 7 * 24 * 60 * 60 * 1000
-});
 
 process.on('unhandledRejection', (reason, p) => {
 	console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -40,17 +36,28 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionStore = new SequelizeStore({
+	db: sequelize,
+	checkExpirationInterval: 15 * 60 * 1000,
+	expiration: 7 * 24 * 60 * 60 * 1000
+});
+sessionStore.sync();
+
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
 		resave: false,
-		saveUninitialized: false,
+		proxy: true,
 		store: sessionStore
 	})
 );
+
+const keycloak = new Keycloak({store: sessionStore, scope: 'offline_access'}, null);
+
+exports.keycloak = keycloak;
+
 app.use(keycloak.middleware({logout: '/api/logout'}));
 app.use(getUserInfo);
-sessionStore.sync();
 
 app.get('/', (req, res) => {
 	return res.status(200).end();

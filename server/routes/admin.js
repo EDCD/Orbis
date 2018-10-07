@@ -1,6 +1,6 @@
 const express = require('express');
 const models = require('../models');
-const {keycloak} = require('../keycloak');
+const {keycloak} = require('../app');
 const {Op} = require('sequelize');
 
 const {Ship, ShipVote, User, Announcement} = models;

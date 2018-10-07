@@ -2,7 +2,7 @@ const express = require('express');
 const models = require('../models');
 const _ = require('lodash');
 const RateLimit = require('express-rate-limit');
-const {keycloak} = require('../keycloak');
+const {keycloak} = require('../app');
 const {Ship, ShipVote, sequelize} = models;
 const router = express.Router();
 

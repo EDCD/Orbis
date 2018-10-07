@@ -1,16 +1,5 @@
-const Keycloak = require('keycloak-connect');
-const session = require('express-session');
 const models = require('./models');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-
-const {sequelize, User} = models;
-const sessionStore = new SequelizeStore({
-	db: sequelize,
-	checkExpirationInterval: 15 * 60 * 1000,
-	expiration: 7 * 24 * 60 * 60 * 1000
-});
-
-const keycloak = new Keycloak({store: sessionStore, scope: 'offline_access'}, null);
+const {User} = models;
 
 const getUserInfo = (req, res, next) => {
 	if (req.user) {
@@ -38,7 +27,7 @@ const getUserInfo = (req, res, next) => {
 		});
 };
 
-module.exports = {keycloak, getUserInfo};
+module.exports = {getUserInfo};
 // Const rp = require('request-promise-native');
 //
 // class Keycloak {
