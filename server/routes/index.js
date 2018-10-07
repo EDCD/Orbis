@@ -12,6 +12,14 @@ function isAuthenticated(req, res, next) {
 	if (req.user) {
 		return next();
 	}
+	if (Object.keys(req.kauth).length === 0 && req.kauth.constructor === Object) {
+		return res.status(401).json({
+			error: 'User not authenticated'
+		});
+	}
+	if (req.kauth) {
+		return next();
+	}
 	return res.status(401).json({
 		error: 'User not authenticated'
 	});
