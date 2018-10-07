@@ -47,7 +47,9 @@ app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
 		resave: true,
-		httpOnly: false,
+		cookie: {
+			httpOnly: false,
+		},
 		proxy: true,
 		store: sessionStore
 	})
