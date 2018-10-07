@@ -46,7 +46,8 @@ sessionStore.sync();
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
-		resave: false,
+		resave: true,
+		httpOnly: false,
 		proxy: true,
 		store: sessionStore
 	})
