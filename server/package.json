@@ -39,7 +39,8 @@
     "serve-favicon": "~2.5.0",
     "shortid": "^2.2.12",
     "sqlite3": "^4.0.2",
-    "swagger-ui-express": "^3.0.10"
+    "swagger-ui-express": "^3.0.10",
+    "username-generator": "^1.1.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.23",

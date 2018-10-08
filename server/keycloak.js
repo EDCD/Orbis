@@ -1,5 +1,11 @@
 const models = require('./models');
 const {User} = models;
+const UsernameGenerator = require('username-generator');
+
+function validateEmail(email) {
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(String(email).toLowerCase());
+}
 
 const getUserInfo = (req, res, next) => {
 	if (req.user) {
@@ -9,6 +15,10 @@ const getUserInfo = (req, res, next) => {
 		return next();
 	}
 	const profile = req.kauth.grant.access_token.content;
+	if (validateEmail(profile.preferred_username)) {
+		profile.preferred_username = UsernameGenerator.generateUsername()
+	}
+	console.log(profile);
 	return User.findOrCreate({
 		where: {email: profile.email}, defaults: {
 			keycloakId: profile.sub,
