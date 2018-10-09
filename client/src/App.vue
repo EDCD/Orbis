@@ -65,7 +65,7 @@
 				return this.$store.state.Common.user;
 			},
 			loggedIn() {
-				return Boolean(this.$store.state.Common.user.username);
+				return !!Object.keys(this.$store.state.Common.user).length
 			}
 		},
 		mounted() {

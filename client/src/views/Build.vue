@@ -80,7 +80,7 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
-					<v-card :key="idx" v-for="(mod,idx) in modules">
+					<v-card v-if="mod" :key="idx" v-for="(mod,idx) in modules">
 						<Module :formats="formats.pct1(mod.power /
 											ship.coriolisShip.powerAvailable)" :mod="mod" :ship="ship" :translate="translate(mod.grp)"
 										:units="units"/>
@@ -172,6 +172,9 @@
 				}
 				return this.ship.coriolisShip.costList.filter(module => module || module.m || module.type !== 'SHIP')
 					.map((e) => {
+						if (!e || !e.m) {
+							return undefined;
+						}
 						return Object.assign({}, this.findModule(e.m.grp, e.m.id), e);
 					});
 			}
