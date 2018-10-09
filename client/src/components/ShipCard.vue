@@ -11,7 +11,7 @@
 				<v-flex justify-start align-content-start align-start>
 					<div class="headline">{{title}}</div>
 					<div class="grey--text">{{truncateText(description, 50)}}</div>
-					<div class="grey--text">By {{username}}</div>
+					<div class="grey--text">By <router-link :to="profile">{{username}}</router-link></div>
 				</v-flex>
 			</v-layout>
 		</v-card-title>
@@ -40,6 +40,9 @@
 		computed: {
 			votes() {
 				return this.$store.state.Vote.votes;
+			},
+			profile() {
+				return `/profile/${this.username}`
 			},
 			loggedIn() {
 				return Boolean(this.$store.state.Common.user) && !_.isEmpty(this.$store.state.Common.user);
