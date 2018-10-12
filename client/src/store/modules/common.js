@@ -12,6 +12,7 @@ export default {
 		announcements: [],
 		builds: {},
 		user: {},
+		admin: false,
 		accessToken: ''
 	},
 	mutations: {
@@ -30,6 +31,7 @@ export default {
 			}
 			console.log(data);
 			state.user = data.data.user;
+			state.admin = data.data.admin;
 			state.accessToken = data.data.accessToken;
 		}
 	},

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
+import store from './store';
 
 Vue.use(Router);
 
@@ -37,7 +38,22 @@ export default new Router({
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue')
 		},
-
+		{
+			path: '/admin',
+			name: 'admin',
+			async beforeEnter(to, from, next) {
+				await store.dispatch('checkAuth');
+				if (store.state.Common.admin === true) {
+					next();
+				} else {
+					next(false)
+				}
+			},
+			// Route level code-splitting
+			// this generates a separate chunk (build.[hash].js) for this route
+			// which is lazy-loaded when the route is visited.
+			component: () => import(/* webpackChunkName: "admin" */ './views/Admin.vue')
+		},
 		{
 			path: '*',
 			name: '404',

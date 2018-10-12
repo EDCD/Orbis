@@ -1,9 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 Vue.use(Vuex);
 
-import {HomeStore as Home, CommonStore as Common, BuildStore as Build, VoteStore as Vote} from './modules';
-
+import {
+	HomeStore as Home,
+	CommonStore as Common,
+	BuildStore as Build,
+	VoteStore as Vote,
+	AdminStore as Admin
+} from './modules';
 
 export default new Vuex.Store({
 	state: {},
@@ -11,7 +17,8 @@ export default new Vuex.Store({
 		Home,
 		Build,
 		Vote,
-		Common
+		Common,
+		Admin
 	},
 	mutations: {},
 	actions: {}
