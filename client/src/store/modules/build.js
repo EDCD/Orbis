@@ -19,7 +19,9 @@ export default {
 	},
 	actions: {
 		async getBuild({commit}, id) {
-			commit(types.BUILD_REQUEST, await axios.get(`/api/builds/${id}`));
+			commit(types.BUILD_REQUEST, await axios.get(`/api/builds/${id}`, {
+				withCredentials: true
+			}));
 		}
 	},
 	getters: {}

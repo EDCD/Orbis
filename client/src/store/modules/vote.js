@@ -29,7 +29,9 @@ export default {
 		async getVote({commit}, id) {
 			let data;
 			try {
-				data = await axios.get(`/api/builds/liked/${id}`);
+				data = await axios.get(`/api/builds/liked/${id}`, {
+					withCredentials: true
+				});
 			} catch (e) {
 				if (e.response.status !== 403 && e.response.status !== 401) {
 					console.log(e);
@@ -38,7 +40,11 @@ export default {
 			commit(types.VOTE_GET_REQUEST, {data, id});
 		},
 		async postVote({commit}, {id, vote}) {
-			commit(types.VOTE_POST_REQUEST, {data: await axios.post(`/api/likes`, {vote, shipId: id}), id});
+			commit(types.VOTE_POST_REQUEST, {
+				data: await axios.post(`/api/likes`, {vote, shipId: id}, {
+					withCredentials: true
+				}), id
+			});
 		}
 	},
 	getters: {}

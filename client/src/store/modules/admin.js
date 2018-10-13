@@ -18,6 +18,8 @@ export default {
 			commit(types.ADMIN_POST_ANNOUNCEMENT_REQUEST, await axios.post(`/api/admin/announcement/add`, {
 				expiresAt,
 				message
+			}, {
+				withCredentials: true
 			}));
 		}
 	},

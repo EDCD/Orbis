@@ -105,6 +105,8 @@
 						await this.$axios.post('/api/builds/update', {
 							updates: this.updates,
 							id: this.ship.id
+						}, {
+							withCredentials: true
 						});
 					} catch (e) {
 						console.error(e);
