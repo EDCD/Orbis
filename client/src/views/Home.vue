@@ -48,18 +48,18 @@
 			}
 		},
 		methods: {
-			async search(value) {
+			async search(search) {
 				this.loading = true;
-				this.searchData = value;
-				await this.$store.dispatch('getBuilds', {pageSize: this.pageSize, offset: 0, search: value});
+				this.searchData = search;
+
+				await this.$store.dispatch('getBuilds', Object.assign({}, search, {pageSize: this.pageSize, offset: 0}));
 				this.loading = false;
 			},
 			async paginate() {
-				await this.$store.dispatch('getBuilds', {
+				await this.$store.dispatch('getBuilds', Object.assign({}, this.searchData, {
 					pageSize: this.pageSize,
-					offset: this.offset,
-					search: this.searchData
-				});
+					offset: this.offset
+				}));
 			}
 		},
 		async mounted() {
