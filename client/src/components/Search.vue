@@ -1,30 +1,33 @@
 <template>
 	<v-container fluid grid-list-xl>
-		<v-layout align-center justify-center column wrap fill-height>
-			<v-flex xs12 sm6>
-				<v-text-field v-model="searchByVal" @keyup.enter="$emit('searchUpdate', search)"
-											label="Search query"></v-text-field>
-				<v-spacer></v-spacer>
+		<v-layout align-center justify-center row wrap fill-height>
+			<v-text-field v-model="searchByVal" @keyup.enter="$emit('searchUpdate', search)"
+										label="Search query"></v-text-field>
+			<v-flex xs6 sm6>
 				<v-select
 					@change="$emit('searchUpdate', search)"
 					:items="searchByKeys"
 					v-model="searchByKey"
 					label="Search for"
 				></v-select>
+			</v-flex>
+			<v-flex xs6 sm6>
 				<v-select
 					@change="$emit('searchUpdate', search)"
 					:items="sortByOrders"
 					v-model="sortByOrder"
 					label="Sort Order"
 				></v-select>
+			</v-flex>
+			<v-flex xs6 sm6>
 				<v-select
 					@change="$emit('searchUpdate', search)"
 					:items="sortByKeys"
 					v-model="sortByKey"
 					label="Sort by"
 				></v-select>
-				<v-btn :loading="loading" @click="$emit('searchUpdate', search)">Search</v-btn>
 			</v-flex>
+			<v-btn :loading="loading" @click="$emit('searchUpdate', search)">Search</v-btn>
 		</v-layout>
 	</v-container>
 </template>

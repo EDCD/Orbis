@@ -24,7 +24,7 @@
 						:href="loggedIn ? '/api/logout' : '/api/auth'"
 						slot="activator"
 					>
-						<img src="@/assets/svg/Logout.svg"/>
+						<img alt="Orbis.zone logo" src="@/assets/svg/Logout.svg"/>
 					</v-btn>
 					<span>{{loggedIn ? 'Logout' : 'Login'}}</span>
 				</v-tooltip>
@@ -32,11 +32,13 @@
 		</header>
 		<v-content>
 			<v-container grid-list-md text-xs-center>
-				<v-flex xs12>
-					<announcement :key="announce.id" v-for="announce in announcements" type="success"
-												:display="Date.parse(announce.expiresAt) > Date.now()"
-												:text="announce.message"></announcement>
-				</v-flex>
+				<v-layout align-center justify-center row wrap fill-height>
+					<v-flex :key="announce.id" v-for="announce in announcements" xs12 sm6>
+						<announcement type="success"
+													:display="Date.parse(announce.expiresAt) > Date.now()"
+													:text="announce.message"></announcement>
+					</v-flex>
+				</v-layout>
 			</v-container>
 			<router-view></router-view>
 		</v-content>

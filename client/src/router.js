@@ -15,6 +15,22 @@ export default new Router({
 			component: Home
 		},
 		{
+			path: '/about',
+			name: 'about',
+			// Route level code-splitting
+			// this generates a separate chunk (build.[hash].js) for this route
+			// which is lazy-loaded when the route is visited.
+			component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+		},
+		{
+			path: '/contact',
+			name: 'contact',
+			// Route level code-splitting
+			// this generates a separate chunk (build.[hash].js) for this route
+			// which is lazy-loaded when the route is visited.
+			component: () => import(/* webpackChunkName: "contact" */ './views/Contact.vue')
+		},
+		{
 			path: '/build/:id',
 			name: 'build',
 			// Route level code-splitting
@@ -46,7 +62,7 @@ export default new Router({
 				if (store.state.Common.admin === true) {
 					next();
 				} else {
-					next(false)
+					next(false);
 				}
 			},
 			// Route level code-splitting
