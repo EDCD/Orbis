@@ -18,7 +18,6 @@ const getUserInfo = (req, res, next) => {
 	if (validateEmail(profile.preferred_username)) {
 		profile.preferred_username = UsernameGenerator.generateUsername()
 	}
-	console.log(profile);
 	return User.findOrCreate({
 		where: {email: profile.email}, defaults: {
 			keycloakId: profile.sub,
