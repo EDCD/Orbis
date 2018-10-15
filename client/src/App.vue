@@ -24,7 +24,7 @@
 						:href="loggedIn ? '/api/logout' : '/api/auth'"
 						slot="activator"
 					>
-						<img src="@/assets/svg/Logout.svg"/>
+						<img alt="Orbis.zone logo" src="@/assets/svg/Logout.svg"/>
 					</v-btn>
 					<span>{{loggedIn ? 'Logout' : 'Login'}}</span>
 				</v-tooltip>
@@ -32,16 +32,37 @@
 		</header>
 		<v-content>
 			<v-container grid-list-md text-xs-center>
-				<v-flex xs12>
-					<announcement :key="announce.id" v-for="announce in announcements" type="success"
-												:display="Date.parse(announce.expiresAt) > Date.now()"
-												:text="announce.message"></announcement>
-				</v-flex>
+				<v-layout align-center justify-center row wrap fill-height>
+					<v-flex :key="announce.id" v-for="announce in announcements" xs12 sm6>
+						<announcement type="success"
+													:display="Date.parse(announce.expiresAt) > Date.now()"
+													:text="announce.message"></announcement>
+					</v-flex>
+				</v-layout>
 			</v-container>
 			<router-view></router-view>
 		</v-content>
-		<v-footer :fixed="fixed" app>
-			<span>&copy; EDCD 2017</span>
+		<v-footer height="auto" :fixed="fixed" color="primary lighten-1" app>
+			<v-layout
+				justify-center
+				row
+				wrap
+			>
+				<v-flex
+					primary
+					lighten-2
+					py-3
+					text-xs-center
+					white--text
+					xs12
+				>
+					&copy; {{new Date().getFullYear()}} <strong>EDCD</strong>
+					<v-btn v-if="admin" to="/admin">Admin</v-btn>
+					<v-btn to="/about">About</v-btn>
+					<v-btn to="/contact">Contact</v-btn>
+				</v-flex>
+
+			</v-layout>
 		</v-footer>
 	</v-app>
 </template>
@@ -64,13 +85,16 @@
 			user() {
 				return this.$store.state.Common.user;
 			},
+			admin() {
+				return this.$store.state.Common.admin;
+			},
 			loggedIn() {
-				return !!Object.keys(this.$store.state.Common.user).length
+				return !!Object.keys(this.$store.state.Common.user).length;
 			}
 		},
-		mounted() {
-			this.$store.dispatch('getAnnouncements');
-			this.$store.dispatch('checkAuth');
+		async mounted() {
+			await this.$store.dispatch('getAnnouncements');
+			await this.$store.dispatch('checkAuth');
 		}
 	};
 </script>

@@ -12,6 +12,7 @@ export default {
 		announcements: [],
 		builds: {},
 		user: {},
+		admin: false,
 		accessToken: ''
 	},
 	mutations: {
@@ -30,6 +31,7 @@ export default {
 			}
 			console.log(data);
 			state.user = data.data.user;
+			state.admin = data.data.admin;
 			state.accessToken = data.data.accessToken;
 		}
 	},
@@ -48,7 +50,9 @@ export default {
 		async checkAuth({commit}) {
 			let data;
 			try {
-				data = await axios.get('/api/checkauth')
+				data = await axios.get('/api/checkauth', {
+					withCredentials: true
+				});
 			} catch (e) {
 				if (e.response.status !== 401) {
 					console.log(e);
@@ -57,10 +61,14 @@ export default {
 			commit(types.AUTH_REQUEST, data);
 		},
 		async getBuilds({commit}, query) {
-			commit(types.BUILD_REQUEST, await axios.post('/api/builds', query));
+			commit(types.BUILD_REQUEST, await axios.post('/api/builds', query, {
+				withCredentials: true
+			}));
 		},
 		async getProfile({commit}, query) {
-			commit(types.PROFILE_REQUEST, await axios.post(`/api/users/profile/${query.username}`, query));
+			commit(types.PROFILE_REQUEST, await axios.post(`/api/users/profile/${query.username}`, query, {
+				withCredentials: true
+			}));
 		}
 	},
 	getters: {}

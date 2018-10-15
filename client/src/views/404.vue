@@ -4,6 +4,7 @@
 			<v-flex xs12>
 				<h1>404! Don't panic!</h1>
 				<router-link to="/">Return home</router-link>
+				<v-btn @click="getRandomImage">Load a random /r/elitedangerous post?</v-btn>
 				<h2 v-if="imageURL">Enjoy a post from /r/elitedangerous</h2>
 				<hr v-if="imageURL">
 				<h3 v-if="imageURL">{{imageTitle}}</h3>
@@ -20,28 +21,25 @@
 			return {
 				imageURL: '',
 				imageTitle: ''
-			}
+			};
 		},
 		methods: {
 			async getRandomImage() {
 				let data;
 				try {
-					data = await this.$axios.get(`https://api.imgur.com/3/gallery/r/elitedangerous`, {headers: {
+					data = await this.$axios.get(`https://api.imgur.com/3/gallery/r/elitedangerous`, {
+						headers: {
 							Authorization: 'Client-ID 746dbc0418a149b'
-						}});
+						}
+					});
 				} catch (e) {
 					console.log(e);
 				}
 				if (data && data.data) {
-					const random = data.data.data[Math.random() * data.data.data.length>>0];
-					this.imageURL = random.link
-					this.imageTitle = random.title
+					const random = data.data.data[Math.random() * data.data.data.length >> 0];
+					this.imageURL = random.link;
+					this.imageTitle = random.title;
 				}
-			}
-		},
-		mounted() {
-			if (Math.random() > 0.3) {
-				this.getRandomImage()
 			}
 		}
 	};

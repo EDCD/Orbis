@@ -48,10 +48,9 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: true,
 		cookie: {
-			httpOnly: false,
 			maxAge: 30 * 24 * 60 * 60 * 1000
 		},
-		proxy: true,
+		proxy: process.env.NODE_ENV === 'production',
 		store: sessionStore
 	})
 );
