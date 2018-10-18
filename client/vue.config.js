@@ -13,7 +13,7 @@ module.exports = {
 				externalImages: {
 					context: 'public', // Important! This tells the plugin where to "base" the paths at
 					sources: glob.sync('public/*.jpg'),
-					destination: 'public/',
+					destination: 'dist',
 					fileName: '[path][name].[ext]' // (filePath) => filePath.replace('jpg', 'webp') is also possible
 				}
 			})
