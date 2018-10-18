@@ -63,10 +63,10 @@
 				return str.length > num ? str.slice(0, num > 3 ? num - 3 : num) + '...' : str;
 			},
 			lazyLoad(url) {
-				return url.replace('{OPTIONS}', '10x');
+				return url.replace('{{WIDTH}}', '10');
 			},
 			fullUrl(url) {
-				return url.replace('{OPTIONS}', '1280x');
+				return url.replace('{{WIDTH}}', '1280');
 			},
 			getVote(id) {
 				const vote = this.votes[id];
