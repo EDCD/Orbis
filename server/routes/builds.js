@@ -188,9 +188,8 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 				}
 				ship[update] = data.updates[update];
 				if (update === 'imageURL') {
-					ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/{OPTIONS}/${
-						data.updates[update]
-					}`;
+					``
+					ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/resize?url=${data.updates[update]}&width={{WIDTH}}`;
 				}
 				console.log(data.updates[update]);
 			}

@@ -88,13 +88,13 @@
 				if (!url) {
 					return url;
 				}
-				return url.replace('{OPTIONS}', '10x');
+				return url.replace('{{width}}', '10');
 			},
 			fullUrl(url) {
 				if (!url) {
 					return url;
 				}
-				return url.replace('{OPTIONS}', '1280x');
+				return url.replace('{{WIDTH}}', '1280');
 			},
 
 			async submit() {
