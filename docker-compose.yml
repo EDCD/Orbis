@@ -53,21 +53,6 @@ services:
     - "traefik.frontend.rule=Host:orbis.zone;PathPrefixStrip:/imgproxy/"
     - "traefik.port=9000"
     - "traefik.protocol=http"
-
-  imageproxy:
-    image: willnorris/imageproxy
-    command: -cache memory:200:4h -cache /tmp/imageproxy -addr 0.0.0.0:8080
-    volumes:
-      - ./data/imageproxy:/tmp/imageproxy
-    networks:
-    - web
-    labels:
-    - "traefik.docker.network=web"
-    - "traefik.enable=true"
-    - "traefik.frontend.rule=Host:orbis.zone;PathPrefixStrip:/imgproxy/"
-    - "traefik.port=8080"
-    - "traefik.protocol=http"
-    restart: always
   orbis_db:
     image: postgres:latest
     env_file:
