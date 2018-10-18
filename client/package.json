@@ -24,6 +24,7 @@
     "@vue/cli-plugin-pwa": "^3.0.4",
     "@vue/cli-service": "^3.0.4",
     "axios": "^0.18.0",
+    "imagemin-webpack-plugin": "^2.3.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "vue-cli-plugin-axios": "^0.0.4",
