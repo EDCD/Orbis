@@ -9,6 +9,21 @@
 					The Orbis project was created to provide a build repository for Coriolis.io
 				</div>
 				<div>
+					<a className="link" href="https://edassets.org/#/">
+						Logo and more by EDAssets
+					</a>
+				</div>
+				<div>
+					<a className="link" href="https://www.edsm.net/">
+						Default ship images by EDSM
+					</a>
+				</div>
+				<div>
+					<a className="link" href="https://fontawesome.com/license">
+						Other icons by FontAwesome
+					</a>
+				</div>
+				<div>
 					WIP
 				</div>
 			</v-flex>
