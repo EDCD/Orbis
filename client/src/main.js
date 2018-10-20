@@ -9,7 +9,7 @@ import './registerServiceWorker';
 
 Vue.config.productionTip = false;
 
-new Vue({
+window.App = new Vue({
 	router,
 	store,
 	render: h => h(App)

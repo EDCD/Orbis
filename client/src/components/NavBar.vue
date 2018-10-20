@@ -16,6 +16,16 @@
 				</v-btn>
 				<span>My Profile</span>
 			</v-tooltip>
+			<v-tooltip v-if="updateAvailable" bottom>
+				<v-btn
+					large
+					@click="update"
+					slot="activator"
+				>
+					Click to update
+				</v-btn>
+				<span>Click to update</span>
+			</v-tooltip>
 			<v-tooltip bottom>
 				<v-btn
 					icon
@@ -33,6 +43,21 @@
 <script>
 	export default {
 		name: 'NavBar',
+		computed: {
+			updateAvailable() {
+				return this.$store.state.Common.updateAvailable;
+			}
+		},
+		methods: {
+			async update() {
+				const reg = await navigator.serviceWorker.getRegistration();
+				if (!reg || !reg.waiting) {
+					return;
+				}
+				reg.waiting.postMessage('skipWaiting');
+				window.location.reload();
+			}
+		},
 		props: {
 			loggedIn: {},
 			user: {}

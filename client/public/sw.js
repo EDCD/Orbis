@@ -1,11 +1,11 @@
-console.log("Hello from sw.js");
+console.log('Hello from sw.js');
 
 if (workbox) {
-	console.log("Yay! Workbox is loaded 🎉");
+	console.log('Yay! Workbox is loaded 🎉');
 	workbox.routing.registerRoute(
-		new RegExp("https://fonts.(?:googleapis|gstatic).com/(.*)"),
+		new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
 		workbox.strategies.cacheFirst({
-			cacheName: "google-fonts",
+			cacheName: 'google-fonts',
 			plugins: [
 				new workbox.expiration.Plugin({
 					maxEntries: 30
@@ -19,7 +19,7 @@ if (workbox) {
 	workbox.routing.registerRoute(
 		/\.(?:png|gif|jpg|jpeg|svg)$/,
 		workbox.strategies.cacheFirst({
-			cacheName: "images",
+			cacheName: 'images',
 			plugins: [
 				new workbox.expiration.Plugin({
 					maxEntries: 60,
@@ -31,42 +31,29 @@ if (workbox) {
 	workbox.routing.registerRoute(
 		/\.(?:js|css)$/,
 		workbox.strategies.staleWhileRevalidate({
-			cacheName: "static-resources"
+			cacheName: 'static-resources'
 		})
 	);
 	try {
 		workbox.googleAnalytics.initialize();
 	} catch (e) {
-		console.log("Probably an ad-blocker");
+		console.log('Probably an ad-blocker');
 	}
 } else {
-	console.log("Boo! Workbox didn't load 😬");
+	console.log('Boo! Workbox didn\'t load 😬');
 }
-(async () => {
-	if (event.request.mode === "navigate" && registration.waiting) {
-		if ((await clients.matchAll()).length < 2) {
-			registration.waiting.postMessage("skipWaiting");
-		}
+
+self.addEventListener('message', (event) => {
+	if (!event.data){
+		return;
 	}
-})();
 
-addEventListener("message", messageEvent => {
-	if (messageEvent.data === "skipWaiting") return skipWaiting();
-});
-
-addEventListener("fetch", event => {
-	event.respondWith(
-		(async () => {
-			if (
-				event.request.mode === "navigate" &&
-				event.request.method === "GET" &&
-				registration.waiting &&
-				(await clients.matchAll()).length < 2
-			) {
-				registration.waiting.postMessage("skipWaiting");
-				return new Response("", { headers: { Refresh: "0" } });
-			}
-			return (await caches.match(event.request)) || fetch(event.request);
-		})()
-	);
+	switch (event.data) {
+		case 'skipWaiting':
+			self.skipWaiting();
+			break;
+		default:
+			// NOOP
+			break;
+	}
 });

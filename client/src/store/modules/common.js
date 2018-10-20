@@ -4,6 +4,7 @@ const types = {
 	ANNOUNCEMENT_REQUEST: 'ANNOUNCEMENT_REQUEST',
 	AUTH_REQUEST: 'AUTH_REQUEST',
 	BUILD_REQUEST: 'BUILD_REQUEST',
+	UPDATE_REQUEST: 'UPDATE_REQUEST',
 	PROFILE_REQUEST: 'PROFILE_REQUEST'
 };
 
@@ -13,6 +14,7 @@ export default {
 		builds: {},
 		user: {},
 		admin: false,
+		updateAvailable: false,
 		accessToken: ''
 	},
 	mutations: {
@@ -33,6 +35,9 @@ export default {
 				return;
 			}
 			state.builds = data.data;
+		},
+		UPDATE_REQUEST(state) {
+			state.updateAvailable = true
 		},
 		AUTH_REQUEST(state, data) {
 			if (!data || !data.data) {
@@ -69,6 +74,10 @@ export default {
 			}
 			commit(types.AUTH_REQUEST, data);
 		},
+		async updateAvailable({commit}) {
+			commit(types.UPDATE_REQUEST);
+		},
+
 		async getBuilds({commit}, query) {
 			commit(types.BUILD_REQUEST, await axios.post('/api/builds', query, {
 				withCredentials: true
