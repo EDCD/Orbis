@@ -2,7 +2,7 @@
 	<header>
 		<v-toolbar dark color="primary">
 			<router-link to="/">
-				<img src="@/assets/svg/Orbis.svg"/>
+				<img alt="Orbis logo" src="@/assets/svg/Orbis.svg"/>
 			</router-link>
 			<v-toolbar-title>Orbis.zone</v-toolbar-title>
 			<v-spacer></v-spacer>
