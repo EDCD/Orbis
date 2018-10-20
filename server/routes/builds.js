@@ -25,13 +25,14 @@ const {Op} = require('sequelize');
 const isAdmin = req => req.user.admin === true;
 
 router.post('/', (req, res) => {
-	let {order, field, search} = req.body;
+	let {order, field, search, ship} = req.body;
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
 	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
+		where: {},
 		offset: req.body.offset,
 		attributes: [
 			'id',
@@ -48,10 +49,12 @@ router.post('/', (req, res) => {
 		]
 	};
 	if (search && search.key && search.value) {
-		query.where = {};
 		query.where[search.key] = {
 			[Op.iLike]: `%${search.value}%`
 		};
+	}
+	if (ship) {
+		query.where['ShipName'] = ship;
 	}
 	return Ship.findAndCountAll(query)
 		.then(async ships => {
@@ -101,7 +104,7 @@ router.get('/:id', (req, res) =>
 			'description',
 			[sequelize.json('author.username'), 'username'],
 			[sequelize.json('author.id'), 'authorId'],
-				'imageURL',
+			'imageURL',
 			'url',
 			'proxiedImage',
 			'coriolisShip'
@@ -188,7 +191,6 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 				}
 				ship[update] = data.updates[update];
 				if (update === 'imageURL') {
-					``
 					ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/resize?url=${data.updates[update]}&width={{WIDTH}}`;
 				}
 				console.log(data.updates[update]);
