@@ -46,6 +46,7 @@
 		methods: {
 			async submit() {
 				await this.$store.dispatch('postAnnouncement', {expiresAt: this.date, message: this.message});
+				await this.$store.dispatch('getAnnouncements');
 			},
 			clear() {
 				this.$refs.form.reset();

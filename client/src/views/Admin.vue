@@ -69,7 +69,6 @@
 			}
 		},
 		async mounted() {
-			// await this.$store.dispatch('getBuilds', {pageSize: this.pageSize, offset: 0});
 		}
 	};
 </script>
