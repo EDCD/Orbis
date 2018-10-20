@@ -40,11 +40,11 @@ if (workbox) {
 		console.log('Probably an ad-blocker');
 	}
 } else {
-	console.log('Boo! Workbox didn\'t load 😬');
+	console.log("Boo! Workbox didn't load 😬");
 }
 
-self.addEventListener('message', (event) => {
-	if (!event.data){
+self.addEventListener('message', event => {
+	if (!event.data) {
 		return;
 	}
 
@@ -56,4 +56,24 @@ self.addEventListener('message', (event) => {
 			// NOOP
 			break;
 	}
+});
+
+self.addEventListener('fetch', function(event) {
+	console.log('Handling fetch event for', event.request.url);
+
+	event.respondWith(
+		caches.match(event.request).then(function(response) {
+			if (response) {
+				return response;
+			}
+
+			return fetch(event.request)
+				.then(function(response) {
+					return response;
+				})
+				.catch(function(error) {
+					return caches.match(OFFLINE_URL);
+				});
+		})
+	);
 });
