@@ -41,7 +41,7 @@
 				return this.$store.state.Common.admin;
 			},
 			loggedIn() {
-				return !!Object.keys(this.$store.state.Common.user).length;
+				return this.$store.state.Common.user && !!Object.keys(this.$store.state.Common.user).length;
 			}
 		},
 		async mounted() {
