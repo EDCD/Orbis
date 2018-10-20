@@ -37,6 +37,9 @@ router.get('/announcement', (req, res) => {
 			}
 		}
 	};
+	if (!req.query.showInCoriolis) {
+		req.query.showInCoriolis = false;
+	}
 	query.where.showInCoriolis = JSON.parse(req.query.showInCoriolis) === true;
 	return Announcement.findAll(query)
 		.then(data => res.json(data))
