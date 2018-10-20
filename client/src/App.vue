@@ -1,35 +1,6 @@
 <template>
 	<v-app dark>
-		<header>
-			<v-toolbar dark color="primary">
-				<router-link to="/">
-					<img src="@/assets/svg/Orbis.svg"/>
-				</router-link>
-				<v-toolbar-title>Orbis.zone</v-toolbar-title>
-				<v-spacer></v-spacer>
-				<v-tooltip v-if="loggedIn" bottom>
-					<v-btn
-						large
-						:href="`/profile/${user.username}`"
-						slot="activator"
-					>
-						My Profile
-					</v-btn>
-					<span>My Profile</span>
-				</v-tooltip>
-				<v-tooltip bottom>
-					<v-btn
-						icon
-						large
-						:href="loggedIn ? '/api/logout' : '/api/auth'"
-						slot="activator"
-					>
-						<img alt="Orbis.zone logo" src="@/assets/svg/Logout.svg"/>
-					</v-btn>
-					<span>{{loggedIn ? 'Logout' : 'Login'}}</span>
-				</v-tooltip>
-			</v-toolbar>
-		</header>
+		<nav-bar :logged-in="loggedIn" :user="user"/>
 		<v-content>
 			<v-container grid-list-md text-xs-center>
 				<v-layout align-center justify-center row wrap fill-height>
@@ -42,37 +13,18 @@
 			</v-container>
 			<router-view></router-view>
 		</v-content>
-		<v-footer height="auto" :fixed="fixed" color="primary lighten-1" app>
-			<v-layout
-				justify-center
-				row
-				wrap
-			>
-				<v-flex
-					primary
-					lighten-2
-					py-3
-					text-xs-center
-					white--text
-					xs12
-				>
-					&copy; {{new Date().getFullYear()}} <strong>EDCD</strong>
-					<v-btn v-if="admin" to="/admin">Admin</v-btn>
-					<v-btn to="/about">About</v-btn>
-					<v-btn to="/contact">Contact</v-btn>
-				</v-flex>
-
-			</v-layout>
-		</v-footer>
+		<nav-footer :admin="admin" :fixed="fixed"/>
 	</v-app>
 </template>
 
 <script>
 	import Announcement from './components/Announcement';
+	import NavBar from './components/NavBar';
+	import NavFooter from './components/NavFooter';
 
 	export default {
 		name: 'App',
-		components: {Announcement},
+		components: {NavFooter, NavBar, Announcement},
 		data() {
 			return {
 				fixed: true
@@ -99,6 +51,3 @@
 	};
 </script>
 
-<style>
-
-</style>
