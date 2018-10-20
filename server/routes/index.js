@@ -30,17 +30,19 @@ router.get('/', (req, res) => {
 });
 
 router.get('/announcement', (req, res) => {
-	return Announcement.findAll({
+	const query = {
 		where: {
 			expiresAt: {
 				[Op.gt]: Date.now()
 			}
 		}
-	})
+	};
+	query.where.showInCoriolis = JSON.parse(req.query.showInCoriolis) === true;
+	return Announcement.findAll(query)
 		.then(data => res.json(data))
 		.catch(err => {
 			console.error(err);
-			return res.json({});
+			return res.json([]);
 		});
 });
 

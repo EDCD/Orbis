@@ -25,6 +25,11 @@
 			v-model="message"
 			label="Announcement text"
 		></v-text-field>
+		<v-checkbox
+			type="checkbox"
+			v-model="coriolis"
+			label="Show on Coriolis?"
+		></v-checkbox>
 		<v-btn
 			@click="submit"
 		>
@@ -40,12 +45,13 @@
 			return {
 				date: '',
 				message: '',
+				coriolis: false,
 				menu: false
 			};
 		},
 		methods: {
 			async submit() {
-				await this.$store.dispatch('postAnnouncement', {expiresAt: this.date, message: this.message});
+				await this.$store.dispatch('postAnnouncement', {expiresAt: this.date, message: this.message, showOnCoriolis: true});
 				await this.$store.dispatch('getAnnouncements');
 			},
 			clear() {
