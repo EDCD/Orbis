@@ -17,12 +17,21 @@ export default {
 	},
 	mutations: {
 		ANNOUNCEMENT_REQUEST(state, data) {
+			if (!data || !data.data) {
+				return;
+			}
 			state.announcements = data.data;
 		},
 		BUILD_REQUEST(state, data) {
+			if (!data || !data.data) {
+				return;
+			}
 			state.builds = data.data;
 		},
 		PROFILE_REQUEST(state, data) {
+			if (!data || !data.data) {
+				return;
+			}
 			state.builds = data.data;
 		},
 		AUTH_REQUEST(state, data) {
