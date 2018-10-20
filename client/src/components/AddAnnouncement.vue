@@ -51,7 +51,7 @@
 		},
 		methods: {
 			async submit() {
-				await this.$store.dispatch('postAnnouncement', {expiresAt: this.date, message: this.message, showOnCoriolis: true});
+				await this.$store.dispatch('postAnnouncement', {expiresAt: this.date, message: this.message, showInCoriolis: this.coriolis});
 				await this.$store.dispatch('getAnnouncements');
 			},
 			clear() {

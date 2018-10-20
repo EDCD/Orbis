@@ -14,10 +14,10 @@ export default {
 		}
 	},
 	actions: {
-		async postAnnouncement({commit}, {expiresAt, message, showOnCoriolis}) {
+		async postAnnouncement({commit}, {expiresAt, message, showInCoriolis}) {
 			commit(types.ADMIN_POST_ANNOUNCEMENT_REQUEST, await axios.post(`/api/admin/announcement/add`, {
 				expiresAt,
-				showOnCoriolis,
+				showInCoriolis,
 				message
 			}, {
 				withCredentials: true
