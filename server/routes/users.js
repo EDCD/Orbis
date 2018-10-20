@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/profile/:name', (req, res) => {
 	const username = req.params.name === 'me' && req.user ? req.user.username : req.params.name;
-	let {order, field, search} = req.body;
+	let {order, field, search, ship} = req.body;
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
@@ -76,6 +76,11 @@ router.post('/profile/:name', (req, res) => {
 			[Op.iLike]: `%${search.value}%`
 		};
 	}
+
+	if (ship) {
+		query.where['ShipName'] = ship;
+	}
+
 	return Ship.findAndCountAll(query)
 		.then(ships => res.json(ships))
 		.catch(err => {

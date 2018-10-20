@@ -57,12 +57,11 @@
 			async search(value) {
 				this.loading = true;
 				this.searchData = value;
-				await this.$store.dispatch('getProfile', {
+
+				await this.$store.dispatch('getProfile', Object.assign({username: this.$route.params.username}, value, {
 					pageSize: this.pageSize,
-					offset: this.offset,
-					search: value,
-					username: this.user.username
-				});
+					offset: 0
+				}));
 				this.loading = false;
 			},
 			async paginate() {
