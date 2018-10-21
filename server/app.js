@@ -33,7 +33,7 @@ app.options('*', cors({credentials: true, origin: true}));
 // app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 
-app.use(cookieParser());
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const sessionStore = new SequelizeStore({
