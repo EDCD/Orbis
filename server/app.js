@@ -24,7 +24,7 @@ process.on('uncaughtException', reason => {
 
 const app = express();
 if (process.env.NODE_ENV === 'production') {
-	app.set('trust proxy', 1);
+	app.set('trust proxy', true);
 }
 app.use(bodyParser.json({limit: '30mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
