@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // sessionStore.sync();
 const sessionStore = new SQLiteStore();
 
-const keycloak = new Keycloak({store: sessionStore, scope: 'offline_access'}, null);
+const keycloak = new Keycloak({store: sessionStore/*, scope: 'offline_access'*/}, null);
 
 app.use(
 	session({
