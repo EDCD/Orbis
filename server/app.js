@@ -14,7 +14,6 @@ const SQLiteStore = require('connect-sqlite3')(session);
 
 const {sequelize, Ship} = models;
 
-
 process.on('unhandledRejection', (reason, p) => {
 	console.error('Unhandled Rejection at:', p, 'reason:', reason);
 });
@@ -24,7 +23,9 @@ process.on('uncaughtException', reason => {
 });
 
 const app = express();
-app.enable('trust proxy');
+if (process.env.NODE_ENV === 'production') {
+	app.set('trust proxy', 1);
+}
 app.use(bodyParser.json({limit: '30mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({credentials: true, origin: true}));
@@ -43,20 +44,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 // sessionStore.sync();
 const sessionStore = new SQLiteStore();
+
+const keycloak = new Keycloak({store: sessionStore, scope: 'offline_access'}, null);
+
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
 		resave: false,
+		saveUninitialized: true,
 		cookie: {
-			maxAge: 30 * 24 * 60 * 60 * 1000
+			maxAge: 30 * 24 * 60 * 60 * 1000,
+			secure: process.env.NODE_ENV === 'production'
 		},
 		proxy: process.env.NODE_ENV === 'production',
 		store: sessionStore,
 		rolling: true
 	})
 );
-
-const keycloak = new Keycloak({store: sessionStore, scope: 'offline_access'}, null);
 
 exports.keycloak = keycloak;
 
