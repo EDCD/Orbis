@@ -24,6 +24,16 @@
 					</a>
 				</div>
 				<div>
+					<a class="link" href="https://l.willb.info/requestfeat">
+						Request a feature
+					</a>
+				</div>
+				<div>
+					<a class="link" href="https://l.willb.info/orbisplanned">
+						Requested features list
+					</a>
+				</div>
+				<div>
 					WIP
 				</div>
 			</v-flex>
