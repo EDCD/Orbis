@@ -18,17 +18,17 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@types/d3": "^5.0.0",
-    "@types/less": "^0.0.34",
-    "@vue/cli-plugin-babel": "^3.0.4",
-    "@vue/cli-plugin-pwa": "^3.0.4",
-    "@vue/cli-service": "^3.0.4",
+    "@types/d3": "^5.0.1",
+    "@types/less": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.0.5",
+    "@vue/cli-plugin-pwa": "^3.0.5",
+    "@vue/cli-service": "^3.0.5",
     "axios": "^0.18.0",
     "imagemin-webpack-plugin": "^2.3.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "vue-cli-plugin-axios": "^0.0.4",
-    "vue-cli-plugin-vuetify": "^0.2.0",
+    "vue-cli-plugin-vuetify": "^0.4.5",
     "vue-template-compiler": "^2.5.17"
   }
 }
