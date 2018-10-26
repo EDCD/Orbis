@@ -9,8 +9,6 @@ const router = express.Router();
 const addLimiter = new RateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 20, // Limit each IP to 20 requests per windowMs
-	delayMs: 1000, // Disable delaying - full speed until the max limit is reached
-	delayAfter: 5,
 	message: 'Too many builds uploaded. Please try again later.'
 });
 
