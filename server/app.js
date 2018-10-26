@@ -8,9 +8,9 @@ const session = require('express-session');
 const models = require('./models');
 const Keycloak = require('keycloak-connect');
 const {getUserInfo} = require('./keycloak');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./api-spec.json');
+const SQLiteStore = require('connect-sqlite3')(session);
 
 const {sequelize, Ship} = models;
 
@@ -36,13 +36,13 @@ app.use(logger('dev'));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const sessionStore = new SequelizeStore({
-	db: sequelize,
-	checkExpirationInterval: 15 * 60 * 1000,
-	expiration: 30 * 24 * 60 * 60 * 1000
-});
-sessionStore.sync();
-
+// const sessionStore = new SequelizeStore({
+// 	db: sequelize,
+// 	checkExpirationInterval: 15 * 60 * 1000,
+// 	expiration: 30 * 24 * 60 * 60 * 1000
+// });
+// sessionStore.sync();
+const sessionStore = new SQLiteStore();
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
