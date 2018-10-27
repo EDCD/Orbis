@@ -88,6 +88,36 @@ router.get('/liked/:shipId', (req, res) => {
 		});
 });
 
+router.post('/liked/batch', (req, res) => {
+	if (!req.user) {
+		return res.status(403).json({message: 'Not logged in'});
+	}
+	if (!req.body.ids) {
+		return res.status(400).json({message: 'No IDs listed'});
+	}
+	return ShipVote.findAll({
+		where: {
+			shipId: {
+				[Op.in]: req.body.ids
+			},
+			userId: req.user.keycloakId
+		},
+		attributes: ['shipId', 'vote']
+	})
+		.then(vote => {
+			if (!vote) {
+				return res.json({});
+			}
+			vote = JSON.parse(JSON.stringify(vote));
+			return res.json(vote);
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+});
+
+
 const allowedUpdates = ['imageURL', 'description', 'title'];
 
 router.get('/:id', (req, res) =>

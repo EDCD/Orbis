@@ -80,11 +80,6 @@
 				this.score = this.$store.state.Vote.counts[id];
 			}
 		},
-		async mounted() {
-			if (this.loggedIn) {
-				await this.$store.dispatch('getVote', this.dbId);
-			}
-		},
 		props: {
 			title: String,
 			coriolisLink: String,

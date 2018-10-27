@@ -44,6 +44,9 @@
 			builds() {
 				return this.$store.state.Common.builds.rows;
 			},
+			loggedIn() {
+				return Boolean(this.$store.state.Common.user) && !_.isEmpty(this.$store.state.Common.user);
+			},
 			pages() {
 				if (!this.$store.state.Common.builds.count) {
 					return 1;
@@ -67,10 +70,16 @@
 					pageSize: this.pageSize,
 					offset: this.offset
 				}));
+				const buildIds = [];
+				this.builds.forEach(e => buildIds.push(e.id));
+				await this.$store.dispatch('getVote', buildIds);
 			}
 		},
 		async mounted() {
 			await this.$store.dispatch('getBuilds', {pageSize: this.pageSize, offset: 0});
+			const buildIds = [];
+			this.builds.forEach(e => buildIds.push(e.id));
+			await this.$store.dispatch('getVote', buildIds);
 		}
 	};
 </script>
