@@ -9,7 +9,7 @@
 			<v-tooltip v-if="loggedIn" bottom>
 				<v-btn
 					large
-					:href="`/profile/${user.username}`"
+					:to="`/profile/${user.username}`"
 					slot="activator"
 				>
 					My Profile
