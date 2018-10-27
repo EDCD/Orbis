@@ -8,29 +8,9 @@
 				<div>
 					The Orbis project was created to provide a build repository for Coriolis.io
 				</div>
-				<div>
-					<a class="link" href="https://edassets.org/#/">
-						Logo and more by EDAssets
-					</a>
-				</div>
-				<div>
-					<a class="link" href="https://www.edsm.net/">
-						Default ship images by EDSM
-					</a>
-				</div>
-				<div>
-					<a class="link" href="https://fontawesome.com/license">
-						Other icons by FontAwesome
-					</a>
-				</div>
-				<div>
-					<a class="link" href="https://l.willb.info/requestfeat">
-						Request a feature
-					</a>
-				</div>
-				<div>
-					<a class="link" href="https://l.willb.info/orbisplanned">
-						Requested features list
+				<div v-for="link in links">
+					<a class="link" :href="link.href">
+						{{link.text}}
 					</a>
 				</div>
 				<div>
@@ -45,7 +25,15 @@
 	export default {
 		name: 'About',
 		data() {
-			return {};
+			return {
+				links: [
+					{href: 'https://edassets.org/#/', text: 'Logo and more by EDAssets'},
+					{href: 'https://www.edsm.net/', text: 'Default ship images by EDSM'},
+					{href: 'https://fontawesome.com/license', text: 'Other icons by FontAwesome'},
+					{href: 'https://l.willb.info/requestfeat', text: 'Request a feature'},
+					{href: 'https://l.willb.info/orbisplanned', text: 'Requested features list'}
+				]
+			};
 		},
 		methods: {}
 	};
