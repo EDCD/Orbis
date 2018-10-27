@@ -1,6 +1,13 @@
 <template>
 	<v-container grid-list-md text-xs-center>
 		<search :loading="loading" @searchUpdate="search"></search>
+		<v-pagination
+			v-show="builds"
+			v-model="page"
+			:length="pages"
+			@input="paginate"
+			:total-visible="7"
+		></v-pagination>
 		<v-layout row justify-space-around wrap>
 			<v-flex :key="ship.id" x12 sm4 v-for="ship in builds">
 				<ship-card :description="ship.description" :username="ship.username" :coriolis-link="ship.url"
@@ -29,7 +36,7 @@
 			return {
 				loading: false,
 				page: 1,
-				pageSize: 10,
+				pageSize: 9,
 				searchData: {}
 			};
 		},
@@ -47,10 +54,7 @@
 				return Math.ceil(this.$store.state.Common.builds.count / this.pageSize);
 			},
 			offset() {
-				if (this.page === 1) {
-					return 0;
-				}
-				return Math.ceil(this.page * this.pageSize);
+				return (this.page - 1) * this.pageSize + 1;
 			}
 		},
 		methods: {
