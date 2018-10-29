@@ -56,7 +56,14 @@
 						submit
 					</v-btn>
 					<v-btn @click="clear">clear</v-btn>
+					<v-btn
+						:loading="loading"
+						:disabled="disabled"
+						@click="deleteBuild">
+						delete
+					</v-btn>
 				</v-form>
+
 			</v-flex>
 		</v-layout>
 	</v-container>
@@ -65,6 +72,7 @@
 <script>
 	import {getLanguage} from '../i18n/Language';
 	import {Modules} from 'coriolis-data/dist/index';
+	import router from '../router';
 
 	const lang = getLanguage();
 	export default {
@@ -95,6 +103,20 @@
 					return url;
 				}
 				return url.replace('{{WIDTH}}', '1280');
+			},
+
+			async deleteBuild() {
+				this.loading = true;
+				try {
+					await this.$axios.delete(`/api/builds/${this.ship.id}`, {}, {
+						withCredentials: true
+					});
+				} catch (e) {
+					console.error(e);
+				}
+
+				this.loading = false;
+				return router.push('/');
 			},
 
 			async submit() {

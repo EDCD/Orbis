@@ -9,8 +9,6 @@ const router = express.Router();
 const addLimiter = new RateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 20, // Limit each IP to 20 requests per windowMs
-	delayMs: 1000, // Disable delaying - full speed until the max limit is reached
-	delayAfter: 5,
 	message: 'Too many builds uploaded. Please try again later.'
 });
 
@@ -89,6 +87,36 @@ router.get('/liked/:shipId', (req, res) => {
 			res.status(500).end();
 		});
 });
+
+router.post('/liked/batch', (req, res) => {
+	if (!req.user) {
+		return res.status(403).json({message: 'Not logged in'});
+	}
+	if (!req.body.ids) {
+		return res.status(400).json({message: 'No IDs listed'});
+	}
+	return ShipVote.findAll({
+		where: {
+			shipId: {
+				[Op.in]: req.body.ids
+			},
+			userId: req.user.keycloakId
+		},
+		attributes: ['shipId', 'vote']
+	})
+		.then(vote => {
+			if (!vote) {
+				return res.json({});
+			}
+			vote = JSON.parse(JSON.stringify(vote));
+			return res.json(vote);
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+});
+
 
 const allowedUpdates = ['imageURL', 'description', 'title'];
 

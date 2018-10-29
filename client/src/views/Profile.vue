@@ -1,12 +1,18 @@
 <template>
 	<v-container grid-list-md text-xs-center>
 		<search :loading="loading" @searchUpdate="search"></search>
-		<v-layout row justify-space-around wrap>
-			<v-flex :key="ship.id" x12 sm4 v-for="ship in builds">
+		<v-pagination
+			v-show="builds"
+			v-model="page"
+			:length="pages"
+			@input="paginate"
+			:total-visible="7"
+		></v-pagination>
+		<v-layout row justify-center wrap>
+			<v-flex :key="ship.id" xs12 lg4 xl4 sm6 md6 v-for="ship in builds">
 				<ship-card :description="ship.description" :username="ship.username" :coriolis-link="ship.url"
 									 :imageURL="ship.proxiedImage"
-									 :title="ship.title" :id="ship.shortid"
-									 :db-id="ship.id" :likes="ship.likes"></ship-card>
+									 :title="ship.title" :id="ship.shortid" :db-id="ship.id" :likes="ship.likes"></ship-card>
 			</v-flex>
 		</v-layout>
 		<v-pagination
@@ -29,7 +35,7 @@
 			return {
 				loading: false,
 				page: 1,
-				pageSize: 10,
+				pageSize: 9,
 				searchData: {}
 			};
 		},
@@ -47,10 +53,7 @@
 				return Math.ceil(this.$store.state.Common.builds.count / this.pageSize);
 			},
 			offset() {
-				if (this.page === 1) {
-					return 0;
-				}
-				return Math.ceil(this.page * this.pageSize);
+				return (this.page - 1) * this.pageSize + 1;
 			}
 		},
 		methods: {
