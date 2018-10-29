@@ -2,6 +2,7 @@ version: '2.1'
 
 services:
   server:
+    image: edcd/orbis-server
     build:
       context: server/
       dockerfile: Dockerfile
@@ -22,6 +23,7 @@ services:
       orbis_db:
         condition: service_healthy
   client:
+    image: edcd/orbis-client
     build:
       context: client/
       dockerfile: Dockerfile
