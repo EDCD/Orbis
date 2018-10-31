@@ -66,6 +66,7 @@
 				this.loading = false;
 			},
 			async paginate() {
+				this.scrollToTop();
 				await this.$store.dispatch('getBuilds', Object.assign({}, this.searchData, {
 					pageSize: this.pageSize,
 					offset: this.offset
@@ -73,6 +74,9 @@
 				const buildIds = [];
 				this.builds.forEach(e => buildIds.push(e.id));
 				await this.$store.dispatch('getVote', buildIds);
+			},
+			scrollToTop() {
+				window.scrollTo(0,0);
 			}
 		},
 		async mounted() {

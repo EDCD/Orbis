@@ -68,12 +68,16 @@
 				this.loading = false;
 			},
 			async paginate() {
+				this.scrollToTop()
 				await this.$store.dispatch('getProfile', {
 					pageSize: this.pageSize,
 					offset: this.offset,
 					search: this.searchData,
 					username: this.$route.params.username
 				});
+			},
+			scrollToTop() {
+				window.scrollTo(0,0);
 			}
 		},
 		async mounted() {
