@@ -122,6 +122,19 @@
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.31.tgz#bac8d8aab6a823e91deb7f79083b2a35fa638f33"
   integrity sha512-LS1MCPaQKqspg7FvexuhmDbWUhE2yIJ+4AgVIyObfc06/UKZ8REgxGNjZc82wPLWmbeOm7S+gSsLgo75TanG4A==
 
+"@types/eslint@^4.16.4":
+  version "4.16.4"
+  resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-4.16.4.tgz#9a0d80208b22f0fd1a9d174e76dc675f3802c011"
+  integrity sha512-g+PV8wktZLJrSPrdCZj6aWfa0xqTrGdx3FywlGE8YH13am8PhkhjtA+Wu1fLdV45gtpM1FM8JWnyFwOsLZI4VA==
+  dependencies:
+    "@types/estree" "*"
+    "@types/json-schema" "*"
+
+"@types/estree@*":
+  version "0.0.39"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
+  integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
+
 "@types/events@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
@@ -131,6 +144,13 @@
   version "0.3.29"
   resolved "https://registry.yarnpkg.com/@types/expect.js/-/expect.js-0.3.29.tgz#28dd359155b84b8ecb094afc3f4b74c3222dca3b"
   integrity sha1-KN01kVW4S47LCUr8P0t0wyItyjs=
+
+"@types/express-rate-limit@^2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@types/express-rate-limit/-/express-rate-limit-2.9.3.tgz#e83a548bf251ad12ca49055c22d3f2da4e16b62d"
+  integrity sha512-KIiEnkemd20SpTHUvN8Yqr11nddpD1xch3hY5G9GnuaURQ9EnoAi1N2DJQK8n8V0vHBJOcmwnMdufLdWn1GYhQ==
+  dependencies:
+    "@types/express" "*"
 
 "@types/express-serve-static-core@*":
   version "4.16.0"
@@ -171,10 +191,20 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-1.0.6.tgz#3e02972728c69248c2af08d60a48cbb8680fffdf"
   integrity sha512-Xqg/lIZMrUd0VRmSRbCAewtwGZiAk3mEUDvV4op1tGl+LvyPcb/MIOSxTl9z+9+J+R4/vpjiCAT4xeKzH9ji1w==
 
+"@types/json-schema@*":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.1.tgz#fcaa655260285b8061850789f8268c51a4ec8ee1"
+  integrity sha512-NVQEMviDWjuen3UW+mU1J6fZ0WhOfG1yRce/2OTcbaz+fgmTw2cahx6N2wh0Yl+a+hg2UZj/oElZmtULWyGIsA==
+
 "@types/lodash@*":
   version "4.14.115"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.115.tgz#54d171b2ce12c058742443b5f6754760f701b8f9"
   integrity sha512-9K/P4XMQxk61omAzQh3bbbFiqnG17eLcFysjlAYz0aPcYrVo8T+ujaCeIeY0Gpzux7x1YbxtEtLKB7ZWf79qdg==
+
+"@types/lodash@^4.14.117":
+  version "4.14.117"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.117.tgz#695a7f514182771a1e0f4345d189052ee33c8778"
+  integrity sha512-xyf2m6tRbz8qQKcxYZa7PA4SllYcay+eh25DN3jmNYY6gSTL7Htc/bttVdkqj2wfJGbeWlQiX8pIyJpKU+tubw==
 
 "@types/mime@*":
   version "2.0.0"
@@ -316,6 +346,14 @@
   integrity sha512-qRvPP8dO7IBqJz8LaQ7/Lw2oo/geiDUPAMx/L+CQCkR9sN622O30XCH7RSyUmilyCSyjxyhJ7cEtd3hmwPwvhw==
   dependencies:
     "@types/superagent" "*"
+
+"@types/swagger-ui-express@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/swagger-ui-express/-/swagger-ui-express-3.0.0.tgz#7c3217cb6d900be1601053d791cfd16725cddd22"
+  integrity sha512-NDr7fgTh4govvso8IM8lkzSMuqGfhw7KX5inVohFUMjqAhDJQRfCwTHxzWk9sd/bTLtmSs9ib+A+09tf9QSt4Q==
+  dependencies:
+    "@types/express" "*"
+    "@types/serve-static" "*"
 
 "@types/tough-cookie@*":
   version "2.3.3"

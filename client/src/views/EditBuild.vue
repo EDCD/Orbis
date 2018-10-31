@@ -1,6 +1,6 @@
 <template>
 	<v-container grid-list-md text-xs-center>
-		<v-layout row justify-space-around wrap>
+		<v-layout row justify-space-around wrap="">
 			<v-flex xs12>
 				<v-card color="cyan darken-2" class="white--text">
 					<v-layout>
@@ -17,8 +17,7 @@
 								<div>
 									<div class="headline">{{this.title || ship.title}}</div>
 									<v-expansion-panel>
-										<v-expansion-panel-content
-										>
+										<v-expansion-panel-content>
 											<div slot="header">Description</div>
 											<v-card>
 												<v-card-text>{{this.description || ship.description}}</v-card-text>
@@ -33,37 +32,13 @@
 			</v-flex>
 			<v-flex>
 				<v-form ref="form" v-model="valid" lazy-validation>
-					<v-text-field
-						v-model="title"
-						:disabled="disabled"
-						label="Build Title"
-					></v-text-field>
-					<v-text-field
-						v-model="imageURL"
-						:disabled="disabled"
-						label="Build image (Direct image URL)"
-					></v-text-field>
-					<v-textarea
-						v-model="description"
-						:disabled="disabled"
-						label="Build description"
-					></v-textarea>
-					<v-btn
-						:loading="loading"
-						:disabled="!valid || disabled"
-						@click="submit"
-					>
-						submit
-					</v-btn>
+					<v-text-field v-model="title" :disabled="disabled" label="Build Title"></v-text-field>
+					<v-text-field v-model="imageURL" :disabled="disabled" label="Build image (Direct image URL)"></v-text-field>
+					<v-textarea v-model="description" :disabled="disabled" label="Build description"></v-textarea>
+					<v-btn :loading="loading" :disabled="!valid || disabled" @click="submit">{{submitOrClose}}</v-btn>
 					<v-btn @click="clear">clear</v-btn>
-					<v-btn
-						:loading="loading"
-						:disabled="disabled"
-						@click="deleteBuild">
-						delete
-					</v-btn>
+					<v-btn :loading="loading" :disabled="disabled" @click="deleteBuild">delete</v-btn>
 				</v-form>
-
 			</v-flex>
 		</v-layout>
 	</v-container>
@@ -87,6 +62,7 @@
 				disabled: true,
 				loading: false,
 				imageURL: '',
+				updated: false,
 				description: '',
 				title: ''
 			};
@@ -96,7 +72,7 @@
 				if (!url) {
 					return url;
 				}
-				return url.replace('{{width}}', '10');
+				return url.replace('{{WIDTH}}', '10');
 			},
 			fullUrl(url) {
 				if (!url) {
@@ -120,6 +96,11 @@
 			},
 
 			async submit() {
+				if (this.submitOrClose === 'Close') {
+					return window.history.length > 1
+        ? this.$router.go(-1)
+        : this.$router.push('/')
+				}
 				if (this.$refs.form.validate()) {
 					// Native form submission is not yet supported
 					this.loading = true;
@@ -135,6 +116,7 @@
 					}
 
 					this.loading = false;
+					this.updated = true;
 				}
 			},
 			clear() {
@@ -151,13 +133,22 @@
 				if (this.title && this.title !== this.ship.title) {
 					updates.title = this.title;
 				}
-				if (this.imageURL && this.imageURL !== this.ship.imageURLi) {
+				if (this.imageURL && this.imageURL !== this.ship.imageURL) {
 					updates.imageURL = this.imageURL;
 				}
 				if (this.description && this.description !== this.ship.description) {
 					updates.description = this.description;
 				}
 				return updates;
+			},
+			submitOrClose() {
+				if (this.updated) {
+					return 'Close';
+				}
+				if (Object.keys(this.updates).length === 0) {
+					return 'Close';
+				}
+				return 'Submit';
 			}
 		},
 		async mounted() {
