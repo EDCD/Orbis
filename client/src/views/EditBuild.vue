@@ -37,7 +37,7 @@
 					<v-select :items="privacyItems" v-model="privacy" :disabled="disabled" label="Build privacy"></v-select>
 					<v-autocomplete
 						v-model="model"
-						:disabled="disabled"
+						:disabled="disabled || sharedWithDisabled"
 						clearable chips deletable-chips multiple
 						:items="items"
 						:loading="isLoading"
@@ -77,7 +77,6 @@
 				translate: lang.translate,
 				valid: true,
 				disabled: true,
-				sharedWithDisabled: true,
 				loading: false,
 				imageURL: '',
 				privacyItems: ['public', 'owner', 'shared'],
@@ -188,6 +187,9 @@
 					};
 				});
 			},
+			sharedWithDisabled() {
+				return this.privacy !== 'shared';
+			},
 			items() {
 				return this.entries.map(entry => {
 					return Object.assign({}, entry);
@@ -257,9 +259,6 @@
 			}
 			this.privacy = this.ship.privacy;
 			this.title = this.ship.title;
-			if (this.privacy !== 'shared') {
-				this.sharedWithDisabled = true;
-			}
 			this.disabled = false;
 		}
 	};
