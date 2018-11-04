@@ -27,10 +27,25 @@ router.post('/', (req, res) => {
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
+	let id = '';
+	if (req.user && req.user.id) {
+		id = req.user.id;
+	}
 	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
-		where: {},
+		where: {
+			[Op.or]: [
+				{
+					privacy: 'public'
+				},
+				{
+					sharedAccounts: {
+						[Op.contains]: [id]
+					}
+				}
+			]
+		},
 		offset: req.body.offset,
 		attributes: [
 			'id',
@@ -54,6 +69,7 @@ router.post('/', (req, res) => {
 	if (ship) {
 		query.where['ShipName'] = ship;
 	}
+	console.log(query);
 	return Ship.findAndCountAll(query)
 		.then(async ships => {
 			return res.json(ships);
@@ -117,8 +133,7 @@ router.post('/liked/batch', (req, res) => {
 		});
 });
 
-
-const allowedUpdates = ['imageURL', 'description', 'title'];
+const allowedUpdates = ['imageURL', 'description', 'title', 'privacy', 'sharedAccounts', 'sharedAccountUsernames'];
 
 router.get('/:id', (req, res) =>
 	Ship.find({
@@ -130,6 +145,9 @@ router.get('/:id', (req, res) =>
 			'shortid',
 			'title',
 			'description',
+			'privacy',
+			'sharedAccounts',
+			'sharedAccountUsernames',
 			[sequelize.json('author.username'), 'username'],
 			[sequelize.json('author.id'), 'authorId'],
 			'imageURL',

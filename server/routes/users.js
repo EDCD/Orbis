@@ -89,4 +89,16 @@ router.post('/profile/:name', (req, res) => {
 		});
 });
 
+router.get('/list', (req, res) => {
+	return User.findAndCountAll({
+		attributes: ['id', 'username']
+	})
+		.then(users => res.json(users))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+});
+
+
 module.exports = router;

@@ -34,6 +34,23 @@
 				<v-form ref="form" v-model="valid" lazy-validation>
 					<v-text-field v-model="title" :disabled="disabled" label="Build Title"></v-text-field>
 					<v-text-field v-model="imageURL" :disabled="disabled" label="Build image (Direct image URL)"></v-text-field>
+					<v-select :items="privacyItems" v-model="privacy" :disabled="disabled" label="Build privacy"></v-select>
+					<v-autocomplete
+						v-model="model"
+						:disabled="disabled"
+						clearable chips deletable-chips multiple
+						:items="items"
+						:loading="isLoading"
+						:search-input.sync="search"
+						color="white"
+						hide-no-data
+						hide-selected
+						item-text="username"
+						item-value="id"
+						label="Shared with (usernames)"
+						placeholder="Start typing to Search"
+						return-object
+					></v-autocomplete>
 					<v-textarea v-model="description" :disabled="disabled" label="Build description"></v-textarea>
 					<v-btn :loading="loading" :disabled="!valid || disabled" @click="submit">{{submitOrClose}}</v-btn>
 					<v-btn @click="clear">clear</v-btn>
@@ -60,10 +77,19 @@
 				translate: lang.translate,
 				valid: true,
 				disabled: true,
+				sharedWithDisabled: true,
 				loading: false,
 				imageURL: '',
+				privacyItems: ['public', 'owner', 'shared'],
 				updated: false,
 				description: '',
+				sharedAccounts: [],
+				privacy: '',
+				entries: [],
+				isLoading: false,
+				model: [],
+				fetched: false,
+				search: null,
 				title: ''
 			};
 		},
@@ -98,8 +124,8 @@
 			async submit() {
 				if (this.submitOrClose === 'Close') {
 					return window.history.length > 1
-        ? this.$router.go(-1)
-        : this.$router.push('/')
+						? this.$router.go(-1)
+						: this.$router.push('/');
 				}
 				if (this.$refs.form.validate()) {
 					// Native form submission is not yet supported
@@ -113,6 +139,8 @@
 						});
 					} catch (e) {
 						console.error(e);
+					} finally {
+						await this.$store.dispatch('getBuild', this.$route.params.id);
 					}
 
 					this.loading = false;
@@ -123,9 +151,66 @@
 				this.$refs.form.reset();
 			}
 		},
+		watch: {
+			search(val) {
+				// Items have already been loaded
+				if (this.items.length > 0 && this.fetched) return;
+
+				// Items have already been requested
+				if (this.isLoading) return;
+
+				this.isLoading = true;
+
+				// Lazily load input items
+				this.axios.get('/api/users/list')
+					.then(res => {
+						const {count, rows} = res.data;
+						this.count = count;
+						this.entries = rows;
+					})
+					.catch(err => {
+						console.log(err);
+					})
+					.finally(() => {
+						this.isLoading = false;
+						this.fetched = true;
+					});
+			}
+		},
 		computed: {
+			fields() {
+				if (!this.model) return [];
+
+				return Object.keys(this.model).map(key => {
+					return {
+						key,
+						value: this.model[key]
+					};
+				});
+			},
+			items() {
+				return this.entries.map(entry => {
+					return Object.assign({}, entry);
+				});
+			},
 			ship() {
 				return this.$store.state.Build.build;
+			},
+
+			ids() {
+				let ids = [];
+				for (const i of this.fields) {
+					ids.push(i.value.id);
+				}
+				return ids;
+			},
+
+			usernames() {
+				let usernames = [];
+				for (const i of this.fields) {
+					usernames.push(i.value.username);
+				}
+				return usernames;
 			},
 
 			updates() {
@@ -138,6 +223,15 @@
 				}
 				if (this.description && this.description !== this.ship.description) {
 					updates.description = this.description;
+				}
+				if (this.privacy && this.privacy !== this.ship.privacy) {
+					updates.privacy = this.privacy;
+				}
+				if (this.ids && this.ids !== this.ship.sharedAccounts) {
+					updates.sharedAccounts = this.ids;
+				}
+				if (this.usernames && this.usernames !== this.usernames.sharedAccountUsernames) {
+					updates.sharedAccountUsernames = this.usernames;
 				}
 				return updates;
 			},
@@ -156,6 +250,16 @@
 			this.imageURL = this.ship.imageURL;
 			this.description = this.ship.description;
 			this.title = this.ship.title;
+			this.sharedAccounts = this.ship.sharedAccountUsernames;
+			for (const id in this.ship.sharedAccounts) {
+				this.entries.push({id: this.ship.sharedAccounts[id], username: this.ship.sharedAccountUsernames[id]});
+				this.model.push({id: this.ship.sharedAccounts[id], username: this.ship.sharedAccountUsernames[id]});
+			}
+			this.privacy = this.ship.privacy;
+			this.title = this.ship.title;
+			if (this.privacy !== 'shared') {
+				this.sharedWithDisabled = true;
+			}
 			this.disabled = false;
 		}
 	};

@@ -37,16 +37,19 @@ export default {
 			state.builds = data.data;
 		},
 		UPDATE_REQUEST(state) {
-			state.updateAvailable = true
+			state.updateAvailable = true;
 		},
 		AUTH_REQUEST(state, data) {
-			if (!data || !data.data) {
+			if (!data) {
+				localStorage.removeItem('user');
+				localStorage.removeItem('admin');
 				return;
 			}
-			console.log(data);
-			state.user = data.data.user;
-			state.admin = data.data.admin;
-			state.accessToken = data.data.accessToken;
+			state.user = data.user;
+			state.admin = data.admin;
+			state.accessToken = data.accessToken;
+			localStorage.setItem('user', JSON.stringify(state.user));
+			localStorage.setItem('admin', state.admin);
 		}
 	},
 	actions: {
@@ -61,7 +64,7 @@ export default {
 			}
 			commit(types.ANNOUNCEMENT_REQUEST, data);
 		},
-		async checkAuth({commit}) {
+		async checkAuth({dispatch, commit}) {
 			let data;
 			try {
 				data = await axios.get('/api/checkauth', {
@@ -72,7 +75,16 @@ export default {
 					console.log(e);
 				}
 			}
-			commit(types.AUTH_REQUEST, data);
+			commit(types.AUTH_REQUEST, data.data);
+		},
+		async checkAuthLocal({dispatch, commit}) {
+			let data;
+			const ls = localStorage.getItem('user');
+			if (ls) {
+				dispatch('checkAuth');
+				return commit(types.AUTH_REQUEST, {user: ls, admin: localStorage.getItem('admin')});
+			}
+			return commit(types.AUTH_REQUEST, null)
 		},
 		async updateAvailable({commit}) {
 			commit(types.UPDATE_REQUEST);

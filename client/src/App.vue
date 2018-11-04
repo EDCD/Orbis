@@ -45,8 +45,8 @@
 			}
 		},
 		async mounted() {
+			await this.$store.dispatch('checkAuthLocal');
 			await this.$store.dispatch('getAnnouncements');
-			await this.$store.dispatch('checkAuth');
 		}
 	};
 </script>

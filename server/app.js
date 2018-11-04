@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const models = require('./models');
+const responseTime = require('response-time');
 const Keycloak = require('keycloak-connect');
 const {getUserInfo} = require('./keycloak');
 const swaggerUi = require('swagger-ui-express');
@@ -23,6 +24,7 @@ process.on('uncaughtException', reason => {
 });
 
 const app = express();
+app.use(responseTime());
 if (process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', true);
 }
