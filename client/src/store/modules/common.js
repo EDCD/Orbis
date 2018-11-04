@@ -82,7 +82,7 @@ export default {
 			const ls = localStorage.getItem('user');
 			dispatch('checkAuth');
 			if (ls) {
-				commit(types.AUTH_REQUEST, {user: ls, admin: localStorage.getItem('admin')});
+				return commit(types.AUTH_REQUEST, {user: ls, admin: localStorage.getItem('admin')});
 			}
 			return commit(types.AUTH_REQUEST, null)
 		},
