@@ -73,7 +73,9 @@ export default {
 			} catch (e) {
 				if (e.response.status !== 401) {
 					console.log(e);
-				}
+        }
+        localStorage.removeItem('user');
+        localStorage.removeItem('admin');
 			}
 			commit(types.AUTH_REQUEST, data.data);
 		},
