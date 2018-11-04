@@ -13,7 +13,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./api-spec.json');
 const SQLiteStore = require('connect-sqlite3')(session);
 
-const {sequelize, Ship} = models;
+const {Ship} = models;
 
 process.on('unhandledRejection', (reason, p) => {
 	console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -39,12 +39,6 @@ app.use(logger('dev'));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// const sessionStore = new SequelizeStore({
-// 	db: sequelize,
-// 	checkExpirationInterval: 15 * 60 * 1000,
-// 	expiration: 30 * 24 * 60 * 60 * 1000
-// });
-// sessionStore.sync();
 const sessionStore = new SQLiteStore();
 
 const keycloak = new Keycloak({store: sessionStore/*, scope: 'offline_access'*/}, null);
