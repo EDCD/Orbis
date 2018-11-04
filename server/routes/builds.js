@@ -40,6 +40,10 @@ router.post('/', (req, res) => {
 					privacy: 'public'
 				},
 				{
+					privacy: 'owner',
+					'author.id': id
+				},
+				{
 					sharedAccounts: {
 						[Op.contains]: [id]
 					}
@@ -159,6 +163,12 @@ router.get('/:id', (req, res) =>
 		.then(ships => {
 			if (!ships) {
 				return res.json({});
+			}
+			if (!isAdmin(req) && ships.privacy === 'owner' && ships.authorId !== req.user.id) {
+				return res.status(403).json({message: 'No permission to view'})
+			}
+			if (!isAdmin(req) && ships.privacy === 'shared' && !ships.sharedAccounts.includes(req.user.id)) {
+				return res.status(403).json({message: 'No permission to view'})
 			}
 			ships = JSON.parse(JSON.stringify(ships));
 			ships.allowedToEdit = false;
