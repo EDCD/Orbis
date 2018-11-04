@@ -80,9 +80,9 @@ export default {
 		async checkAuthLocal({dispatch, commit}) {
 			let data;
 			const ls = localStorage.getItem('user');
+			dispatch('checkAuth');
 			if (ls) {
-				dispatch('checkAuth');
-				return commit(types.AUTH_REQUEST, {user: ls, admin: localStorage.getItem('admin')});
+				commit(types.AUTH_REQUEST, {user: ls, admin: localStorage.getItem('admin')});
 			}
 			return commit(types.AUTH_REQUEST, null)
 		},
