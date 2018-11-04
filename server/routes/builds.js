@@ -73,7 +73,6 @@ router.post('/', (req, res) => {
 	if (ship) {
 		query.where['ShipName'] = ship;
 	}
-	console.log(query);
 	return Ship.findAndCountAll(query)
 		.then(async ships => {
 			return res.json(ships);
