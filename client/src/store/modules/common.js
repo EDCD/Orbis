@@ -64,7 +64,7 @@ export default {
 			}
 			commit(types.ANNOUNCEMENT_REQUEST, data);
 		},
-		async checkAuth({dispatch, commit}) {
+		async checkAuth({commit}) {
 			let data;
 			try {
 				data = await axios.get('/api/checkauth', {
@@ -82,7 +82,7 @@ export default {
 			const ls = localStorage.getItem('user');
 			dispatch('checkAuth');
 			if (ls) {
-				return commit(types.AUTH_REQUEST, {user: ls, admin: localStorage.getItem('admin')});
+				return commit(types.AUTH_REQUEST, {user: JSON.parse(ls), admin: JSON.parse(localStorage.getItem('admin'))});
 			}
 			return commit(types.AUTH_REQUEST, null)
 		},
