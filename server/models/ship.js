@@ -11,7 +11,7 @@ module.exports = (sequelize, DataType) => {
 				primaryKey: true
 			},
 			shortid: {
-				type: DataType.STRING,
+				type: DataType.TEXT,
 				defaultValue: shortid.generate,
 				primaryKey: false
 			},
@@ -19,34 +19,46 @@ module.exports = (sequelize, DataType) => {
 				type: DataType.JSONB
 			},
 			ShipName: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			imageURL: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			proxiedImage: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			author: {
 				type: DataType.JSONB
 			},
 			title: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			Ship: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			url: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			description: {
-				type: DataType.STRING
+				type: DataType.TEXT
 			},
 			createdAt: {
 				type: DataType.DATE
 			},
 			updatedAt: {
 				type: DataType.DATE
+			},
+			privacy: {
+				type: DataType.ENUM('public', 'owner', 'shared'),
+				defaultValue: 'public'
+			},
+			sharedAccounts: {
+				type: DataType.ARRAY(DataType.TEXT),
+				defaultValue: []
+			},
+			sharedAccountUsernames: {
+				type: DataType.ARRAY(DataType.TEXT),
+				defaultValue: []
 			},
 			likes: {
 				type: DataType.INTEGER,
@@ -64,6 +76,9 @@ module.exports = (sequelize, DataType) => {
 				{fields: ['id']},
 				{fields: ['updatedAt']},
 				{fields: ['author']},
+				{fields: ['privacy']},
+				{fields: ['privacy', 'author']},
+				{fields: ['sharedAccounts']},
 				{fields: ['createdAt']},
 				{fields: ['shortid']},
 				{fields: ['Ship']},

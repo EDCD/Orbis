@@ -48,10 +48,11 @@ router.post('/profile/:name', (req, res) => {
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
+	let id = '';
+	if (req.user && req.user.id) {
+		id = req.user.id;
+	}
 	const query = {
-		where: {
-			'author.username': username
-		},
 		order: [[field || 'createdAt', order || 'DESC']],
 		limit: req.body.pageSize,
 		offset: req.body.offset,
@@ -68,10 +69,26 @@ router.post('/profile/:name', (req, res) => {
 			'likes',
 			'url',
 			'proxiedImage'
-		]
+		],
+		where: {
+			'author.username': username,
+			[Op.or]: [
+				{
+					privacy: 'public'
+				},
+				{
+					privacy: 'owner',
+					'author.id': id
+				},
+				{
+					sharedAccounts: {
+						[Op.contains]: [id]
+					}
+				}
+			]
+		}
 	};
 	if (search && search.key && search.value) {
-		query.where = {};
 		query.where[search.key] = {
 			[Op.iLike]: `%${search.value}%`
 		};
@@ -88,5 +105,17 @@ router.post('/profile/:name', (req, res) => {
 			res.status(500).end();
 		});
 });
+
+router.get('/list', (req, res) => {
+	return User.findAndCountAll({
+		attributes: ['id', 'username']
+	})
+		.then(users => res.json(users))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+});
+
 
 module.exports = router;
