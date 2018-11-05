@@ -10,7 +10,7 @@
 		></v-pagination>
 		<v-layout row justify-center wrap>
 			<v-flex :key="ship.id" xs12 lg4 xl4 sm6 md6 v-for="ship in builds">
-				<ship-card :description="ship.description" :username="ship.username" :coriolis-link="ship.url"
+				<ship-card :description="ship.description" :username="ship.username" :coriolis-link="ship.coriolisShip.url"
 									 :imageURL="ship.proxiedImage"
 									 :title="ship.title" :id="ship.shortid" :db-id="ship.id" :likes="ship.likes"></ship-card>
 			</v-flex>
