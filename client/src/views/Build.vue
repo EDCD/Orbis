@@ -22,8 +22,8 @@
                       color="primary"
                       target="_blank"
                       rel="noopener noreferrer"
-                      v-if="ship.url"
-                      :href="ship.url"
+                      v-if="ship.coriolisShip.url"
+                      :href="ship.coriolisShip.url"
                     >
                       Edit build on
                       Coriolis.io
