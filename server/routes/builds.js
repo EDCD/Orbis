@@ -59,9 +59,9 @@ router.post('/', (req, res) => {
 			'title',
 			'description',
 			[sequelize.json('author.username'), 'username'],
+			[sequelize.json('coriolisShip.url'), 'url'],
 			'Ship',
 			'likes',
-			'url',
 			'proxiedImage'
 		]
 	};
