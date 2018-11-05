@@ -64,7 +64,7 @@ self.addEventListener('message', event => {
 const OFFLINE_URL = '/';
 self.addEventListener('fetch', function(event) {
 	console.log('Handling fetch event for', event.request.url);
-  if (event.request.url === 'https://coriolis.io/iframe.html') {
+  if (event.request.url.startsWith('https://coriolis.io/')) {
     return event.respondWith(fetch(event.request))
   }
 	event.respondWith(
