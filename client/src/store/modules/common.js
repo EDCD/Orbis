@@ -76,8 +76,11 @@ export default {
         }
         localStorage.removeItem('user');
         localStorage.removeItem('admin');
-			}
-			commit(types.AUTH_REQUEST, data.data);
+      }
+      if (data && data.data) {
+        return commit(types.AUTH_REQUEST, data.data);
+      }
+      return commit(types.AUTH_REQUEST, null);
 		},
 		async checkAuthLocal({dispatch, commit}) {
 			let data;

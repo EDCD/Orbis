@@ -20,7 +20,7 @@ const batchAddLimiter = new RateLimit({
 
 const {Op} = require('sequelize');
 
-const isAdmin = req => req.user.admin === true;
+const isAdmin = req => req.user && req.user.admin === true;
 
 router.post('/', (req, res) => {
 	let {order, field, search, ship} = req.body;

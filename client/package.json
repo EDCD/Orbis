@@ -15,7 +15,8 @@
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuetify": "^1.2.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "xdlocalstorage": "^2.0.5"
   },
   "devDependencies": {
     "@types/d3": "^5.0.1",

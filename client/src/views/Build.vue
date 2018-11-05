@@ -1,94 +1,114 @@
 <template>
-	<v-container grid-list-md text-xs-center>
-		<v-layout row justify-space-around wrap>
-			<v-flex xs12>
-				<v-card color="cyan darken-2" class="white--text">
-					<v-layout>
-						<v-flex xs5>
-							<v-img
-								:lazy-src="lazyLoad(ship.proxiedImage)"
-								:src="fullUrl(ship.proxiedImage)"
-								height="256px"
-								contain
-							></v-img>
-						</v-flex>
-						<v-flex xs7>
-							<v-card-title primary-title>
-								<div>
-									<div class="headline">{{ship.title}}</div>
-									<div>By {{ship.username}}</div>
-									<div>
-										<v-btn color="primary" target="_blank" rel="noopener noreferrer" v-if="ship.url" :href="ship.url">
-											Edit build on
-											Coriolis.io
-										</v-btn>
-									</div>
-									<div>
-										<v-btn color="primary" v-if="ship.allowedToEdit" :to="`/edit/${$route.params.id}`">Edit build
-											details
-										</v-btn>
-									</div>
-									<v-expansion-panel>
-										<v-expansion-panel-content
-										>
-											<div slot="header">Description</div>
-											<v-card>
-												<v-card-text>{{ship.description}}</v-card-text>
-											</v-card>
-										</v-expansion-panel-content>
-									</v-expansion-panel>
-								</div>
-							</v-card-title>
-						</v-flex>
-					</v-layout>
-				</v-card>
-			</v-flex>
-			<v-flex v-if="ship">
-				<div class="build">
-					<v-container grid-list-small fluid>
-						<v-layout v-if="ship.coriolisShip" row wrap justify-center>
-							<v-flex xs4>Armour: {{formats.int(ship.coriolisShip.armour)}}</v-flex>
-							<v-flex xs4>Shield: {{formats.int(ship.coriolisShip.shield)}} {{units.MJ}}</v-flex>
-							<v-flex xs4>Top Speed: {{formats.int(ship.coriolisShip.topBoost)}} {{units['m/s']}}</v-flex>
-							<v-flex xs4>
-								Hull Thermal Res:
-								{{formats.pct1(ship.coriolisShip.hullThermRes)}}
-							</v-flex>
-							<v-flex xs4>
-								Hull Explosive Res:
-								{{formats.pct1(ship.coriolisShip.hullExplRes)}}
-							</v-flex>
-							<v-flex xs4>
-								Hull Kinetic Res:
-								{{formats.pct1(ship.coriolisShip.hullKinRes)}}
-							</v-flex>
-							<v-flex xs4>
-								Hull Caustic Res:
-								{{formats.pct1(ship.coriolisShip.hullCausRes)}}
-							</v-flex>
-							<v-flex xs4>
-								Shield Thermal Res:
-								{{formats.pct1(ship.coriolisShip.shieldThermRes)}}
-							</v-flex>
-							<v-flex xs4>
-								Shield Explosive Res:
-								{{formats.pct1(ship.coriolisShip.shieldExplRes)}}
-							</v-flex>
-							<v-flex xs4>
-								Shield Explosive Res:
-								{{formats.pct1(ship.coriolisShip.shieldKinRes)}}
-							</v-flex>
-						</v-layout>
-					</v-container>
-					<v-card v-if="mod" :key="idx" v-for="(mod,idx) in modules">
-						<Module :formats="formats.pct1(mod.power /
-											ship.coriolisShip.powerAvailable)" :mod="mod" :ship="ship" :translate="translate(mod.grp)"
-										:units="units"/>
-					</v-card>
-				</div>
-			</v-flex>
-		</v-layout>
-	</v-container>
+  <v-container grid-list-md text-xs-center>
+    <v-layout row justify-space-around wrap="">
+      <v-flex xs12>
+        <v-card color="cyan darken-2" class="white--text">
+          <v-layout>
+            <v-flex xs5>
+              <v-img
+                :lazy-src="lazyLoad(ship.proxiedImage)"
+                :src="fullUrl(ship.proxiedImage)"
+                height="256px"
+                contain
+              ></v-img>
+            </v-flex>
+            <v-flex xs7>
+              <v-card-title primary-title>
+                <div>
+                  <div class="headline">{{ship.title}}</div>
+                  <div>By {{ship.username}}</div>
+                  <div>
+                    <v-btn
+                      color="primary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      v-if="ship.url"
+                      :href="ship.url"
+                    >
+                      Edit build on
+                      Coriolis.io
+                    </v-btn>
+                    <v-btn
+                      v-if="ship.url"
+                      :loading="saving"
+                      @click="saveBuildToCoriolis"
+                    >Save build to Coriolis</v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      color="primary"
+                      v-if="ship.allowedToEdit"
+                      :to="`/edit/${$route.params.id}`"
+                    >
+                      Edit build
+                      details
+                    </v-btn>
+                  </div>
+                  <v-expansion-panel>
+                    <v-expansion-panel-content>
+                      <div slot="header">Description</div>
+                      <v-card>
+                        <v-card-text>{{ship.description}}</v-card-text>
+                      </v-card>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </div>
+              </v-card-title>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+      <v-flex v-if="ship">
+        <div class="build">
+          <v-container grid-list-small fluid>
+            <v-layout v-if="ship.coriolisShip" row wrap="" justify-center>
+              <v-flex xs4>Armour: {{formats.int(ship.coriolisShip.armour)}}</v-flex>
+              <v-flex xs4>Shield: {{formats.int(ship.coriolisShip.shield)}} {{units.MJ}}</v-flex>
+              <v-flex xs4>Top Speed: {{formats.int(ship.coriolisShip.topBoost)}} {{units['m/s']}}</v-flex>
+              <v-flex xs4>
+                Hull Thermal Res:
+                {{formats.pct1(ship.coriolisShip.hullThermRes)}}
+              </v-flex>
+              <v-flex xs4>
+                Hull Explosive Res:
+                {{formats.pct1(ship.coriolisShip.hullExplRes)}}
+              </v-flex>
+              <v-flex xs4>
+                Hull Kinetic Res:
+                {{formats.pct1(ship.coriolisShip.hullKinRes)}}
+              </v-flex>
+              <v-flex xs4>
+                Hull Caustic Res:
+                {{formats.pct1(ship.coriolisShip.hullCausRes)}}
+              </v-flex>
+              <v-flex xs4>
+                Shield Thermal Res:
+                {{formats.pct1(ship.coriolisShip.shieldThermRes)}}
+              </v-flex>
+              <v-flex xs4>
+                Shield Explosive Res:
+                {{formats.pct1(ship.coriolisShip.shieldExplRes)}}
+              </v-flex>
+              <v-flex xs4>
+                Shield Explosive Res:
+                {{formats.pct1(ship.coriolisShip.shieldKinRes)}}
+              </v-flex>
+            </v-layout>
+          </v-container>
+          <v-card v-if="mod" :key="idx" v-for="(mod,idx) in modules">
+            <Module
+              :formats="formats.pct1(mod.power /
+											ship.coriolisShip.powerAvailable)"
+              :mod="mod"
+              :ship="ship"
+              :translate="translate(mod.grp)"
+              :units="units"
+            />
+          </v-card>
+        </div>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -103,7 +123,9 @@
 		data: () => {
 			return {
 				formats: lang.formats,
-				units: lang.units,
+        units: lang.units,
+        saving: false,
+        coriolisBuilds: null,
 				translate: lang.translate
 			};
 		},
@@ -127,6 +149,28 @@
 				}
 				return url.replace('{{WIDTH}}', '1280');
 			},
+
+      saveBuildToCoriolis() {
+        this.saving = true;
+        let builds = this.coriolisBuilds;
+        const code = [
+          'A',
+          this.ship.coriolisShip.serialized.standard,
+          this.ship.coriolisShip.serialized.hardpoints,
+          this.ship.coriolisShip.serialized.internal,
+          '.',
+          this.ship.coriolisShip.serialized.enabled,
+          '.',
+          this.ship.coriolisShip.serialized.priorities,
+          '.',
+          this.ship.coriolisShip.serialized.modifications
+        ].join('')
+        builds[this.ship.coriolisShip.coriolisId][this.ship.title] = code;
+        xdLocalStorage.setItem('builds', JSON.stringify(builds), (data) => {
+          console.log(data);
+          this.saving = false;
+        });
+      },
 
 			/**
 			 * Finds the module with the specific group and ID
@@ -180,7 +224,29 @@
 			}
 		},
 		async beforeMount() {
-			await this.$store.dispatch('getBuild', this.$route.params.id);
+      await this.$store.dispatch('getBuild', this.$route.params.id);
+      console.log(window.xdLocalStorage)
+      if (window.xdLocalStorage.wasInit()) {
+        console.log('Got iframe ready');
+        window.xdLocalStorage.getItem('builds', builds => {
+          this.coriolisBuilds = JSON.parse(builds.value);
+        });
+      } else {
+        window.xdLocalStorage.init(
+                {
+                    /* required */
+                    iframeUrl:'https://coriolis.io/iframe.html',
+                    //an option function to be called right after the iframe was loaded and ready for action
+                    initCallback: () => {
+                        console.log('Got iframe ready');
+                        window.xdLocalStorage.getItem('builds', builds => {
+                          this.coriolisBuilds = JSON.parse(builds.value);
+                        });
+
+                    }
+                }
+        );
+      }
 		}
 	};
 </script>
