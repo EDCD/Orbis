@@ -29,7 +29,7 @@
                       Coriolis.io
                     </v-btn>
                     <v-btn
-                      v-if="ship.url"
+                      v-if="shipCode"
                       :loading="saving"
                       @click="saveBuildToCoriolis"
                     >Save build to Coriolis</v-btn>
@@ -153,19 +153,7 @@
       saveBuildToCoriolis() {
         this.saving = true;
         let builds = this.coriolisBuilds;
-        const code = [
-          'A',
-          this.ship.coriolisShip.serialized.standard,
-          this.ship.coriolisShip.serialized.hardpoints,
-          this.ship.coriolisShip.serialized.internal,
-          '.',
-          this.ship.coriolisShip.serialized.enabled,
-          '.',
-          this.ship.coriolisShip.serialized.priorities,
-          '.',
-          this.ship.coriolisShip.serialized.modifications
-        ].join('')
-        builds[this.ship.coriolisShip.coriolisId][this.ship.title] = code;
+        builds[this.ship.coriolisShip.coriolisId][this.ship.title] = this.shipCode;
         xdLocalStorage.setItem('builds', JSON.stringify(builds), (data) => {
           console.log(data);
           this.saving = false;
@@ -210,6 +198,20 @@
 			ship() {
 				return this.$store.state.Build.build;
 			},
+      shipCode() {
+			  return  [
+          'A',
+          this.ship.coriolisShip.serialized.standard,
+          this.ship.coriolisShip.serialized.hardpoints,
+          this.ship.coriolisShip.serialized.internal,
+          '.',
+          this.ship.coriolisShip.serialized.enabled,
+          '.',
+          this.ship.coriolisShip.serialized.priorities,
+          '.',
+          this.ship.coriolisShip.serialized.modifications
+        ].join('')
+      },
 			modules() {
 				if (!this.ship || !this.ship.coriolisShip || !this.ship.coriolisShip.costList) {
 					return;
