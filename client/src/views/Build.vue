@@ -1,6 +1,20 @@
 <template>
   <v-container grid-list-md text-xs-center>
     <v-layout row justify-space-around wrap="">
+      <v-snackbar
+      v-model="snackbar"
+      :timeout="6000"
+      :top="true"
+    >
+      {{ buildSavedText }}
+      <v-btn
+        color="pink"
+        flat
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
       <v-flex xs12>
         <v-card color="cyan darken-2" class="white--text">
           <v-layout>
@@ -125,6 +139,8 @@
 				formats: lang.formats,
         units: lang.units,
         saving: false,
+        snackbar: false,
+        buildSavedText: 'Build has been saved to coriolis.io',
         coriolisBuilds: null,
 				translate: lang.translate
 			};
@@ -156,6 +172,7 @@
         builds[this.ship.coriolisShip.coriolisId][this.ship.title] = this.shipCode;
         xdLocalStorage.setItem('builds', JSON.stringify(builds), (data) => {
           console.log(data);
+          this.snackbar = true;
           this.saving = false;
         });
       },
@@ -199,6 +216,9 @@
 				return this.$store.state.Build.build;
 			},
       shipCode() {
+        if (!this.ship || !this.ship.coriolisShip || !this.ship.coriolisShip.serialized) {
+          return '';
+        }
 			  return  [
           'A',
           this.ship.coriolisShip.serialized.standard,
