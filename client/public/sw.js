@@ -29,6 +29,10 @@ if (workbox) {
 		})
 	);
 	workbox.routing.registerRoute(
+		'https://coriolis.io/iframe.html',
+		workbox.strategies.networkOnly()
+	);
+	workbox.routing.registerRoute(
 		/\.(?:js|css)$/,
 		workbox.strategies.staleWhileRevalidate({
 			cacheName: 'static-resources'
