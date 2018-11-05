@@ -22,7 +22,7 @@
                       color="primary"
                       target="_blank"
                       rel="noopener noreferrer"
-                      v-if="ship.coriolisShip.url"
+                      v-if="ship.coriolisShip && ship.coriolisShip.url"
                       :href="ship.coriolisShip.url"
                     >
                       Edit build on
