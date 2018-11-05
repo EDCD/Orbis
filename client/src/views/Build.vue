@@ -169,6 +169,12 @@
       saveBuildToCoriolis() {
         this.saving = true;
         let builds = JSON.parse(JSON.stringify(this.coriolisBuilds));
+        if (!builds) {
+          builds = {};
+        }
+        if (!builds[this.ship.coriolisShip.id]) {
+          builds[this.ship.coriolisShip.id] = {};
+        }
         builds[this.ship.coriolisShip.id][this.ship.title] = this.shipCode;
         xdLocalStorage.setItem('builds', JSON.stringify(builds), (data) => {
           console.log(data);
