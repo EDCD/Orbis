@@ -18,7 +18,7 @@ export default new Router({
 			path: '/about',
 			name: 'about',
 			// Route level code-splitting
-			// this generates a separate chunk (build.[hash].js) for this route
+      // this generates a separate chunk (about.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
 		},
@@ -26,7 +26,7 @@ export default new Router({
 			path: '/contact',
 			name: 'contact',
 			// Route level code-splitting
-			// this generates a separate chunk (build.[hash].js) for this route
+      // this generates a separate chunk (contact.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "contact" */ './views/Contact.vue')
 		},
@@ -42,7 +42,7 @@ export default new Router({
 			path: '/edit/:id',
 			name: 'editbuild',
 			// Route level code-splitting
-			// this generates a separate chunk (build.[hash].js) for this route
+      // this generates a separate chunk (editbuild.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "editbuild" */ './views/EditBuild.vue')
 		},
@@ -50,7 +50,7 @@ export default new Router({
 			path: '/profile/:username',
 			name: 'profile',
 			// Route level code-splitting
-			// this generates a separate chunk (build.[hash].js) for this route
+      // this generates a separate chunk (profile.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue')
 		},
@@ -66,7 +66,7 @@ export default new Router({
 				}
 			},
 			// Route level code-splitting
-			// this generates a separate chunk (build.[hash].js) for this route
+      // this generates a separate chunk (admin.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "admin" */ './views/Admin.vue')
 		},
@@ -74,7 +74,7 @@ export default new Router({
 			path: '*',
 			name: '404',
 			// Route level code-splitting
-			// this generates a separate chunk (build.[hash].js) for this route
+      // this generates a separate chunk (404.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "404" */ './views/404.vue')
 		}

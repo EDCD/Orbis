@@ -74,7 +74,7 @@ const votes = require('./routes/votes');
 const webhooks = require('./routes/webhooks');
 const admin = require('./routes/admin');
 
-app.get('/build/:id/og', (req, res) =>
+app.get('/api/build/:id/og', (req, res) =>
 	Ship.find({
 		where: {shortid: req.params.id},
 		attributes: [
@@ -121,7 +121,7 @@ app.get('/build/:id/og', (req, res) =>
 		})
 );
 
-app.get('/og', (req, res) => {
+app.get('/api/og', (req, res) => {
 	const uri =
 		req.protocol + '://' + req.get('host') + req.originalUrl.replace('/og', '');
 	let html = '<!doctype html>\n';
