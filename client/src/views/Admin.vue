@@ -20,12 +20,10 @@
 </template>
 
 <script>
-	import ShipCard from '../components/ShipCard';
-	import Search from '../components/Search';
 	import AddAnnouncement from '../components/AddAnnouncement';
 
 	export default {
-		components: {AddAnnouncement, Search, ShipCard},
+    components: {AddAnnouncement},
 		data: () => {
 			return {
 				alert: true,
@@ -67,8 +65,6 @@
 					search: this.searchData
 				});
 			}
-		},
-		async mounted() {
 		}
 	};
 </script>
