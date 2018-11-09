@@ -14,6 +14,9 @@
 									 :imageURL="ship.proxiedImage"
 									 :title="ship.title" :id="ship.shortid" :db-id="ship.id" :likes="ship.likes"></ship-card>
 			</v-flex>
+      <v-flex xs12 lg4 xl4 sm6 md6 v-if="builds.length === 0 && !loading">
+        No results. Please try widening your search.
+      </v-flex>
 		</v-layout>
 		<v-pagination
 			v-show="builds"
@@ -37,7 +40,7 @@
 				page: 1,
 				pageSize: 9,
 				searchData: {},
-				loading: false
+				loading: true
 			};
 		},
 		computed: {
@@ -67,6 +70,7 @@
 			},
 			async paginate() {
 				this.scrollToTop();
+        this.loading = true;
 				await this.$store.dispatch('getBuilds', Object.assign({}, this.searchData, {
 					pageSize: this.pageSize,
 					offset: this.offset
@@ -74,6 +78,7 @@
 				const buildIds = [];
 				this.builds.forEach(e => buildIds.push(e.id));
 				await this.$store.dispatch('getVote', buildIds);
+				this.loading = false;
 			},
 			scrollToTop() {
 				window.scrollTo(0,0);
@@ -81,6 +86,7 @@
 		},
 		async mounted() {
 			await this.$store.dispatch('getBuilds', {pageSize: this.pageSize, offset: 0});
+			this.loading = false;
 			const buildIds = [];
 			this.builds.forEach(e => buildIds.push(e.id));
 			await this.$store.dispatch('getVote', buildIds);
