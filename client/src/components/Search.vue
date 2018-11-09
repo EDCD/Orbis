@@ -85,6 +85,8 @@
 		'Imperial Eagle': 'imperial_eagle',
 		Keelback: 'keelback',
 		'Krait Mk II': 'krait_mkii',
+		'Krait Phantom': 'krait_phantom',
+		'Mamba': 'mamba',
 		Orca: 'orca',
 		Python: 'python',
 		Sidewinder: 'sidewinder',
