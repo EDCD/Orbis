@@ -1,86 +1,71 @@
-console.log('Hello from sw.js');
+console.log("Hello from sw.js");
 
 if (workbox) {
-	console.log('Yay! Workbox is loaded 🎉');
+  console.log("Yay! Workbox is loaded 🎉");
   workbox.precaching.precacheAndRoute(self.__precacheManifest);
-	workbox.routing.registerRoute(
-		new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
-		workbox.strategies.cacheFirst({
-			cacheName: 'google-fonts',
-			plugins: [
-				new workbox.expiration.Plugin({
-					maxEntries: 30
-				}),
-				new workbox.cacheableResponse.Plugin({
-					statuses: [0, 200]
-				})
-			]
-		})
-	);
-	workbox.routing.registerRoute(
-		/\.(?:png|gif|jpg|jpeg|svg)$/,
-		workbox.strategies.cacheFirst({
-			cacheName: 'images',
-			plugins: [
-				new workbox.expiration.Plugin({
-					maxEntries: 60,
-					maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
-				})
-			]
-		})
-	);
-	workbox.routing.registerRoute(
-		'https://coriolis.io/iframe.html',
-		workbox.strategies.networkOnly()
-	);
-	workbox.routing.registerRoute(
-		/\.(?:js|css)$/,
-		workbox.strategies.staleWhileRevalidate({
-			cacheName: 'static-resources'
-		})
-	);
-	try {
-		workbox.googleAnalytics.initialize();
-	} catch (e) {
-		console.log('Probably an ad-blocker');
-	}
+
+  workbox.routing.registerNavigationRoute("/index.html", {
+    blacklist: [new RegExp("/api/")]
+  });
+
+  workbox.routing.registerRoute(
+    new RegExp("/(.*?)"),
+    workbox.strategies.staleWhileRevalidate()
+  );
+
+  workbox.routing.registerRoute(
+    new RegExp("/api(.*?)"),
+    workbox.strategies.networkFirst()
+  );
+
+  workbox.routing.registerRoute(
+    new RegExp("https://fonts.(?:googleapis|gstatic).com/(.*)"),
+    workbox.strategies.cacheFirst({
+      cacheName: "google-fonts",
+      plugins: [
+        new workbox.expiration.Plugin({
+          maxEntries: 30
+        }),
+        new workbox.cacheableResponse.Plugin({
+          statuses: [0, 200]
+        })
+      ]
+    })
+  );
+
+  workbox.routing.registerRoute(
+    /\.(?:png|gif|jpg|jpeg|svg)$/,
+    workbox.strategies.cacheFirst({
+      cacheName: "images",
+      plugins: [
+        new workbox.expiration.Plugin({
+          maxEntries: 60,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+        })
+      ]
+    })
+  );
+
+  try {
+    workbox.googleAnalytics.initialize();
+  } catch (e) {
+    console.log("Probably an ad-blocker");
+  }
 } else {
-	console.log("Boo! Workbox didn't load 😬");
+  console.log("Boo! Workbox didn't load 😬");
 }
 
-self.addEventListener('message', event => {
-	if (!event.data) {
-		return;
-	}
-
-	switch (event.data) {
-		case 'skipWaiting':
-			self.skipWaiting();
-			break;
-		default:
-			// NOOP
-			break;
-	}
-});
-const OFFLINE_URL = '/';
-self.addEventListener('fetch', function(event) {
-	console.log('Handling fetch event for', event.request.url);
-  if (event.request.url.startsWith('https://coriolis.io/')) {
-    return
+self.addEventListener("message", event => {
+  if (!event.data) {
+    return;
   }
-	event.respondWith(
-		caches.match(event.request).then(function(response) {
-			if (response) {
-				return response;
-			}
 
-			return fetch(event.request)
-				.then(function(response) {
-					return response;
-				})
-				.catch(function(error) {
-					return caches.match(OFFLINE_URL);
-				});
-		})
-	);
+  switch (event.data) {
+    case "skipWaiting":
+      self.skipWaiting();
+      break;
+    default:
+      // NOOP
+      break;
+  }
 });
