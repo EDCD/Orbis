@@ -14,7 +14,7 @@
 									 :imageURL="ship.proxiedImage"
 									 :title="ship.title" :id="ship.shortid" :db-id="ship.id" :likes="ship.likes"></ship-card>
 			</v-flex>
-      <v-flex xs12 lg4 xl4 sm6 md6 v-if="builds.length === 0 && !loading">
+      <v-flex xs12 lg4 xl4 sm6 md6 v-if="builds && builds.length === 0 && !loading">
         No results. Please try widening your search.
       </v-flex>
 		</v-layout>

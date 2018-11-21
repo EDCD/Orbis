@@ -71,7 +71,7 @@ export default {
 					withCredentials: true
 				});
 			} catch (e) {
-				if (e.response.status !== 401) {
+				if (e && e.response && e.response.status !== 401) {
 					console.log(e);
         }
         localStorage.removeItem('user');
