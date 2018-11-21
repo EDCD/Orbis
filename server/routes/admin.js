@@ -125,7 +125,13 @@ router.post('/ship/update', keycloak.protect('Admin'), (req, res) => {
 });
 
 router.get('/announcements', keycloak.protect('Admin'), (req, res) => {
-	return Announcement.findAll()
+	return Announcement.findAll({
+		where: {
+			expiresAt: {
+				[Op.gt]: Date.now()
+			}
+		}
+	})
 		.then(data => res.json(data))
 		.catch(err => {
 			console.error(err);
