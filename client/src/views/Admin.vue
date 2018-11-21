@@ -9,8 +9,8 @@
 			<!--</v-flex>-->
 		<!--</v-layout>-->
 		<add-announcement/>
-    <v-flex xs6 sm12 v-for="announce in $store.state.Common.announcements" :key="announce.id">
-      {{announce.message}} <v-btn @click="() => deleteAnnouncement(announce)">Delete</v-btn>
+    <v-flex xs6 sm12 v-for="announce in $store.state.Admin.announcements" :key="announce.id">
+      {{announce.message}} <v-btn @click="deleteAnnouncement(announce)">Delete</v-btn>
     </v-flex>
 		<!--<v-pagination-->
 			<!--v-show="builds"-->
@@ -54,6 +54,9 @@
         return Math.ceil(this.page * this.pageSize);
       }
     },
+    async mounted() {
+        await this.$store.dispatch('getAdminAnnouncements');
+    },
     methods: {
       async search(value) {
         this.loading = true;
@@ -64,6 +67,7 @@
       async deleteAnnouncement(item) {
         await this.$store.dispatch('deleteAnnouncement', { id: item.id });
         await this.$store.dispatch('getAnnouncements');
+        await this.$store.dispatch('getAdminAnnouncements');
       },
       async paginate() {
         await this.$store.dispatch('getBuilds', {
