@@ -39,24 +39,25 @@
 	</v-form>
 </template>
 <script>
-	export default {
-		name: 'AddAnnouncement',
-		data() {
-			return {
-				date: '',
-				message: '',
-				coriolis: false,
-				menu: false
-			};
-		},
-		methods: {
-			async submit() {
-				await this.$store.dispatch('postAnnouncement', {expiresAt: this.date, message: this.message, showInCoriolis: this.coriolis});
-				await this.$store.dispatch('getAnnouncements');
-			},
-			clear() {
-				this.$refs.form.reset();
-			}
-		}
-	};
+  export default {
+    name: 'AddAnnouncement',
+    data() {
+      return {
+        date: '',
+        message: '',
+        coriolis: false,
+        menu: false
+      };
+    },
+    methods: {
+      async submit() {
+        await this.$store.dispatch('postAnnouncement', { expiresAt: this.date, message: this.message, showInCoriolis: this.coriolis });
+        await this.$store.dispatch('getAnnouncements');
+        await this.$store.dispatch('getAdminAnnouncements');
+      },
+      clear() {
+        this.$refs.form.reset();
+      }
+    }
+  };
 </script>

@@ -10,7 +10,9 @@
 		<!--</v-layout>-->
 		<add-announcement/>
     <v-flex xs6 sm12 v-for="announce in $store.state.Admin.announcements" :key="announce.id">
-      {{announce.message}} <v-btn @click="deleteAnnouncement(announce)">Delete</v-btn>
+      <v-alert type="success" :value="true">
+		{{announce.message}} <v-btn @click="deleteAnnouncement(announce)">Delete</v-btn>
+	</v-alert>
     </v-flex>
 		<!--<v-pagination-->
 			<!--v-show="builds"-->
@@ -55,7 +57,7 @@
       }
     },
     async mounted() {
-        await this.$store.dispatch('getAdminAnnouncements');
+      await this.$store.dispatch('getAdminAnnouncements');
     },
     methods: {
       async search(value) {
