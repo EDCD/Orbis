@@ -115,7 +115,7 @@
 				searchByKey: 'Title',
 				shipFilter: 'No Filter',
         shipNames: Object.keys(shipNameMap),
-        categoryNames: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner'],
+        categoryNames: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner', 'PvP'],
         category: '',
 				searchByVal: '',
 				sortByOrders: ['Ascending', 'Descending'],

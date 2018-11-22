@@ -229,7 +229,7 @@ router.delete('/:id', keycloak.protect(), async (req, res) => {
 	return res.status(403).json({success: false});
 });
 
-const cats = ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner'];
+const cats = ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner', 'PvP'];
 
 router.post('/update', keycloak.protect(), async (req, res) => {
 	if (!req.body || !req.body.updates) {

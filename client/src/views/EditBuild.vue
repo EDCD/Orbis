@@ -81,7 +81,7 @@
 				loading: false,
 				imageURL: '',
         privacyItems: ['public', 'owner', 'shared'],
-        categoryItems: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner'],
+        categoryItems: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner', 'PvP'],
         category: '',
 				updated: false,
 				description: '',
