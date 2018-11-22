@@ -35,6 +35,7 @@
 					<v-text-field v-model="title" :disabled="disabled" label="Build Title"></v-text-field>
 					<v-text-field v-model="imageURL" :disabled="disabled" label="Build image (Direct image URL)"></v-text-field>
 					<v-select :items="privacyItems" v-model="privacy" :disabled="disabled" label="Build privacy"></v-select>
+					<v-select :items="categoryItems" v-model="category" :disabled="disabled" label="Build category"></v-select>
 					<v-autocomplete
 						v-model="model"
 						:disabled="disabled || sharedWithDisabled"
@@ -79,7 +80,9 @@
 				disabled: true,
 				loading: false,
 				imageURL: '',
-				privacyItems: ['public', 'owner', 'shared'],
+        privacyItems: ['public', 'owner', 'shared'],
+        categoryItems: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner'],
+        category: '',
 				updated: false,
 				description: '',
 				sharedAccounts: [],
@@ -231,10 +234,14 @@
 				}
 				if (this.ids && this.ids !== this.ship.sharedAccounts) {
 					updates.sharedAccounts = this.ids;
+        }
+        if (this.category && this.category !== this.ship.category) {
+					updates.category = this.category;
 				}
 				if (this.usernames && this.usernames !== this.usernames.sharedAccountUsernames) {
 					updates.sharedAccountUsernames = this.usernames;
-				}
+        }
+
 				return updates;
 			},
 			submitOrClose() {
@@ -253,6 +260,7 @@
 			this.description = this.ship.description;
 			this.title = this.ship.title;
 			this.sharedAccounts = this.ship.sharedAccountUsernames;
+			this.category = this.ship.category;
 			for (const id in this.ship.sharedAccounts) {
 				this.entries.push({id: this.ship.sharedAccounts[id], username: this.ship.sharedAccountUsernames[id]});
 				this.model.push({id: this.ship.sharedAccounts[id], username: this.ship.sharedAccountUsernames[id]});

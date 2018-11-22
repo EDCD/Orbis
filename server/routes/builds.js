@@ -23,7 +23,7 @@ const {Op} = require('sequelize');
 const isAdmin = req => req.user && req.user.admin === true;
 
 router.post('/', (req, res) => {
-	let {order, field, search, ship} = req.body;
+	let {order, field, search, ship, category} = req.body;
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
@@ -55,7 +55,8 @@ router.post('/', (req, res) => {
 			'id',
 			'updatedAt',
 			'createdAt',
-			'shortid',
+      'shortid',
+      'category',
 			'title',
 			'description',
 			[sequelize.json('author.username'), 'username'],
@@ -72,6 +73,9 @@ router.post('/', (req, res) => {
 	}
 	if (ship) {
 		query.where['ShipName'] = ship;
+  }
+  if (category) {
+		query.where['category'] = category;
 	}
 	return Ship.findAndCountAll(query)
 		.then(async ships => {
@@ -136,7 +140,7 @@ router.post('/liked/batch', (req, res) => {
 		});
 });
 
-const allowedUpdates = ['imageURL', 'description', 'title', 'privacy', 'sharedAccounts', 'sharedAccountUsernames'];
+const allowedUpdates = ['imageURL', 'description', 'title', 'privacy', 'sharedAccounts', 'sharedAccountUsernames', 'category'];
 
 router.get('/:id', (req, res) =>
 	Ship.find({
@@ -144,7 +148,8 @@ router.get('/:id', (req, res) =>
 		attributes: [
 			'id',
 			'updatedAt',
-			'createdAt',
+      'createdAt',
+      'category',
 			'shortid',
 			'title',
 			'description',
@@ -224,6 +229,8 @@ router.delete('/:id', keycloak.protect(), async (req, res) => {
 	return res.status(403).json({success: false});
 });
 
+const cats = ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner'];
+
 router.post('/update', keycloak.protect(), async (req, res) => {
 	if (!req.body || !req.body.updates) {
 		return res.status(400).end();
@@ -242,6 +249,9 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 					continue;
 				}
 				if (allowedUpdates.indexOf(update) === -1) {
+					continue;
+        }
+        if (update === 'category' && cats.indexOf(data.updates[update]) === -1) {
 					continue;
 				}
 				ship[update] = data.updates[update];

@@ -44,7 +44,10 @@ module.exports = (sequelize, DataType) => {
 			},
 			createdAt: {
 				type: DataType.DATE
-			},
+      },
+      category: {
+        type: DataType.TEXT
+      },
 			updatedAt: {
 				type: DataType.DATE
 			},

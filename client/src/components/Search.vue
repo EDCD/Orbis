@@ -19,6 +19,14 @@
 					label="Ship Filter"
 				></v-select>
 			</v-flex>
+      <v-flex xs6 sm6>
+				<v-select
+					@change="$emit('searchUpdate', search)"
+					:items="categoryNames"
+					v-model="category"
+					label="Category"
+				></v-select>
+			</v-flex>
 			<v-flex xs6 sm6>
 				<v-select
 					@change="$emit('searchUpdate', search)"
@@ -106,7 +114,9 @@
 				searchByKeys: ['Title', 'Description'],
 				searchByKey: 'Title',
 				shipFilter: 'No Filter',
-				shipNames: Object.keys(shipNameMap),
+        shipNames: Object.keys(shipNameMap),
+        categoryNames: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner'],
+        category: '',
 				searchByVal: '',
 				sortByOrders: ['Ascending', 'Descending'],
 				sortByOrder: 'Descending',
@@ -117,7 +127,8 @@
 		computed: {
 			search() {
 				return {
-					ship: shipNameMap[this.shipFilter],
+          ship: shipNameMap[this.shipFilter],
+          category: this.category,
 					order: sortMap[this.sortByOrder],
 					field: sortKeyMap[this.sortByKey],
 					search: {key: searchKeyMap[this.searchByKey], value: this.searchByVal.toLowerCase()}
