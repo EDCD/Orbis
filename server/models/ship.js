@@ -82,6 +82,7 @@ module.exports = (sequelize, DataType) => {
 				{fields: ['privacy']},
 				{fields: ['privacy', 'author']},
 				{fields: ['sharedAccounts']},
+				{fields: ['category']},
 				{fields: ['createdAt']},
 				{fields: ['shortid']},
 				{fields: ['Ship']},
