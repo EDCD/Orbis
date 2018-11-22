@@ -44,9 +44,9 @@
 				return this.$store.state.Common.user && !!Object.keys(this.$store.state.Common.user).length;
 			}
 		},
-		async mounted() {
-			await this.$store.dispatch('checkAuthLocal');
-			await this.$store.dispatch('getAnnouncements');
+		mounted() {
+			this.$store.dispatch('checkAuth');
+			this.$store.dispatch('getAnnouncements');
 		}
 	};
 </script>
