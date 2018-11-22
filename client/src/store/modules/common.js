@@ -41,6 +41,9 @@ export default {
     },
     AUTH_REQUEST(state, data) {
       if (!data) {
+        state.user = null;
+        state.admin = null;
+        state.accessToken = null;
         return;
       }
       state.user = data.user;
