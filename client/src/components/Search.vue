@@ -115,8 +115,8 @@
 				searchByKey: 'Title',
 				shipFilter: 'No Filter',
         shipNames: Object.keys(shipNameMap),
-        categoryNames: ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner', 'PvP'],
-        category: '',
+        categoryNames: ['No Filter', 'Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner', 'PvP'],
+        category: 'No Filter',
 				searchByVal: '',
 				sortByOrders: ['Ascending', 'Descending'],
 				sortByOrder: 'Descending',
@@ -128,7 +128,7 @@
 			search() {
 				return {
           ship: shipNameMap[this.shipFilter],
-          category: this.category,
+          category: this.category === 'No Filter' ? '' : this.category,
 					order: sortMap[this.sortByOrder],
 					field: sortKeyMap[this.sortByKey],
 					search: {key: searchKeyMap[this.searchByKey], value: this.searchByVal.toLowerCase()}
