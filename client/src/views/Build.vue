@@ -157,13 +157,13 @@
 				if (!url) {
 					return url;
 				}
-				return url.replace('{{WIDTH}}', '10');
+				return `${url.replace('{{WIDTH}}', '10')}&height=10`;
 			},
 			fullUrl(url) {
 				if (!url) {
 					return url;
 				}
-				return url.replace('{{WIDTH}}', '1280');
+				return `${url.replace('{{WIDTH}}', '1280')}&height=720`;
 			},
 
       saveBuildToCoriolis() {
