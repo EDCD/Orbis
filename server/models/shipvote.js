@@ -45,12 +45,11 @@ module.exports = (sequelize, DataType) => {
 			if (!ship) {
 				return;
 			}
-			const votes = await ShipVote.sum('vote', {
+			ship.likes = await ShipVote.sum('vote', {
 				where: {
 					shipId: ship.id
 				}
 			});
-			ship.likes = votes;
 			ship.save();
 		});
 	}

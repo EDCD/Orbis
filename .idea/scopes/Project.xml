@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Project" pattern="(file[orbis]:client//*||file[orbis]:server//*)&amp;&amp;!file[orbis]:client/dist//*" />
+</component>

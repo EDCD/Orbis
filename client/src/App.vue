@@ -56,9 +56,9 @@ export default {
 			);
 		}
 	},
-	mounted() {
-		this.$store.dispatch('checkAuth');
-		this.$store.dispatch('getAnnouncements');
+	async mounted() {
+		await this.$store.dispatch('checkAuth');
+		await this.$store.dispatch('getAnnouncements');
 	}
 };
 </script>
