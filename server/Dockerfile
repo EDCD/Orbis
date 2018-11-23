@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY . ./
 
-ENTRYPOINT ["./node", "./bin/www"]
+ENTRYPOINT ["node", "./bin/www"]
