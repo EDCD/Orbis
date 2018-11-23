@@ -1,4 +1,4 @@
-FROM node:8.10.0 as builder
+FROM node:10 as builder
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY . ./
 
 RUN npm install --prod
 
-FROM astefanutti/scratch-node
+FROM astefanutti/scratch-node:10
 
 COPY --from=builder /app /
 
