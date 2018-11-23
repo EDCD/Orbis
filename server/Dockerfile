@@ -1,15 +1,13 @@
-FROM node:8.10.0
-# Set a working directory
-WORKDIR /usr/src/app
+FROM node:8.10.0 as builder
 
-COPY . .
-RUN chown --recursive node:node /usr/src/app
+WORKDIR /app
 
-# Install Node.js dependencies
-RUN yarn install --no-progress
-# Run the container under "node" user by default
-USER node
+COPY . ./
 
-# Set NODE_ENV env variable to "production" for faster expressjs
-ENV NODE_ENV production
-CMD [ "node", "./bin/www" ]
+RUN npm install --prod
+
+FROM astefanutti/scratch-node
+
+COPY --from=builder /app /
+
+ENTRYPOINT ["./node", "./bin/www"]
