@@ -16,7 +16,7 @@ export function getLanguage() {
 	let currentTerms = lang.terms;
 	let d3Locale = d3.formatLocale(lang.formats);
 	let gen = d3Locale.format('');
-	const round = function (x, n) {
+	const round = function(x, n) {
 		const ten_n = Math.pow(10, n);
 		return Math.round(x * ten_n) / ten_n;
 	};
@@ -27,7 +27,13 @@ export function getLanguage() {
 		};
 	} else {
 		translate = (t, x) => {
-			return currentTerms[t + '_' + x] || currentTerms[t] || fallbackTerms[t + '_' + x] || fallbackTerms[t] || t;
+			return (
+				currentTerms[t + '_' + x] ||
+				currentTerms[t] ||
+				fallbackTerms[t + '_' + x] ||
+				fallbackTerms[t] ||
+				t
+			);
 		};
 	}
 
@@ -45,7 +51,11 @@ export function getLanguage() {
 			rPct: d3Locale.format('.0%'), // % to 0 decimal places (.e.g 5%)
 			round1: d => gen(round(d, 1)), // Round to 0-1 decimal places (e.g. 5.1, 4)
 			round: d => gen(round(d, 2)), // Rounded to 0-2 decimal places (.e.g 5.12, 4.1)
-			time: d => (d < 0 ? '-' : '') + Math.floor(Math.abs(d) / 60) + ':' + ('00' + Math.floor(Math.abs(d) % 60)).substr(-2, 2)
+			time: d =>
+				(d < 0 ? '-' : '') +
+				Math.floor(Math.abs(d) / 60) +
+				':' +
+				('00' + Math.floor(Math.abs(d) % 60)).substr(-2, 2)
 		},
 		translate,
 		units: {

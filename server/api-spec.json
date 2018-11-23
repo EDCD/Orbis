@@ -1,400 +1,400 @@
 {
-  "info": {
-    "title": "Orbis.zone API",
-    "version": "1.0.0",
-    "description": "Orbis"
-  },
-  "paths": {
-    "/api/builds": {
-      "post": {
-        "summary": "/api/builds",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "A list of builds",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Builds"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/builds/{id}": {
-      "get": {
-        "description": "A list of builds",
-        "summary": "/api/builds/{id}",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A list of builds",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Build"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "/api/builds/{id}",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Build object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Build"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Build not found"
-          }
-        }
-      }
-    },
-    "/api/builds/update": {
-      "post": {
-        "summary": "/api/builds/update",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Build successfully updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuildUpdate"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "No updates"
-          },
-          "401": {
-            "description": "Not logged in"
-          },
-          "403": {
-            "description": "Not authorized to modify this build"
-          }
-        }
-      }
-    },
-    "/api/builds/add": {
-      "post": {
-        "summary": "/api/builds/add",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Ship successfully created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BuildAdd"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "No body"
-          },
-          "401": {
-            "description": "Not logged in"
-          },
-          "403": {
-            "description": "Not authorized to add a build"
-          }
-        }
-      }
-    },
-    "/api/likes": {
-      "post": {
-        "summary": "/api/likes",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Vote successfully cast",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Vote"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "No body"
-          },
-          "401": {
-            "description": "Not logged in"
-          },
-          "500": {
-            "description": "Server failed"
-          }
-        }
-      }
-    }
-  },
-  "swagger": "2.0",
-  "components": {
-    "schemas": {
-      "BuildAdd": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "description": "Success",
-            "type": "boolean",
-            "example": true
-          },
-          "id": {
-            "type": "string",
-            "description": "Ship id",
-            "example": "f4fc0480-9915-11e8-816e-4f06e637e8a0"
-          },
-          "ship": {
-            "description": "Ship status",
-            "type": "string",
-            "example": "created"
-          },
-          "link": {
-            "description": "Ship link",
-            "type": "string",
-            "example": "https://orbis.zone/build/i8vNM6kY6"
-          }
-        }
-      },
-      "Vote": {
-        "type": "object",
-        "properties": {
-          "created": {
-            "description": "Success",
-            "type": "boolean",
-            "example": true
-          },
-          "count": {
-            "description": "Current total",
-            "type": "number",
-            "example": 1
-          }
-        }
-      },
-      "Author": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "keycloakId": {
-            "type": "string"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "email": {
-            "type": "string"
-          },
-          "badges": {
-            "type": "object"
-          },
-          "username": {
-            "type": "string"
-          },
-          "imageURL": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string"
-          }
-        }
-      },
-      "Builds": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "integer"
-          },
-          "rows": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Build"
-            }
-          }
-        },
-        "example": [
-          {
-            "count": 1,
-            "rows": {
-              "id": "9db26400-98fa-11e8-8d34-1dbebdc8ddbc",
-              "updatedAt": "2018-08-05T21:57:58.976Z",
-              "createdAt": "2018-08-05T21:57:58.976Z",
-              "shortid": "XmX8KSDXR",
-              "title": "Explorer with srv",
-              "description": "Explorer with srv",
-              "author": {
-                "id": "ee00d230-98f9-11e8-8d34-1dbebdc8ddbc",
-                "admin": false,
-                "email": "email@email.com",
-                "badges": {},
-                "imageURL": "https://orbis.zone/diamondback_explorer.jpg",
-                "username": "willyb321",
-                "createdAt": "2018-08-05T21:53:04.212Z",
-                "updatedAt": "2018-08-05T21:53:04.212Z",
-                "keycloakId": "1351fgd-ee2a-4eb8-a1fadf-8e807ee7356c"
-              },
-              "proxiedImage": "https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/diamondback_explorer.jpg",
-              "coriolisShip": {},
-              "likes": 3
-            }
-          }
-        ]
-      },
-      "Build": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "f4fc0480-9915-11e8-816e-4f06e637e8a0"
-          },
-          "updatedAt": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "shortid": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "author": {
-            "$ref": "#/components/schemas/Author"
-          },
-          "description": {
-            "type": "string"
-          },
-          "proxiedImage": {
-            "type": "string"
-          },
-          "coriolisShip": {
-            "type": "object"
-          },
-          "likes": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "id",
-          "updatedAt",
-          "createdAt",
-          "shortid",
-          "title",
-          "description",
-          "author",
-          "proxiedImage",
-          "coriolisShip",
-          "likes"
-        ],
-        "example": [
-          {
-            "id": "9db26400-98fa-11e8-8d34-1dbebdc8ddbc",
-            "updatedAt": "2018-08-05T21:57:58.976Z",
-            "createdAt": "2018-08-05T21:57:58.976Z",
-            "shortid": "XmX8KSDXR",
-            "title": "Explorer with srv",
-            "description": "Explorer with srv",
-            "author": {
-              "id": "ee00d230-98f9-11e8-8d34-1dbebdc8ddbc",
-              "admin": false,
-              "email": "email@email.com",
-              "badges": {},
-              "imageURL": "https://orbis.zone/diamondback_explorer.jpg",
-              "username": "willyb321",
-              "createdAt": "2018-08-05T21:53:04.212Z",
-              "updatedAt": "2018-08-05T21:53:04.212Z",
-              "keycloakId": "1351fgd-ee2a-4eb8-a1fadf-8e807ee7356c"
-            },
-            "proxiedImage": "https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/diamondback_explorer.jpg",
-            "coriolisShip": {},
-            "likes": 3
-          }
-        ]
-      },
-      "BuildUpdate": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "description": "Success",
-            "example": true
-          },
-          "id": {
-            "type": "string",
-            "description": "Ship id",
-            "example": "dec30e40-9544-11e8-a647-7fe2ef000e49"
-          },
-          "body": {
-            "type": "object",
-            "properties": {
-              "updates": {
-                "type": "object",
-                "properties": {
-                  "imageURL": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "title": {
-                    "type": "string"
-                  }
-                }
-              },
-              "id": {
-                "type": "string",
-                "example": "dec30e40-9544-11e8-a647-7fe2ef000e49"
-              }
-            }
-          },
-          "ship": {
-            "type": "string",
-            "example": "created"
-          },
-          "link": {
-            "type": "string",
-            "example": "https://orbis.zone/build/bSTQWz5xm"
-          }
-        }
-      }
-    }
-  }
+	"info": {
+		"title": "Orbis.zone API",
+		"version": "1.0.0",
+		"description": "Orbis"
+	},
+	"paths": {
+		"/api/builds": {
+			"post": {
+				"summary": "/api/builds",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "A list of builds",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Builds"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/builds/{id}": {
+			"get": {
+				"description": "A list of builds",
+				"summary": "/api/builds/{id}",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "A list of builds",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Build"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "/api/builds/{id}",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"schema": {
+							"type": "string"
+						},
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Build object",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Build"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Build not found"
+					}
+				}
+			}
+		},
+		"/api/builds/update": {
+			"post": {
+				"summary": "/api/builds/update",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Build successfully updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BuildUpdate"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "No updates"
+					},
+					"401": {
+						"description": "Not logged in"
+					},
+					"403": {
+						"description": "Not authorized to modify this build"
+					}
+				}
+			}
+		},
+		"/api/builds/add": {
+			"post": {
+				"summary": "/api/builds/add",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Ship successfully created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BuildAdd"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "No body"
+					},
+					"401": {
+						"description": "Not logged in"
+					},
+					"403": {
+						"description": "Not authorized to add a build"
+					}
+				}
+			}
+		},
+		"/api/likes": {
+			"post": {
+				"summary": "/api/likes",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Vote successfully cast",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Vote"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "No body"
+					},
+					"401": {
+						"description": "Not logged in"
+					},
+					"500": {
+						"description": "Server failed"
+					}
+				}
+			}
+		}
+	},
+	"swagger": "2.0",
+	"components": {
+		"schemas": {
+			"BuildAdd": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"description": "Success",
+						"type": "boolean",
+						"example": true
+					},
+					"id": {
+						"type": "string",
+						"description": "Ship id",
+						"example": "f4fc0480-9915-11e8-816e-4f06e637e8a0"
+					},
+					"ship": {
+						"description": "Ship status",
+						"type": "string",
+						"example": "created"
+					},
+					"link": {
+						"description": "Ship link",
+						"type": "string",
+						"example": "https://orbis.zone/build/i8vNM6kY6"
+					}
+				}
+			},
+			"Vote": {
+				"type": "object",
+				"properties": {
+					"created": {
+						"description": "Success",
+						"type": "boolean",
+						"example": true
+					},
+					"count": {
+						"description": "Current total",
+						"type": "number",
+						"example": 1
+					}
+				}
+			},
+			"Author": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"keycloakId": {
+						"type": "string"
+					},
+					"admin": {
+						"type": "boolean"
+					},
+					"email": {
+						"type": "string"
+					},
+					"badges": {
+						"type": "object"
+					},
+					"username": {
+						"type": "string"
+					},
+					"imageURL": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string"
+					},
+					"updatedAt": {
+						"type": "string"
+					}
+				}
+			},
+			"Builds": {
+				"type": "object",
+				"properties": {
+					"count": {
+						"type": "integer"
+					},
+					"rows": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Build"
+						}
+					}
+				},
+				"example": [
+					{
+						"count": 1,
+						"rows": {
+							"id": "9db26400-98fa-11e8-8d34-1dbebdc8ddbc",
+							"updatedAt": "2018-08-05T21:57:58.976Z",
+							"createdAt": "2018-08-05T21:57:58.976Z",
+							"shortid": "XmX8KSDXR",
+							"title": "Explorer with srv",
+							"description": "Explorer with srv",
+							"author": {
+								"id": "ee00d230-98f9-11e8-8d34-1dbebdc8ddbc",
+								"admin": false,
+								"email": "email@email.com",
+								"badges": {},
+								"imageURL": "https://orbis.zone/diamondback_explorer.jpg",
+								"username": "willyb321",
+								"createdAt": "2018-08-05T21:53:04.212Z",
+								"updatedAt": "2018-08-05T21:53:04.212Z",
+								"keycloakId": "1351fgd-ee2a-4eb8-a1fadf-8e807ee7356c"
+							},
+							"proxiedImage": "https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/diamondback_explorer.jpg",
+							"coriolisShip": {},
+							"likes": 3
+						}
+					}
+				]
+			},
+			"Build": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"example": "f4fc0480-9915-11e8-816e-4f06e637e8a0"
+					},
+					"updatedAt": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string"
+					},
+					"shortid": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"author": {
+						"$ref": "#/components/schemas/Author"
+					},
+					"description": {
+						"type": "string"
+					},
+					"proxiedImage": {
+						"type": "string"
+					},
+					"coriolisShip": {
+						"type": "object"
+					},
+					"likes": {
+						"type": "number"
+					}
+				},
+				"required": [
+					"id",
+					"updatedAt",
+					"createdAt",
+					"shortid",
+					"title",
+					"description",
+					"author",
+					"proxiedImage",
+					"coriolisShip",
+					"likes"
+				],
+				"example": [
+					{
+						"id": "9db26400-98fa-11e8-8d34-1dbebdc8ddbc",
+						"updatedAt": "2018-08-05T21:57:58.976Z",
+						"createdAt": "2018-08-05T21:57:58.976Z",
+						"shortid": "XmX8KSDXR",
+						"title": "Explorer with srv",
+						"description": "Explorer with srv",
+						"author": {
+							"id": "ee00d230-98f9-11e8-8d34-1dbebdc8ddbc",
+							"admin": false,
+							"email": "email@email.com",
+							"badges": {},
+							"imageURL": "https://orbis.zone/diamondback_explorer.jpg",
+							"username": "willyb321",
+							"createdAt": "2018-08-05T21:53:04.212Z",
+							"updatedAt": "2018-08-05T21:53:04.212Z",
+							"keycloakId": "1351fgd-ee2a-4eb8-a1fadf-8e807ee7356c"
+						},
+						"proxiedImage": "https://orbis.zone/imgproxy/{OPTIONS}/https://orbis.zone/diamondback_explorer.jpg",
+						"coriolisShip": {},
+						"likes": 3
+					}
+				]
+			},
+			"BuildUpdate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "Success",
+						"example": true
+					},
+					"id": {
+						"type": "string",
+						"description": "Ship id",
+						"example": "dec30e40-9544-11e8-a647-7fe2ef000e49"
+					},
+					"body": {
+						"type": "object",
+						"properties": {
+							"updates": {
+								"type": "object",
+								"properties": {
+									"imageURL": {
+										"type": "string"
+									},
+									"description": {
+										"type": "string"
+									},
+									"title": {
+										"type": "string"
+									}
+								}
+							},
+							"id": {
+								"type": "string",
+								"example": "dec30e40-9544-11e8-a647-7fe2ef000e49"
+							}
+						}
+					},
+					"ship": {
+						"type": "string",
+						"example": "created"
+					},
+					"link": {
+						"type": "string",
+						"example": "https://orbis.zone/build/bSTQWz5xm"
+					}
+				}
+			}
+		}
+	}
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import {register} from 'register-service-worker';
+import { register } from 'register-service-worker';
 import store from './store';
 
 if (process.env.NODE_ENV === 'production') {
@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'production') {
 		ready() {
 			console.log(
 				'App is being served from cache by a service worker.\n' +
-				'For more details, visit https://goo.gl/AFskqB'
+					'For more details, visit https://goo.gl/AFskqB'
 			);
 		},
 		cached() {
@@ -19,7 +19,9 @@ if (process.env.NODE_ENV === 'production') {
 			store.dispatch('updateAvailable');
 		},
 		offline() {
-			console.log('No internet connection found. App is running in offline mode.');
+			console.log(
+				'No internet connection found. App is running in offline mode.'
+			);
 		},
 		error(error) {
 			console.error('Error during service worker registration:', error);

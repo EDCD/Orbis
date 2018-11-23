@@ -13,7 +13,7 @@ function isAuthenticated(req, res, next) {
 	});
 }
 
-const {ShipVote} = models;
+const { ShipVote } = models;
 
 router.post('/', isAuthenticated, (req, res) => {
 	const author = req.user;
@@ -34,7 +34,7 @@ router.post('/', isAuthenticated, (req, res) => {
 					shipId: req.body.shipId
 				}
 			});
-			return res.json({created, count});
+			return res.json({ created, count });
 		})
 		.catch(err => {
 			console.error(err);

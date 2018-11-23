@@ -3,7 +3,7 @@ const models = require('../models');
 const Op = require('sequelize').Op;
 
 const router = express.Router();
-const {User, Ship, sequelize} = models;
+const { User, Ship, sequelize } = models;
 
 router.post('/register', async (req, res) => {
 	if (!req.body) {
@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
 		}
 	});
 	if (user) {
-		return res.json({success: false, error: 'User already exists.'});
+		return res.json({ success: false, error: 'User already exists.' });
 	}
 	try {
 		user = await User.create({
@@ -33,18 +33,21 @@ router.post('/register', async (req, res) => {
 	} catch (err) {
 		if (err instanceof models.Sequelize.UniqueConstraintError) {
 			console.info('User already exists.');
-			return res.json({success: false, error: 'User already exists.'});
+			return res.json({ success: false, error: 'User already exists.' });
 		}
 		console.error(err);
 		console.error(err.message);
 	}
 
-	return res.json({success: true, user: 'created'});
+	return res.json({ success: true, user: 'created' });
 });
 
 router.post('/profile/:name', (req, res) => {
-	const username = req.params.name === 'me' && req.user ? req.user.username : req.params.name;
-	let {order, field, search, ship} = req.body;
+	const username =
+		req.params.name === 'me' && req.user
+			? req.user.username
+			: req.params.name;
+	let { order, field, search, ship } = req.body;
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
@@ -116,6 +119,5 @@ router.get('/list', (req, res) => {
 			res.status(500).end();
 		});
 });
-
 
 module.exports = router;

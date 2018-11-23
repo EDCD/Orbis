@@ -30,30 +30,29 @@ module.exports = (sequelize, DataType) => {
 		},
 		{
 			indexes: [
-				{fields: ['vote']},
-				{fields: ['shipId']},
-				{fields: ['shipId', 'userId']},
-				{fields: ['userId']}
+				{ fields: ['vote'] },
+				{ fields: ['shipId'] },
+				{ fields: ['shipId', 'userId'] },
+				{ fields: ['userId'] }
 			],
 			freezeTableName: true
 		}
 	);
 
 	function updateVotesColumn(instance) {
-		const {Ship} = require('.');
-		Ship.find({where: {id: instance.shipId}})
-			.then(async ship => {
-				if (!ship) {
-					return;
+		const { Ship } = require('.');
+		Ship.find({ where: { id: instance.shipId } }).then(async ship => {
+			if (!ship) {
+				return;
+			}
+			const votes = await ShipVote.sum('vote', {
+				where: {
+					shipId: ship.id
 				}
-				const votes = await ShipVote.sum('vote', {
-					where: {
-						shipId: ship.id
-					}
-				});
-				ship.likes = votes;
-				ship.save();
 			});
+			ship.likes = votes;
+			ship.save();
+		});
 	}
 
 	ShipVote.beforeUpsert(updateVotesColumn);

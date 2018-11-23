@@ -1,5 +1,5 @@
 const models = require('./models');
-const {User} = models;
+const { User } = models;
 const UsernameGenerator = require('username-generator');
 
 function validateEmail(email) {
@@ -11,29 +11,36 @@ const getUserInfo = (req, res, next) => {
 	if (req.user) {
 		return next();
 	}
-	if (!req.kauth || !req.kauth.grant || !req.kauth.grant.access_token || !req.kauth.grant.access_token.content) {
+	if (
+		!req.kauth ||
+		!req.kauth.grant ||
+		!req.kauth.grant.access_token ||
+		!req.kauth.grant.access_token.content
+	) {
 		return next();
 	}
 	const profile = req.kauth.grant.access_token.content;
 	if (validateEmail(profile.preferred_username)) {
-		profile.preferred_username = UsernameGenerator.generateUsername()
+		profile.preferred_username = UsernameGenerator.generateUsername();
 	}
 	return User.findOrCreate({
-		where: {email: profile.email}, defaults: {
+		where: { email: profile.email },
+		defaults: {
 			keycloakId: profile.sub,
 			username: profile.preferred_username
 		}
-	}).spread((user, created) => {
-		if (created) {
-			console.info(`Created user ${user.username}`);
-		}
-		req.user = user.get();
-		return next();
 	})
+		.spread((user, created) => {
+			if (created) {
+				console.info(`Created user ${user.username}`);
+			}
+			req.user = user.get();
+			return next();
+		})
 		.catch(err => {
 			console.error(err);
 			return next();
 		});
 };
 
-module.exports = {getUserInfo};
+module.exports = { getUserInfo };

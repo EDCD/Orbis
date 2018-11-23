@@ -29,7 +29,6 @@ Just open [http://localhost:3000](http://localhost:3000).
 
 We have added some [Mocha](https://mochajs.org) based test. You can run them by `npm test`
 
-
 ## Setup in Details
 
 In order to understand how this application has been built, you can find the
@@ -40,6 +39,7 @@ described. You can find those files in the repo.
 #### Express Setup
 
 First we will create a bare Express App using `express-generator` [Express Generator](https://expressjs.com/en/starter/generator.html)
+
 ```bash
 # install express generator globally
 npm install -g express-generator
@@ -74,8 +74,8 @@ We are using `.sequelizerc` setup change config path for migrations. You can rea
 const path = require('path');
 
 module.exports = {
-  'config': path.resolve('config', 'config.js')
-}
+	config: path.resolve('config', 'config.js')
+};
 ```
 
 You will now have a basic express application with some additional directories
@@ -88,25 +88,25 @@ like this:
 ```js
 // task.js
 // ...
-  Task.associate = function(models) {
-    // Using additional options like CASCADE etc for demonstration
-    // Can also simply do Task.belongsTo(models.User);
-    Task.belongsTo(models.User, {
-      onDelete: "CASCADE",
-      foreignKey: {
-        allowNull: false
-      }
-    });
-  }
+Task.associate = function(models) {
+	// Using additional options like CASCADE etc for demonstration
+	// Can also simply do Task.belongsTo(models.User);
+	Task.belongsTo(models.User, {
+		onDelete: 'CASCADE',
+		foreignKey: {
+			allowNull: false
+		}
+	});
+};
 // ...
 ```
 
 ```js
 // user.js
 // ...
-  User.associate = function(models) {
-    User.hasMany(models.Task);
-  }
+User.associate = function(models) {
+	User.hasMany(models.Task);
+};
 // ...
 ```
 
@@ -136,7 +136,7 @@ you have to adjust the `bin/www` file to this:
 var app = require('../app');
 var debug = require('debug')('init:server');
 var http = require('http');
-var models = require("../models");
+var models = require('../models');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -144,15 +144,21 @@ app.set('port', port);
 var server = http.createServer(app);
 
 // sync() will create all table if they doesn't exist in database
-models.sequelize.sync().then(function () {
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
+models.sequelize.sync().then(function() {
+	server.listen(port);
+	server.on('error', onError);
+	server.on('listening', onListening);
 });
 
-function normalizePort(val) { /* ... */ }
-function onError(error) { /* ... */ }
-function onListening() { /* ... */ }
+function normalizePort(val) {
+	/* ... */
+}
+function onError(error) {
+	/* ... */
+}
+function onListening() {
+	/* ... */
+}
 ```
 
 And finally you have to adjust the `config/config.js` to fit your environment.

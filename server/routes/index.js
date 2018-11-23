@@ -1,10 +1,10 @@
 const express = require('express');
 const models = require('../models');
-const {keycloak} = require('../app');
+const { keycloak } = require('../app');
 const Sequelize = require('sequelize');
 
-const {Announcement} = models;
-const {Op} = Sequelize;
+const { Announcement } = models;
+const { Op } = Sequelize;
 
 const router = express.Router();
 
@@ -12,7 +12,10 @@ function isAuthenticated(req, res, next) {
 	if (req.user) {
 		return next();
 	}
-	if (Object.keys(req.kauth).length === 0 && req.kauth.constructor === Object) {
+	if (
+		Object.keys(req.kauth).length === 0 &&
+		req.kauth.constructor === Object
+	) {
 		return res.status(401).json({
 			error: 'User not authenticated'
 		});

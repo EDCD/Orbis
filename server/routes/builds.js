@@ -2,8 +2,8 @@ const express = require('express');
 const models = require('../models');
 const _ = require('lodash');
 const RateLimit = require('express-rate-limit');
-const {keycloak} = require('../app');
-const {Ship, ShipVote, sequelize} = models;
+const { keycloak } = require('../app');
+const { Ship, ShipVote, sequelize } = models;
 const router = express.Router();
 
 const addLimiter = new RateLimit({
@@ -18,12 +18,12 @@ const batchAddLimiter = new RateLimit({
 	message: 'Too many builds uploaded. Please try again later.'
 });
 
-const {Op} = require('sequelize');
+const { Op } = require('sequelize');
 
 const isAdmin = req => req.user && req.user.admin === true;
 
 router.post('/', (req, res) => {
-	let {order, field, search, ship, category} = req.body;
+	let { order, field, search, ship, category } = req.body;
 	if (!req.body.pageSize || req.body.pageSize > 100) {
 		req.body.pageSize = 10;
 	}
@@ -55,8 +55,8 @@ router.post('/', (req, res) => {
 			'id',
 			'updatedAt',
 			'createdAt',
-      'shortid',
-      'category',
+			'shortid',
+			'category',
 			'title',
 			'description',
 			[sequelize.json('author.username'), 'username'],
@@ -73,8 +73,8 @@ router.post('/', (req, res) => {
 	}
 	if (ship) {
 		query.where['ShipName'] = ship;
-  }
-  if (category) {
+	}
+	if (category) {
 		query.where['category'] = category;
 	}
 	return Ship.findAndCountAll(query)
@@ -89,7 +89,7 @@ router.post('/', (req, res) => {
 
 router.get('/liked/:shipId', (req, res) => {
 	if (!req.user) {
-		return res.status(403).json({message: 'Not logged in'});
+		return res.status(403).json({ message: 'Not logged in' });
 	}
 	return ShipVote.find({
 		where: {
@@ -103,7 +103,7 @@ router.get('/liked/:shipId', (req, res) => {
 				return res.json({});
 			}
 			vote = JSON.parse(JSON.stringify(vote));
-			return res.json({vote: vote.vote});
+			return res.json({ vote: vote.vote });
 		})
 		.catch(err => {
 			console.error(err);
@@ -113,10 +113,10 @@ router.get('/liked/:shipId', (req, res) => {
 
 router.post('/liked/batch', (req, res) => {
 	if (!req.user) {
-		return res.status(403).json({message: 'Not logged in'});
+		return res.status(403).json({ message: 'Not logged in' });
 	}
 	if (!req.body.ids) {
-		return res.status(400).json({message: 'No IDs listed'});
+		return res.status(400).json({ message: 'No IDs listed' });
 	}
 	return ShipVote.findAll({
 		where: {
@@ -140,16 +140,24 @@ router.post('/liked/batch', (req, res) => {
 		});
 });
 
-const allowedUpdates = ['imageURL', 'description', 'title', 'privacy', 'sharedAccounts', 'sharedAccountUsernames', 'category'];
+const allowedUpdates = [
+	'imageURL',
+	'description',
+	'title',
+	'privacy',
+	'sharedAccounts',
+	'sharedAccountUsernames',
+	'category'
+];
 
 router.get('/:id', (req, res) =>
 	Ship.find({
-		where: {shortid: req.params.id},
+		where: { shortid: req.params.id },
 		attributes: [
 			'id',
 			'updatedAt',
-      'createdAt',
-      'category',
+			'createdAt',
+			'category',
 			'shortid',
 			'title',
 			'description',
@@ -168,11 +176,23 @@ router.get('/:id', (req, res) =>
 			if (!ships) {
 				return res.json({});
 			}
-			if (!isAdmin(req) && ships.privacy === 'owner' && ships.authorId !== req.user.id) {
-				return res.status(403).json({message: 'No permission to view'})
+			if (
+				!isAdmin(req) &&
+				ships.privacy === 'owner' &&
+				ships.authorId !== req.user.id
+			) {
+				return res
+					.status(403)
+					.json({ message: 'No permission to view' });
 			}
-			if (!isAdmin(req) && ships.privacy === 'shared' && !ships.sharedAccounts.includes(req.user.id)) {
-				return res.status(403).json({message: 'No permission to view'})
+			if (
+				!isAdmin(req) &&
+				ships.privacy === 'shared' &&
+				!ships.sharedAccounts.includes(req.user.id)
+			) {
+				return res
+					.status(403)
+					.json({ message: 'No permission to view' });
 			}
 			ships = JSON.parse(JSON.stringify(ships));
 			ships.allowedToEdit = false;
@@ -224,12 +244,20 @@ router.delete('/:id', keycloak.protect(), async (req, res) => {
 				success: true
 			});
 		}
-		return res.status(403).json({success: false});
+		return res.status(403).json({ success: false });
 	}
-	return res.status(403).json({success: false});
+	return res.status(403).json({ success: false });
 });
 
-const cats = ['Combat', 'Mining', 'Trading', 'Exploration', 'Smuggling', 'Passenger Liner', 'PvP'];
+const cats = [
+	'Combat',
+	'Mining',
+	'Trading',
+	'Exploration',
+	'Smuggling',
+	'Passenger Liner',
+	'PvP'
+];
 
 router.post('/update', keycloak.protect(), async (req, res) => {
 	if (!req.body || !req.body.updates) {
@@ -245,18 +273,25 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 		const isadmin = isAdmin(req);
 		if (req.user.id === ship.author.id || isadmin) {
 			for (const update in data.updates) {
-				if (!Object.prototype.hasOwnProperty.call(data.updates, update)) {
+				if (
+					!Object.prototype.hasOwnProperty.call(data.updates, update)
+				) {
 					continue;
 				}
 				if (allowedUpdates.indexOf(update) === -1) {
 					continue;
-        }
-        if (update === 'category' && cats.indexOf(data.updates[update]) === -1) {
+				}
+				if (
+					update === 'category' &&
+					cats.indexOf(data.updates[update]) === -1
+				) {
 					continue;
 				}
 				ship[update] = data.updates[update];
 				if (update === 'imageURL') {
-					ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/resize?url=${data.updates[update]}&width={{WIDTH}}`;
+					ship.proxiedImage = `${
+						process.env.IMGPROXY_BASE_URL
+					}/resize?url=${data.updates[update]}&width={{WIDTH}}`;
 				}
 				console.log(data.updates[update]);
 			}
@@ -280,7 +315,7 @@ router.post('/add', keycloak.protect(), addLimiter, async (req, res) => {
 		return res.status(400).end();
 	}
 	const data = JSON.parse(JSON.stringify(req.body));
-	data.author = req.user === undefined ? {username: 'Anonymous'} : req.user;
+	data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
 	const ship = await Ship.create(data);
 	return res.json({
 		success: true,
@@ -327,11 +362,14 @@ router.post(
 						link: `https://orbis.zone/build/${s.shortid}`
 					});
 				}
-				return res.json({totalCreated: returnObj.length, data: returnObj});
+				return res.json({
+					totalCreated: returnObj.length,
+					data: returnObj
+				});
 			})
 			.catch(err => {
 				console.error(err);
-				return res.status(500).json({error: err.message});
+				return res.status(500).json({ error: err.message });
 			});
 	}
 );

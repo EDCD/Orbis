@@ -2,7 +2,7 @@ const express = require('express');
 const models = require('../models');
 const crypto = require('crypto');
 
-const {User} = models;
+const { User } = models;
 const router = express.Router();
 
 function isAuthenticated(req, res, next) {
@@ -21,10 +21,16 @@ const verifyPatreon = req => {
 
 	const payload = JSON.stringify(req.body);
 	const secret = process.env.PATREON_WEBHOOK_SECRET;
-	const ourSignature = `${crypto.createHmac('md5', secret).update(payload).digest('hex')}`;
+	const ourSignature = `${crypto
+		.createHmac('md5', secret)
+		.update(payload)
+		.digest('hex')}`;
 	console.log(theirSignature);
 	console.log(ourSignature);
-	return crypto.timingSafeEqual(Buffer.from(theirSignature), Buffer.from(ourSignature));
+	return crypto.timingSafeEqual(
+		Buffer.from(theirSignature),
+		Buffer.from(ourSignature)
+	);
 };
 
 router.get('/', (req, res) => {
@@ -44,7 +50,7 @@ router.post('/patreon', (req, res) => {
 		.then(async user => {
 			if (user) {
 				const badge = req.body.included[2].attributes.title;
-				user.badges = {current: badge};
+				user.badges = { current: badge };
 				await user.save();
 			}
 		})

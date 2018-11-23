@@ -18,10 +18,13 @@ export default {
 		}
 	},
 	actions: {
-		async getBuild({commit}, id) {
-			commit(types.BUILD_REQUEST, await axios.get(`/api/builds/${id}`, {
-				withCredentials: true
-			}));
+		async getBuild({ commit }, id) {
+			commit(
+				types.BUILD_REQUEST,
+				await axios.get(`/api/builds/${id}`, {
+					withCredentials: true
+				})
+			);
 		}
 	},
 	getters: {}

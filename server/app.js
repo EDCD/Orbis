@@ -8,12 +8,12 @@ const session = require('express-session');
 const models = require('./models');
 const responseTime = require('response-time');
 const Keycloak = require('keycloak-connect');
-const {getUserInfo} = require('./keycloak');
+const { getUserInfo } = require('./keycloak');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./api-spec.json');
 const SQLiteStore = require('connect-sqlite3')(session);
 
-const {Ship} = models;
+const { Ship } = models;
 
 process.on('unhandledRejection', (reason, p) => {
 	console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -28,10 +28,10 @@ app.use(responseTime());
 if (process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', true);
 }
-app.use(bodyParser.json({limit: '30mb'}));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cors({credentials: true, origin: true}));
-app.options('*', cors({credentials: true, origin: true}));
+app.use(bodyParser.json({ limit: '30mb' }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors({ credentials: true, origin: true }));
+app.options('*', cors({ credentials: true, origin: true }));
 // Uncomment after placing your favicon in /public
 // app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
@@ -41,7 +41,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const sessionStore = new SQLiteStore();
 
-const keycloak = new Keycloak({store: sessionStore/*, scope: 'offline_access'*/}, null);
+const keycloak = new Keycloak(
+	{ store: sessionStore /*, scope: 'offline_access'*/ },
+	null
+);
 
 app.use(
 	session({
@@ -60,7 +63,7 @@ app.use(
 
 exports.keycloak = keycloak;
 
-app.use(keycloak.middleware({logout: '/api/logout'}));
+app.use(keycloak.middleware({ logout: '/api/logout' }));
 app.use(getUserInfo);
 
 app.get('/', (req, res) => {
@@ -76,7 +79,7 @@ const admin = require('./routes/admin');
 
 app.get('/api/build/:id/og', (req, res) =>
 	Ship.find({
-		where: {shortid: req.params.id},
+		where: { shortid: req.params.id },
 		attributes: [
 			'id',
 			'updatedAt',
@@ -100,10 +103,13 @@ app.get('/api/build/:id/og', (req, res) =>
 				req.get('host') +
 				req.originalUrl.replace('/og', '');
 			let html = '<!doctype html>\n';
-			html += `<html><head>`;
+			html += `<html lang="en"><head>`;
+			html += `<title>Orbis.zone</title>`;
 			html += `<meta name="author" content="${ship.author.username}"/>`;
 			html += `<meta name="og:title" content="${ship.title}"/>`;
-			html += `<meta name="og:description" content="${ship.description}"/>`;
+			html += `<meta name="og:description" content="${
+				ship.description
+			}"/>`;
 			html += `<meta name="og:image" content="${ship.imageURL}"/>`;
 			html += `<meta name="og:url" content="${uri}"/>`;
 			html += `<meta property="og:type" content="website"/>`;
@@ -123,9 +129,13 @@ app.get('/api/build/:id/og', (req, res) =>
 
 app.get('/api/og', (req, res) => {
 	const uri =
-		req.protocol + '://' + req.get('host') + req.originalUrl.replace('/og', '');
+		req.protocol +
+		'://' +
+		req.get('host') +
+		req.originalUrl.replace('/og', '');
 	let html = '<!doctype html>\n';
-	html += `<html><head>`;
+	html += `<html lang="en"><head>`;
+	html += `<title>Orbis.zone</title>`;
 	html += `<meta name="author" content="Willyb321"/>`;
 	html += `<meta name="og:title" content="Orbis.zone"/>`;
 	html += `<meta name="og:description" content="It's time to dock"/>`;
@@ -143,7 +153,7 @@ app.get('/api/og', (req, res) => {
 
 app.get('/api/oembed.json', (req, res) => {
 	const json = {
-		author_name: 'It\'s time to dock',
+		author_name: "It's time to dock",
 		author_url: 'https://orbis.zone',
 		provider_name: 'Orbis.zone is the build repository for Coriolis.io.',
 		provider_url: 'https://orbis.zone'

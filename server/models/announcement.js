@@ -1,7 +1,9 @@
 'use strict';
 
 module.exports = (sequelize, DataType) => {
-	return sequelize.define('Announcement', {
+	return sequelize.define(
+		'Announcement',
+		{
 			id: {
 				type: DataType.UUID,
 				defaultValue: DataType.UUIDV1,
@@ -19,9 +21,10 @@ module.exports = (sequelize, DataType) => {
 		},
 		{
 			indexes: [
-				{fields: ['expiresAt']},
-				{fields: ['showInCoriolis']}
+				{ fields: ['expiresAt'] },
+				{ fields: ['showInCoriolis'] }
 			],
 			freezeTableName: true
-		});
+		}
+	);
 };

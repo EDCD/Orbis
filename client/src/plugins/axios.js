@@ -11,7 +11,7 @@ import axios from 'axios';
 const config = {
 	// BaseURL: process.env.baseURL || process.env.apiUrl || ""
 	// timeout: 60 * 1000, // Timeout
-	withCredentials: true, // Check cross-site Access-Control
+	withCredentials: true // Check cross-site Access-Control
 };
 
 const _axios = axios.create(config);
@@ -39,7 +39,7 @@ _axios.interceptors.response.use(
 	}
 );
 
-Plugin.install = function (Vue, options) {
+Plugin.install = function(Vue, options) {
 	Vue.axios = _axios;
 	window.axios = _axios;
 	Object.defineProperties(Vue.prototype, {

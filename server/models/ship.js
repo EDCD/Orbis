@@ -44,10 +44,10 @@ module.exports = (sequelize, DataType) => {
 			},
 			createdAt: {
 				type: DataType.DATE
-      },
-      category: {
-        type: DataType.TEXT
-      },
+			},
+			category: {
+				type: DataType.TEXT
+			},
 			updatedAt: {
 				type: DataType.DATE
 			},
@@ -76,18 +76,22 @@ module.exports = (sequelize, DataType) => {
 		},
 		{
 			indexes: [
-				{fields: ['id']},
-				{fields: ['updatedAt']},
-				{fields: ['author']},
-				{fields: ['privacy']},
-				{fields: ['privacy', 'author']},
-				{fields: ['sharedAccounts']},
-				{fields: ['category']},
-				{fields: ['createdAt']},
-				{fields: ['shortid']},
-				{fields: ['Ship']},
+				{ fields: ['id'] },
+				{ fields: ['updatedAt'] },
+				{ fields: ['author'] },
+				{ fields: ['privacy'] },
+				{ fields: ['privacy', 'author'] },
+				{ fields: ['sharedAccounts'] },
+				{ fields: ['category'] },
+				{ fields: ['createdAt'] },
+				{ fields: ['shortid'] },
+				{ fields: ['Ship'] },
 				// Add a FULLTEXT index
-				{type: 'FULLTEXT', name: 'text_idx', fields: ['description', 'title']}
+				{
+					type: 'FULLTEXT',
+					name: 'text_idx',
+					fields: ['description', 'title']
+				}
 			],
 			freezeTableName: true
 		}
@@ -98,7 +102,13 @@ module.exports = (sequelize, DataType) => {
 		delete ship.author.given_name;
 		ship.imageURL = `https://orbis.zone/${ship.coriolisShip.id}.jpg`;
 
-		ship.proxiedImage = `${process.env.IMGPROXY_BASE_URL}/resize?url=${ship.imageURL}&width={{WIDTH}}` || `https://orbis.zone/imgproxy/resize?url=${ship.imageURL}&width={{WIDTH}}`;
+		ship.proxiedImage =
+			`${process.env.IMGPROXY_BASE_URL}/resize?url=${
+				ship.imageURL
+			}&width={{WIDTH}}` ||
+			`https://orbis.zone/imgproxy/resize?url=${
+				ship.imageURL
+			}&width={{WIDTH}}`;
 	});
 
 	return Ship;
