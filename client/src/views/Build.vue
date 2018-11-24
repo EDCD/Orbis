@@ -72,9 +72,9 @@
 				<div class="build">
 					<v-container grid-list-small fluid>
 						<v-layout
-							v-if="ship.coriolisShip"
+							v-if="ship && ship.coriolisShip && ship.coriolisShip.armour"
 							row
-							wrap=""
+							wrap
 							justify-center
 						>
 							<v-flex xs4
