@@ -40,8 +40,8 @@
 											v-if="shipCode"
 											:loading="saving"
 											@click="saveBuildToCoriolis"
-											>Save build to Coriolis</v-btn
-										>
+											>Save build to Coriolis
+										</v-btn>
 									</div>
 									<div>
 										<v-btn
@@ -52,16 +52,11 @@
 											Edit build details
 										</v-btn>
 									</div>
-									<v-expansion-panel>
-										<v-expansion-panel-content>
-											<div slot="header">Description</div>
-											<v-card>
-												<v-card-text>{{
-													ship.description
-												}}</v-card-text>
-											</v-card>
-										</v-expansion-panel-content>
-									</v-expansion-panel>
+									<div>Description</div>
+									<v-textarea
+										:value="ship.description"
+										readonly
+									></v-textarea>
 								</div>
 							</v-card-title>
 						</v-flex>
@@ -72,27 +67,29 @@
 				<div class="build">
 					<v-container grid-list-small fluid>
 						<v-layout
-							v-if="ship && ship.coriolisShip && ship.coriolisShip.armour"
+							v-if="
+								ship &&
+									ship.coriolisShip &&
+									ship.coriolisShip.armour
+							"
 							row
 							wrap
 							justify-center
 						>
 							<v-flex xs4
 								>Armour:
-								{{
-									formats.int(ship.coriolisShip.armour)
-								}}</v-flex
-							>
+								{{ formats.int(ship.coriolisShip.armour) }}
+							</v-flex>
 							<v-flex xs4
 								>Shield:
 								{{ formats.int(ship.coriolisShip.shield) }}
-								{{ units.MJ }}</v-flex
-							>
+								{{ units.MJ }}
+							</v-flex>
 							<v-flex xs4
 								>Top Speed:
 								{{ formats.int(ship.coriolisShip.topBoost) }}
-								{{ units['m/s'] }}</v-flex
-							>
+								{{ units['m/s'] }}
+							</v-flex>
 							<v-flex xs4>
 								Hull Thermal Res:
 								{{
