@@ -9,12 +9,12 @@ if (workbox) {
 	});
 
 	workbox.routing.registerRoute(
-		new RegExp('/(.*?)'),
+		/\/(.*)/,
 		workbox.strategies.staleWhileRevalidate()
 	);
 
 	workbox.routing.registerRoute(
-		new RegExp('/api(.*?)'),
+		/\/api(.*)/,
 		workbox.strategies.networkOnly()
 	);
 
@@ -39,7 +39,7 @@ if (workbox) {
 			cacheName: 'images',
 			plugins: [
 				new workbox.expiration.Plugin({
-					maxEntries: 60,
+					maxEntries: 120,
 					maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
 				})
 			]
