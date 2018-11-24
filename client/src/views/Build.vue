@@ -300,7 +300,8 @@ export default {
 						this.findModule(e.m.grp, e.m.id),
 						e
 					);
-				});
+				})
+				.filter(mod => !!mod);
 		}
 	},
 	async beforeMount() {
