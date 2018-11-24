@@ -14,8 +14,12 @@
 export default {
 	name: 'NavFooter',
 	props: {
-		admin: {},
 		fixed: {}
+	},
+	computed: {
+		admin() {
+			return this.$store.state.Common.admin;
+		}
 	}
 };
 </script>

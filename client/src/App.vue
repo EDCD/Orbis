@@ -1,6 +1,6 @@
 <template>
 	<v-app dark>
-		<nav-bar :logged-in="loggedIn" :user="user" />
+		<nav-bar />
 		<v-content>
 			<v-container grid-list-md text-xs-center>
 				<v-layout align-center justify-center row wrap fill-height>
@@ -22,7 +22,7 @@
 			</v-container>
 			<router-view></router-view>
 		</v-content>
-		<nav-footer :admin="admin" :fixed="fixed" />
+		<nav-footer :fixed="fixed" />
 	</v-app>
 </template>
 

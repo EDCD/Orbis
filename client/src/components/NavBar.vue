@@ -38,6 +38,18 @@ export default {
 	computed: {
 		updateAvailable() {
 			return this.$store.state.Common.updateAvailable;
+		},
+		user() {
+			return this.$store.state.Common.user;
+		},
+		admin() {
+			return this.$store.state.Common.admin;
+		},
+		loggedIn() {
+			return (
+				this.$store.state.Common.user &&
+				!!Object.keys(this.$store.state.Common.user).length
+			);
 		}
 	},
 	methods: {
@@ -49,10 +61,6 @@ export default {
 			reg.waiting.postMessage('skipWaiting');
 			window.location.reload();
 		}
-	},
-	props: {
-		loggedIn: {},
-		user: {}
 	}
 };
 </script>
