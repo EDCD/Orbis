@@ -46,6 +46,19 @@ if (workbox) {
 		})
 	);
 
+	workbox.routing.registerRoute(
+		/imgproxy/,
+		workbox.strategies.cacheFirst({
+			cacheName: 'imgproxy',
+			plugins: [
+				new workbox.expiration.Plugin({
+					maxEntries: 120,
+					maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+				})
+			]
+		})
+	);
+
 	try {
 		workbox.googleAnalytics.initialize();
 	} catch (e) {
