@@ -40,6 +40,8 @@
 					<v-text-field
 						v-model="title"
 						:disabled="disabled"
+						:rules="titleRules"
+						:counter="50"
 						label="Build Title"
 					></v-text-field>
 					<v-text-field
@@ -80,7 +82,9 @@
 					></v-autocomplete>
 					<v-textarea
 						v-model="description"
+						:rules="descRules"
 						:disabled="disabled"
+						:counter="255"
 						label="Build description"
 					></v-textarea>
 					<v-btn
@@ -117,6 +121,18 @@ export default {
 			units: lang.units,
 			translate: lang.translate,
 			valid: true,
+			descRules: [
+				v => !!v || 'Description is required',
+				v =>
+					(v && v.length <= 255) ||
+					'Description must be less than 10 characters'
+			],
+			titleRules: [
+				v => !!v || 'Title is required',
+				v =>
+					(v && v.length <= 50) ||
+					'Title must be less than 50 characters'
+			],
 			disabled: true,
 			loading: false,
 			imageURL: '',
