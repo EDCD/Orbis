@@ -1,6 +1,6 @@
 <template>
 	<v-container grid-list-md text-xs-center>
-		<v-layout row wrap max-height="200px">
+		<v-layout row wrap>
 			<v-flex xs12><h1>Featured builds</h1></v-flex>
 			<v-flex xs4>
 				<v-item-group
@@ -25,7 +25,7 @@
 					</v-item>
 				</v-item-group>
 			</v-flex>
-			<v-flex xs8>
+			<v-flex sm4>
 				<v-window dense v-model="featuredWindow" vertical>
 					<v-window-item v-for="(ship, i) in featured" :key="i">
 						<ship-card
