@@ -72,6 +72,12 @@ module.exports = (sequelize, DataType) => {
 			},
 			stats: {
 				type: DataType.JSONB
+			},
+			featured: {
+				type: DataType.BOOLEAN
+			},
+			featuredon: {
+				type: DataType.DATE
 			}
 		},
 		{
@@ -80,6 +86,7 @@ module.exports = (sequelize, DataType) => {
 				{ fields: ['updatedAt'] },
 				{ fields: ['author'] },
 				{ fields: ['privacy'] },
+				{ fields: ['featured'] },
 				{ fields: ['privacy', 'author'] },
 				{ fields: ['sharedAccounts'] },
 				{ fields: ['category'] },

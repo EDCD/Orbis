@@ -87,6 +87,44 @@ router.post('/', (req, res) => {
 		});
 });
 
+router.get('/featured', (req, res) => {
+	return Ship.findAll({
+		where: {
+			featured: true,
+			featuredon: {
+				[Op.lt]: new Date(
+					new Date().getTime() + 7 * 24 * 60 * 60 * 1000
+				).toISOString()
+			}
+		},
+		attributes: [
+			'id',
+			'updatedAt',
+			'createdAt',
+			'shortid',
+			'category',
+			'featured',
+			'title',
+			'description',
+			[sequelize.json('author.username'), 'username'],
+			[sequelize.json('coriolisShip.url'), 'url'],
+			'Ship',
+			'likes',
+			'proxiedImage'
+		]
+	})
+		.then(ships => {
+			if (!ships) {
+				return res.json({});
+			}
+			return res.json(ships);
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+});
+
 router.get('/liked/:shipId', (req, res) => {
 	if (!req.user) {
 		return res.status(403).json({ message: 'Not logged in' });

@@ -26,6 +26,22 @@
 				<v-btn @click="deleteAnnouncement(announce);">Delete</v-btn>
 			</v-alert>
 		</v-flex>
+		<v-layout row wrap>
+			<v-flex xs12 sm6>
+				<v-text-field
+					v-model="startFeature"
+					label="Build ID to feature"
+				></v-text-field>
+				<v-btn @click="startFeaturing">Start feature for 7 days</v-btn>
+			</v-flex>
+			<v-flex xs12 sm6>
+				<v-text-field
+					v-model="stopFeature"
+					label="Build ID to stop featuring"
+				></v-text-field>
+				<v-btn @click="stopFeaturing">Stop feature prematurely</v-btn>
+			</v-flex>
+		</v-layout>
 		<!-- <v-pagination -->
 		<!-- v-show="builds" -->
 		<!-- v-model="page" -->
@@ -50,6 +66,8 @@ export default {
 			announcementPickerVisible: false,
 			announcementText: '',
 			date: null,
+			stopFeature: '',
+			startFeature: '',
 			searchData: {},
 			loading: false
 		};
@@ -83,6 +101,12 @@ export default {
 				search: value
 			});
 			this.loading = false;
+		},
+		async stopFeaturing() {
+			await this.$store.dispatch('stopFeatureBuild', this.stopFeature);
+		},
+		async startFeaturing() {
+			await this.$store.dispatch('featureBuild', this.startFeature);
 		},
 		async deleteAnnouncement(item) {
 			await this.$store.dispatch('deleteAnnouncement', { id: item.id });

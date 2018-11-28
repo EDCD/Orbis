@@ -180,4 +180,29 @@ router.post(
 	}
 );
 
+router.post('/feature/add', keycloak.protect('Admin'), async (req, res) => {
+	if (!req.body) {
+		return res.status(400).json({});
+	}
+	const ship = await Ship.findOne({ where: { shortid: req.body.id } });
+	if (!ship) {
+		return res.status(400).json({});
+	}
+	ship.featured = true;
+	ship.featuredon = new Date();
+	await ship.save();
+	return res.status(200).json({ created: true, ship });
+});
+
+router.post('/feature/delete', keycloak.protect('Admin'), async (req, res) => {
+	const ship = await Ship.findOne({ where: { shortid: req.body.id } });
+	if (!ship) {
+		return res.status(400).json({});
+	}
+	ship.featured = false;
+	ship.featuredon = null;
+	await ship.save();
+	return res.status(200).json({ created: true, ship });
+});
+
 module.exports = router;

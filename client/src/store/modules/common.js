@@ -5,13 +5,15 @@ const types = {
 	AUTH_REQUEST: 'AUTH_REQUEST',
 	BUILD_REQUEST: 'BUILD_REQUEST',
 	UPDATE_REQUEST: 'UPDATE_REQUEST',
+	FEATURED_BUILDS_REQUEST: 'FEATURED_BUILDS_REQUEST',
 	PROFILE_REQUEST: 'PROFILE_REQUEST'
 };
 
 export default {
 	state: {
 		announcements: [],
-		builds: {},
+		builds: [],
+		featuredBuilds: [],
 		user: {},
 		admin: false,
 		updateAvailable: false,
@@ -29,6 +31,12 @@ export default {
 				return;
 			}
 			state.builds = data.data;
+		},
+		FEATURED_BUILDS_REQUEST(state, data) {
+			if (!data || !data.data) {
+				return;
+			}
+			state.featuredBuilds = data.data;
 		},
 		PROFILE_REQUEST(state, data) {
 			if (!data || !data.data) {
@@ -87,6 +95,14 @@ export default {
 			commit(
 				types.BUILD_REQUEST,
 				await axios.post('/api/builds', query, {
+					withCredentials: true
+				})
+			);
+		},
+		async getFeaturedBuilds({ commit }) {
+			commit(
+				types.FEATURED_BUILDS_REQUEST,
+				await axios.get('/api/builds/featured', {
 					withCredentials: true
 				})
 			);

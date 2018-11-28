@@ -1,5 +1,58 @@
 <template>
 	<v-container grid-list-md text-xs-center>
+		<v-layout row wrap max-height="200px">
+			<v-flex xs12><h1>Featured builds</h1></v-flex>
+			<v-flex xs4>
+				<v-item-group
+					class="shrink mr-4"
+					v-model="featuredWindow"
+					mandatory
+					tag="v-flex"
+				>
+					<v-item light v-for="n in featured.length" :key="n">
+						<div slot-scope="{ active, toggle }">
+							<v-btn
+								flat
+								outline
+								color="white"
+								:input-value="active"
+								icon
+								@click="toggle"
+							>
+								<v-icon>mdi-record</v-icon>
+							</v-btn>
+						</div>
+					</v-item>
+				</v-item-group>
+			</v-flex>
+			<v-flex xs8>
+				<v-window dense v-model="featuredWindow" vertical>
+					<v-window-item v-for="(ship, i) in featured" :key="i">
+						<ship-card
+							:description="ship.description"
+							:username="ship.username"
+							:coriolis-link="ship.url"
+							:imageURL="ship.proxiedImage"
+							:title="ship.title"
+							:id="ship.shortid"
+							:db-id="ship.id"
+							:likes="ship.likes"
+						></ship-card>
+					</v-window-item>
+				</v-window>
+			</v-flex>
+		</v-layout>
+		<v-flex
+			xs12
+			lg4
+			xl4
+			sm6
+			md6
+			v-if="builds && builds.length === 0 && !loading"
+		>
+			No results. Please try widening your search.
+		</v-flex>
+		<hr />
 		<search
 			v-show="builds"
 			:loading="loading"
@@ -57,6 +110,7 @@ export default {
 			alert: true,
 			page: 1,
 			pageSize: 9,
+			featuredWindow: 0,
 			searchData: {},
 			loading: true
 		};
@@ -64,6 +118,9 @@ export default {
 	computed: {
 		builds() {
 			return this.$store.state.Common.builds.rows;
+		},
+		featured() {
+			return this.$store.state.Common.featuredBuilds;
 		},
 		loggedIn() {
 			return (
@@ -121,6 +178,7 @@ export default {
 			pageSize: this.pageSize,
 			offset: 0
 		});
+		await this.$store.dispatch('getFeaturedBuilds');
 		this.loading = false;
 		const buildIds = [];
 		this.builds.forEach(e => buildIds.push(e.id));

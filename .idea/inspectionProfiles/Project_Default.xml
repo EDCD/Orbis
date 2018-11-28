@@ -5,7 +5,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="357">
+          <list size="358">
             <item index="0" class="java.lang.String" itemvalue="nobr" />
             <item index="1" class="java.lang.String" itemvalue="noembed" />
             <item index="2" class="java.lang.String" itemvalue="comment" />
@@ -363,6 +363,7 @@
             <item index="354" class="java.lang.String" itemvalue="@select.capture" />
             <item index="355" class="java.lang.String" itemvalue="@select.self" />
             <item index="356" class="java.lang.String" itemvalue="v-bind:key" />
+            <item index="357" class="java.lang.String" itemvalue="slot-scope" />
           </list>
         </value>
       </option>
