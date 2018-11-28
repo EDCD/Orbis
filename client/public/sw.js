@@ -9,7 +9,7 @@ if (workbox) {
 	});
 
 	workbox.routing.registerRoute(
-		/\/(.*)/,
+		/^\/((?!api).)*$/,
 		workbox.strategies.staleWhileRevalidate()
 	);
 
