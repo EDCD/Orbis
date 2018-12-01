@@ -26,22 +26,13 @@
 				<v-btn @click="deleteAnnouncement(announce);">Delete</v-btn>
 			</v-alert>
 		</v-flex>
-		<v-layout row wrap>
-			<v-flex xs12 sm6>
-				<v-text-field
-					v-model="startFeature"
-					label="Build ID to feature"
-				></v-text-field>
-				<v-btn @click="startFeaturing">Start feature for 7 days</v-btn>
-			</v-flex>
-			<v-flex xs12 sm6>
-				<v-text-field
-					v-model="stopFeature"
-					label="Build ID to stop featuring"
-				></v-text-field>
-				<v-btn @click="stopFeaturing">Stop feature prematurely</v-btn>
-			</v-flex>
-		</v-layout>
+		<AdminFeatureBuilds
+			:loading="loading"
+			:start-feature="startFeature"
+			:start-featuring="startFeaturing"
+			:stop-feature="stopFeature"
+			:stop-featuring="stopFeaturing"
+		/>
 		<!-- <v-pagination -->
 		<!-- v-show="builds" -->
 		<!-- v-model="page" -->
@@ -53,10 +44,11 @@
 </template>
 
 <script>
-import AddAnnouncement from '../components/AddAnnouncement';
+import AddAnnouncement from '../components/AdminAddAnnouncement';
+import AdminFeatureBuilds from '../components/AdminFeatureBuilds';
 
 export default {
-	components: { AddAnnouncement },
+	components: { AdminFeatureBuilds, AddAnnouncement },
 	data: () => {
 		return {
 			alert: true,
@@ -103,22 +95,30 @@ export default {
 			this.loading = false;
 		},
 		async stopFeaturing() {
+			this.loading = true;
 			await this.$store.dispatch('stopFeatureBuild', this.stopFeature);
+			this.loading = false;
 		},
 		async startFeaturing() {
+			this.loading = true;
 			await this.$store.dispatch('featureBuild', this.startFeature);
+			this.loading = false;
 		},
 		async deleteAnnouncement(item) {
+			this.loading = true;
 			await this.$store.dispatch('deleteAnnouncement', { id: item.id });
 			await this.$store.dispatch('getAnnouncements');
 			await this.$store.dispatch('getAdminAnnouncements');
+			this.loading = false;
 		},
 		async paginate() {
+			this.loading = true;
 			await this.$store.dispatch('getBuilds', {
 				pageSize: this.pageSize,
 				offset: this.offset,
 				search: this.searchData
 			});
+			this.loading = false;
 		}
 	}
 };

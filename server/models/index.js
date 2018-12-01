@@ -30,6 +30,9 @@ db[ShipVoteModel.name] = ShipVoteModel;
 const AnnouncementModel = sequelize.import('./announcement.js');
 db[AnnouncementModel.name] = AnnouncementModel;
 
+ShipModel.belongsTo(UserModel);
+ShipVoteModel.belongsTo(ShipModel);
+
 Object.keys(db).forEach(modelName => {
 	if (db[modelName].associate) {
 		db[modelName].associate(db);
