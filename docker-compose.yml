@@ -74,6 +74,7 @@ services:
     environment:
       POSTGRESQL_PASSWORD: ${PG_PASSWORD}
       POSTGRESQL_USERNAME: orbis
+      POSTGRESQL_DATABASE: orbis
 
 
 networks:
