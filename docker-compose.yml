@@ -56,7 +56,7 @@ services:
     - "traefik.port=9000"
     - "traefik.protocol=http"
   orbis_db:
-    image: postgres:latest
+    image: bitnami/postgresql:latest
     env_file:
       - .env
     healthcheck:
@@ -69,11 +69,11 @@ services:
     ports:
       - 127.0.0.1:5433:5432
     volumes:
-      - orbis_data:/var/lib/postgresql/data
+      - orbis_data:/bitnami
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_USER: orbis
+      POSTGRESQL_PASSWORD: ${PG_PASSWORD}
+      POSTGRESQL_USERNAME: orbis
 
 
 networks:
