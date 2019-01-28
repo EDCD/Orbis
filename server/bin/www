@@ -19,7 +19,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 const server = http.createServer(app);
-models.sequelize.sync({ force: false }).then(function() {
+models.sequelize.sync({ force: false, alter: false }).then(function() {
 	/**
 	 * Listen on provided port, on all network interfaces.
 	 */

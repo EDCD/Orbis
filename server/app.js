@@ -8,10 +8,72 @@ const session = require('express-session');
 const models = require('./models');
 const responseTime = require('response-time');
 const Keycloak = require('keycloak-connect');
-const { getUserInfo } = require('./keycloak');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./api-spec.json');
 const SQLiteStore = require('connect-sqlite3')(session);
+const passport = require('passport');
+const Auth0Strategy = require('passport-auth0');
+
+Auth0Strategy.prototype.authorizationParams = function(options) {
+	var options = options || {};
+
+	var params = {};
+	if (options.connection && typeof options.connection === 'string') {
+		params.connection = options.connection;
+	}
+	if (options.audience && typeof options.audience === 'string') {
+		params.audience = options.audience;
+	}
+	if (options.prompt && typeof options.prompt === 'string') {
+		params.prompt = options.prompt;
+	}
+	if (options.login_hint && typeof options.login_hint === 'string') {
+		params.login_hint = options.login_hint;
+	}
+
+	if (options.scope && typeof options.scope === 'string') {
+		params.scope = options.scope;
+	}
+
+	return params;
+};
+
+const strategy = new Auth0Strategy(
+	{
+		domain: process.env.AUTH0_DOMAIN,
+		clientID: process.env.AUTH0_CLIENT_ID,
+		issuer: 'auth.willb.info',
+		scope: 'openid email profile app_metadata user_metadata roles',
+		clientSecret: process.env.AUTH0_CLIENT_SECRET,
+		callbackURL:
+			process.env.AUTH0_CALLBACK_URL ||
+			'http://localhost:3030/api/callback'
+	},
+	function(accessToken, refreshToken, extraParams, profile, done) {
+		// accessToken is the token to call Auth0 API (not needed in the most cases)
+		// extraParams.id_token has the JSON Web Token
+		// profile has all the information from the user
+		models.User.findOrCreate({
+			where: { id: profile.id },
+			defaults: {
+				nickname: profile.nickname,
+				admin: profile._json.app_metadata.admin || false,
+				email: profile.emails[0].value
+			}
+		})
+			.spread((user, created) => {
+				if (created) {
+					console.info(`Created user ${user.nickname}`);
+					console.info(JSON.stringify(user));
+				}
+			})
+			.catch(err => {
+				console.error(err);
+			});
+		return done(null, profile);
+	}
+);
+passport.use(strategy);
 
 const { Ship } = models;
 
@@ -41,11 +103,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const sessionStore = new SQLiteStore();
 
-const keycloak = new Keycloak(
-	{ store: sessionStore /*, scope: 'offline_access'*/ },
-	null
-);
-
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
@@ -61,10 +118,40 @@ app.use(
 	})
 );
 
-exports.keycloak = keycloak;
+passport.serializeUser(function(user, done) {
+	done(null, user);
+});
 
-app.use(keycloak.middleware({ logout: '/api/logout' }));
-app.use(getUserInfo);
+passport.deserializeUser(function(user, done) {
+	done(null, user);
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+function secured(req, res, next) {
+	if (req.user) {
+		return next();
+	}
+	req.session.returnTo = req.originalUrl;
+	res.redirect('/login');
+}
+
+function securedAdmin(req, res, next) {
+	if (
+		req.user &&
+		req.user._json &&
+		req.user._json.app_metadata &&
+		req.user._json.app_metadata.admin === true
+	) {
+		return next();
+	}
+	req.session.returnTo = req.originalUrl;
+	res.redirect('/api/auth');
+}
+
+exports.secured = secured;
+exports.securedAdmin = securedAdmin;
 
 app.get('/', (req, res) => {
 	return res.status(200).end();

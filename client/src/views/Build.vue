@@ -1,5 +1,5 @@
 <template>
-	<v-container grid-list-md text-xs-center>
+	<v-container v-if="this.forgeShipCode" grid-list-md text-xs-center>
 		<v-layout row justify-space-around wrap="">
 			<v-snackbar v-model="snackbar" :timeout="6000" :top="true">
 				{{ buildSavedText }}
@@ -12,8 +12,8 @@
 					<v-layout>
 						<v-flex xs5>
 							<v-img
-								:lazy-src="lazyLoad(ship.proxiedImage)"
-								:src="fullUrl(ship.proxiedImage)"
+								:lazy-src="lazyLoad(forgeShipCode.proxiedImage)"
+								:src="fullUrl(forgeShipCode.proxiedImage)"
 								height="256px"
 								contain
 							></v-img>
@@ -21,18 +21,22 @@
 						<v-flex xs7>
 							<v-card-title primary-title>
 								<div>
-									<div class="headline">{{ ship.title }}</div>
-									<div>By {{ ship.username }}</div>
+									<div class="headline">
+										{{ forgeShipCode.title }}
+									</div>
+									<div>By {{ forgeShipCode.username }}</div>
 									<div>
 										<v-btn
 											color="primary"
 											target="_blank"
 											rel="noopener noreferrer"
 											v-if="
-												ship.coriolisShip &&
-													ship.coriolisShip.url
+												forgeShipCode.coriolisShip &&
+													forgeShipCode.url
 											"
-											:href="ship.coriolisShip.url"
+											:href="
+												forgeShipCode.url
+											"
 										>
 											Edit build on Coriolis.io
 										</v-btn>
@@ -46,7 +50,7 @@
 									<div>
 										<v-btn
 											color="primary"
-											v-if="ship.allowedToEdit"
+											v-if="forgeShipCode.allowedToEdit"
 											:to="`/edit/${$route.params.id}`"
 										>
 											Edit build details
@@ -54,7 +58,7 @@
 									</div>
 									<div>Description</div>
 									<v-textarea
-										:value="ship.description"
+										:value="forgeShipCode.description"
 										readonly
 									></v-textarea>
 								</div>
@@ -69,8 +73,8 @@
 						<v-layout
 							v-if="
 								ship &&
-									ship.coriolisShip &&
-									ship.coriolisShip.armour
+									forgeShipCode.coriolisShip &&
+									forgeShipCode.armour
 							"
 							row
 							wrap
@@ -78,45 +82,75 @@
 						>
 							<v-flex xs4
 								>Armour:
-								{{ formats.int(ship.coriolisShip.armour) }}
+								{{
+									formats.int(
+										forgeShipCode.coriolisforgeShipCode
+											.armour
+									)
+								}}
 							</v-flex>
 							<v-flex xs4
 								>Shield:
-								{{ formats.int(ship.coriolisShip.shield) }}
+								{{
+									formats.int(
+										forgeShipCode.coriolisforgeShipCode
+											.shield
+									)
+								}}
 								{{ units.MJ }}
 							</v-flex>
 							<v-flex xs4
 								>Top Speed:
-								{{ formats.int(ship.coriolisShip.topBoost) }}
+								{{
+									formats.int(
+										forgeShipCode.coriolisforgeShipCode
+											.topBoost
+									)
+								}}
 								{{ units['m/s'] }}
 							</v-flex>
 							<v-flex xs4>
 								Hull Thermal Res:
 								{{
-									formats.pct1(ship.coriolisShip.hullThermRes)
+									formats.pct1(
+										forgeShipCode.coriolisforgeShipCode
+											.hullThermRes
+									)
 								}}
 							</v-flex>
 							<v-flex xs4>
 								Hull Explosive Res:
 								{{
-									formats.pct1(ship.coriolisShip.hullExplRes)
+									formats.pct1(
+										forgeShipCode.coriolisforgeShipCode
+											.hullExplRes
+									)
 								}}
 							</v-flex>
 							<v-flex xs4>
 								Hull Kinetic Res:
-								{{ formats.pct1(ship.coriolisShip.hullKinRes) }}
+								{{
+									formats.pct1(
+										forgeShipCode.coriolisforgeShipCode
+											.hullKinRes
+									)
+								}}
 							</v-flex>
 							<v-flex xs4>
 								Hull Caustic Res:
 								{{
-									formats.pct1(ship.coriolisShip.hullCausRes)
+									formats.pct1(
+										forgeShipCode.coriolisforgeShipCode
+											.hullCausRes
+									)
 								}}
 							</v-flex>
 							<v-flex xs4>
 								Shield Thermal Res:
 								{{
 									formats.pct1(
-										ship.coriolisShip.shieldThermRes
+										forgeShipCode.coriolisforgeShipCode
+											.shieldThermRes
 									)
 								}}
 							</v-flex>
@@ -124,14 +158,18 @@
 								Shield Explosive Res:
 								{{
 									formats.pct1(
-										ship.coriolisShip.shieldExplRes
+										forgeShipCode.coriolisforgeShipCode
+											.shieldExplRes
 									)
 								}}
 							</v-flex>
 							<v-flex xs4>
 								Shield Explosive Res:
 								{{
-									formats.pct1(ship.coriolisShip.shieldKinRes)
+									formats.pct1(
+										forgeShipCode.coriolisforgeShipCode
+											.shieldKinRes
+									)
 								}}
 							</v-flex>
 						</v-layout>
@@ -140,7 +178,9 @@
 						<Module
 							:formats="
 								formats.pct1(
-									mod.power / ship.coriolisShip.powerAvailable
+									mod.power /
+										forgeShipCode.coriolisforgeShipCode
+											.powerAvailable
 								)
 							"
 							:mod="mod"
@@ -159,6 +199,7 @@
 import { getLanguage } from '../i18n/Language';
 import { Modules } from 'coriolis-data/dist/index';
 import Module from '../components/Module';
+import { Ship } from 'ed-forge';
 
 const lang = getLanguage();
 export default {
@@ -170,6 +211,7 @@ export default {
 			units: lang.units,
 			saving: false,
 			snackbar: false,
+			ship: null,
 			buildSavedText: 'Build has been saved to coriolis.io',
 			coriolisBuilds: null,
 			translate: lang.translate
@@ -180,11 +222,12 @@ export default {
 			if (!module || !module.m || module.type === 'SHIP') {
 				return undefined;
 			}
-			return Object.assign(
-				{},
-				findModule(module.m.grp, module.m.id),
-				module
-			);
+			return module;
+			// return Object.assign(
+			// {},
+			// findModule(module.m.grp, module.m.id),
+			// module
+			// );
 		},
 
 		lazyLoad(url) {
@@ -206,10 +249,12 @@ export default {
 			if (!builds) {
 				builds = {};
 			}
-			if (!builds[this.ship.coriolisShip.id]) {
-				builds[this.ship.coriolisShip.id] = {};
+			if (!builds[this.forgeShipCode.coriolisShip.id]) {
+				builds[this.forgeShipCode.coriolisShip.id] = {};
 			}
-			builds[this.ship.coriolisShip.id][this.ship.title] = this.shipCode;
+			builds[this.forgeShipCode.coriolisShip.id][
+				this.forgeShipCode.title
+			] = this.forgeShipCodeCode;
 			xdLocalStorage.setItem('builds', JSON.stringify(builds), data => {
 				console.log(data);
 				this.snackbar = true;
@@ -254,55 +299,44 @@ export default {
 		}
 	},
 	computed: {
-		ship() {
+		forgeShipCode() {
 			return this.$store.state.Build.build;
 		},
 		shipCode() {
 			if (
-				!this.ship ||
-				!this.ship.coriolisShip ||
-				!this.ship.coriolisShip.serialized
+				!this.forgeShipCode ||
+				!this.forgeShipCode.coriolisShip ||
+				!this.forgeShipCode.coriolisShip.serialized
 			) {
 				return '';
 			}
 			return [
 				'A',
-				this.ship.coriolisShip.serialized.standard,
-				this.ship.coriolisShip.serialized.hardpoints,
-				this.ship.coriolisShip.serialized.internal,
+				this.forgeShipCode.coriolisShip.serialized.standard,
+				this.forgeShipCode.coriolisShip.serialized.hardpoints,
+				this.forgeShipCode.coriolisShip.serialized.internal,
 				'.',
-				this.ship.coriolisShip.serialized.enabled,
+				this.forgeShipCode.coriolisShip.serialized.enabled,
 				'.',
-				this.ship.coriolisShip.serialized.priorities,
+				this.forgeShipCode.coriolisShip.serialized.priorities,
 				'.',
-				this.ship.coriolisShip.serialized.modifications
+				this.forgeShipCode.coriolisShip.serialized.modifications
 			].join('');
 		},
 		modules() {
-			if (
-				!this.ship ||
-				!this.ship.coriolisShip ||
-				!this.ship.coriolisShip.costList
-			) {
+			if (!this.ship) {
 				return;
 			}
-			return this.ship.coriolisShip.costList
-				.filter(module => module || module.m || module.type !== 'SHIP')
-				.map(e => {
-					if (!e || !e.m) {
-						return undefined;
-					}
-					return Object.assign(
-						{},
-						this.findModule(e.m.grp, e.m.id),
-						e
-					);
-				})
-				.filter(mod => !!mod);
+			return this.ship.getModules();
 		}
 	},
 	async beforeMount() {
 		await this.$store.dispatch('getBuild', this.$route.params.id);
+		try {
+			this.ship = new Ship(this.forgeShipCode.forgeShip);
+		} catch (e) {
+			console.error(e);
+		}
 		console.log(window.xdLocalStorage);
 		if (window.xdLocalStorage.wasInit()) {
 			console.log('Got iframe ready');

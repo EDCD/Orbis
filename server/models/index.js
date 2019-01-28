@@ -19,19 +19,19 @@ if (config.use_env_variable) {
 }
 
 const UserModel = sequelize.import('./user.js');
-db[UserModel.name] = UserModel;
+db['User'] = UserModel;
 
 const ShipModel = sequelize.import('./ship.js');
-db[ShipModel.name] = ShipModel;
+db['Ship'] = ShipModel;
 
 const ShipVoteModel = sequelize.import('./shipvote.js');
-db[ShipVoteModel.name] = ShipVoteModel;
+db['ShipVote'] = ShipVoteModel;
 
 const AnnouncementModel = sequelize.import('./announcement.js');
 db[AnnouncementModel.name] = AnnouncementModel;
 
-ShipModel.belongsTo(UserModel);
-ShipVoteModel.belongsTo(ShipModel);
+UserModel.hasMany(ShipModel);
+ShipModel.belongsTo(UserModel, { foreignKey: 'userId', as: 'User' });
 
 Object.keys(db).forEach(modelName => {
 	if (db[modelName].associate) {

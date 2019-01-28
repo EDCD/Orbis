@@ -157,3 +157,5 @@ client/dist
 server/keycloak\.json
 
 server/sessions
+
+export/

@@ -1,6 +1,6 @@
 const express = require('express');
 const models = require('../models');
-const { keycloak } = require('../app');
+const { secured, securedAdmin } = require('../app');
 const { Op } = require('sequelize');
 
 const { Ship, ShipVote, User, Announcement } = models;
@@ -17,7 +17,7 @@ function isAuthenticated(req, res, next) {
 	});
 }
 
-router.post('/users', keycloak.protect('Admin'), (req, res) => {
+router.post('/users', securedAdmin, (req, res) => {
 	let { order, field, search } = req.body;
 	console.log(field);
 	console.log(order);
@@ -40,7 +40,7 @@ router.post('/users', keycloak.protect('Admin'), (req, res) => {
 		});
 });
 
-router.post('/user/update', keycloak.protect('Admin'), (req, res) => {
+router.post('/user/update', securedAdmin, (req, res) => {
 	const body = req.body;
 	if (!req.body || !body.id) {
 		return res.status(400).json(req.body);
@@ -61,7 +61,7 @@ router.post('/user/update', keycloak.protect('Admin'), (req, res) => {
 	return res.status(200).json({});
 });
 
-router.post('/ships', keycloak.protect('Admin'), (req, res) => {
+router.post('/ships', securedAdmin, (req, res) => {
 	let { order, field, search } = req.body;
 	console.log(field);
 	console.log(order);
@@ -98,7 +98,7 @@ router.post('/ships', keycloak.protect('Admin'), (req, res) => {
 		});
 });
 
-router.post('/ship/update', keycloak.protect('Admin'), (req, res) => {
+router.post('/ship/update', securedAdmin, (req, res) => {
 	const body = req.body;
 	if (!req.body || !body.id) {
 		return res.status(400).json({});
@@ -133,7 +133,7 @@ router.post('/ship/update', keycloak.protect('Admin'), (req, res) => {
 	return res.status(200).json({});
 });
 
-router.get('/announcements', keycloak.protect('Admin'), (req, res) => {
+router.get('/announcements', securedAdmin, (req, res) => {
 	return Announcement.findAll({
 		where: {
 			expiresAt: {
@@ -148,39 +148,31 @@ router.get('/announcements', keycloak.protect('Admin'), (req, res) => {
 		});
 });
 
-router.post(
-	'/announcement/add',
-	keycloak.protect('Admin'),
-	async (req, res) => {
-		if (!req.body) {
-			return res.status(400).json({});
-		}
-		const announcement = await Announcement.create(req.body);
-		return res.status(200).json({ created: true, announcement });
+router.post('/announcement/add', securedAdmin, async (req, res) => {
+	if (!req.body) {
+		return res.status(400).json({});
 	}
-);
+	const announcement = await Announcement.create(req.body);
+	return res.status(200).json({ created: true, announcement });
+});
 
-router.post(
-	'/announcement/delete',
-	keycloak.protect('Admin'),
-	async (req, res) => {
-		const body = req.body;
-		if (!req.body || !body.id) {
-			return res.status(400).json({});
-		}
-		const announcement = await Announcement.find({
-			where: {
-				id: req.body.id
-			}
-		});
-		if (announcement) {
-			await announcement.destroy();
-		}
-		return res.status(200).json({ deleted: true });
+router.post('/announcement/delete', securedAdmin, async (req, res) => {
+	const body = req.body;
+	if (!req.body || !body.id) {
+		return res.status(400).json({});
 	}
-);
+	const announcement = await Announcement.find({
+		where: {
+			id: req.body.id
+		}
+	});
+	if (announcement) {
+		await announcement.destroy();
+	}
+	return res.status(200).json({ deleted: true });
+});
 
-router.post('/feature/add', keycloak.protect('Admin'), async (req, res) => {
+router.post('/feature/add', securedAdmin, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).json({});
 	}
@@ -194,7 +186,7 @@ router.post('/feature/add', keycloak.protect('Admin'), async (req, res) => {
 	return res.status(200).json({ created: true, ship });
 });
 
-router.post('/feature/delete', keycloak.protect('Admin'), async (req, res) => {
+router.post('/feature/delete', securedAdmin, async (req, res) => {
 	const ship = await Ship.findOne({ where: { shortid: req.body.id } });
 	if (!ship) {
 		return res.status(400).json({});

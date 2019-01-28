@@ -7,7 +7,7 @@
 			<v-toolbar-title>Orbis.zone</v-toolbar-title>
 			<v-spacer></v-spacer>
 			<v-tooltip v-if="loggedIn" bottom>
-				<v-btn large :to="`/profile/${user.username}`" slot="activator">
+				<v-btn large :to="`/profile/${user.nickname}`" slot="activator">
 					My Profile
 				</v-btn>
 				<span>My Profile</span>

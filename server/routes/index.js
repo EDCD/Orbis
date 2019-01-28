@@ -1,7 +1,8 @@
 const express = require('express');
 const models = require('../models');
-const { keycloak } = require('../app');
 const Sequelize = require('sequelize');
+const passport = require('passport');
+const { secured, securedAdmin } = require('../app');
 
 const { Announcement } = models;
 const { Op } = Sequelize;
@@ -12,24 +13,40 @@ function isAuthenticated(req, res, next) {
 	if (req.user) {
 		return next();
 	}
-	if (
-		Object.keys(req.kauth).length === 0 &&
-		req.kauth.constructor === Object
-	) {
-		return res.status(401).json({
-			error: 'User not authenticated'
-		});
-	}
-	if (req.kauth) {
-		return next();
-	}
 	return res.status(401).json({
 		error: 'User not authenticated'
 	});
 }
 
 router.get('/', (req, res) => {
-	res.status(200).end();
+	res.status(200).json(req.user);
+});
+
+router.get(
+	'/auth',
+	passport.authenticate('auth0', {
+		scope: 'openid email profile app_metadata user_metadata roles'
+	}),
+	function(req, res) {
+		res.redirect('/');
+	}
+);
+
+// Perform the final stage of authentication and redirect to previously requested URL or '/user'
+router.get(
+	'/callback',
+	passport.authenticate('auth0', { failureRedirect: '/api/auth' }),
+	(req, res) => {
+		if (!req.user) {
+			throw new Error('user null');
+		}
+		res.redirect('/');
+	}
+);
+
+router.get('/logout', (req, res) => {
+	req.logout();
+	res.redirect('/');
 });
 
 router.get('/announcement', (req, res) => {
@@ -52,31 +69,18 @@ router.get('/announcement', (req, res) => {
 		});
 });
 
-// Start authentication request
-// options [optional], extra authentication parameters
-router.get('/auth', keycloak.protect(), (req, res) => {
-	res.redirect('/');
-});
-
-router.get('/logout', (req, res) => {
-	console.log(req.user);
-	req.logout();
-	res.redirect('/');
-});
-
-router.get('/checkauth', isAuthenticated, (req, res) => {
+router.get('/checkauth', secured, (req, res) => {
 	return res.status(200).json({
 		status: 'Login successful!',
-		accessToken: req.kauth.grant.access_token.token,
 		user: req.user,
 		admin: req.user.admin
 	});
 });
 
-router.get('/checkauth/admin', keycloak.protect('Admin'), (req, res) => {
+router.get('/checkauth/admin', securedAdmin, (req, res) => {
 	return res.status(200).json({
 		status: 'Login successful!',
-		accessToken: req.kauth.grant.access_token.token,
+		user: req.user,
 		admin: req.user.admin
 	});
 });

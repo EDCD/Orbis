@@ -6,9 +6,10 @@ module.exports = (sequelize, DataType) => {
 		'Ship',
 		{
 			id: {
-				type: DataType.UUID,
+				type: DataType.TEXT,
 				defaultValue: DataType.UUIDV1,
-				primaryKey: true
+				primaryKey: true,
+				unique: true
 			},
 			shortid: {
 				type: DataType.TEXT,
@@ -17,6 +18,9 @@ module.exports = (sequelize, DataType) => {
 			},
 			coriolisShip: {
 				type: DataType.JSONB
+			},
+			forgeShip: {
+				type: DataType.TEXT
 			},
 			ShipName: {
 				type: DataType.TEXT
@@ -36,6 +40,9 @@ module.exports = (sequelize, DataType) => {
 			Ship: {
 				type: DataType.TEXT
 			},
+			shipId: {
+				type: DataType.TEXT
+			},
 			url: {
 				type: DataType.TEXT
 			},
@@ -50,6 +57,13 @@ module.exports = (sequelize, DataType) => {
 			},
 			updatedAt: {
 				type: DataType.DATE
+			},
+			userId: {
+				type: DataType.TEXT,
+				references: {
+					model: 'User',
+					key: 'id'
+				}
 			},
 			privacy: {
 				type: DataType.ENUM('public', 'owner', 'shared'),
@@ -105,9 +119,7 @@ module.exports = (sequelize, DataType) => {
 	);
 
 	Ship.beforeCreate(ship => {
-		delete ship.author.family_name;
-		delete ship.author.given_name;
-		ship.imageURL = `https://orbis.zone/${ship.coriolisShip.id}.jpg`;
+		ship.imageURL = `https://orbis.zone/${ship.Ship}.jpg`;
 
 		ship.proxiedImage =
 			`${process.env.IMGPROXY_BASE_URL}/resize?url=${

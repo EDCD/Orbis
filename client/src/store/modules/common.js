@@ -56,7 +56,7 @@ export default {
 			}
 			state.user = data.user;
 			window.bugsnagClient.user = state.user;
-			state.admin = data.admin;
+			state.admin = data.user._json.app_metadata.admin;
 			state.accessToken = data.accessToken;
 		}
 	},

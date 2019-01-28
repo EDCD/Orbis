@@ -110,6 +110,7 @@
 import { getLanguage } from '../i18n/Language';
 import { Modules } from 'coriolis-data/dist/index';
 import router from '../router';
+import { Ship } from 'ed-forge';
 
 const lang = getLanguage();
 export default {
@@ -134,6 +135,7 @@ export default {
 					'Title must be less than 50 characters'
 			],
 			disabled: true,
+			forgeShip: null,
 			loading: false,
 			imageURL: '',
 			privacyItems: ['public', 'owner', 'shared'],
@@ -298,6 +300,9 @@ export default {
 			const updates = {};
 			if (this.title && this.title !== this.ship.title) {
 				updates.title = this.title;
+				if (this.forgeShip) {
+					this.forgeShip.setShipName(this.title);
+				}
 			}
 			if (this.imageURL && this.imageURL !== this.ship.imageURL) {
 				updates.imageURL = this.imageURL;
@@ -338,6 +343,7 @@ export default {
 	},
 	async mounted() {
 		await this.$store.dispatch('getBuild', this.$route.params.id);
+		this.forgeShip = new Ship(this.ship.forgeShip);
 		this.imageURL = this.ship.imageURL;
 		this.description = this.ship.description;
 		this.title = this.ship.title;

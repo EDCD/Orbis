@@ -5,12 +5,15 @@ module.exports = (sequelize, DataType) => {
 		'ShipVote',
 		{
 			userId: {
-				type: DataType.UUID,
+				type: DataType.TEXT,
 				allowNull: false,
-				primaryKey: true
+				references: {
+					model: 'User',
+					key: 'id'
+				}
 			},
 			shipId: {
-				type: DataType.UUID,
+				type: DataType.TEXT,
 				allowNull: false,
 				primaryKey: true,
 				references: {
@@ -41,15 +44,20 @@ module.exports = (sequelize, DataType) => {
 
 	function updateVotesColumn(instance) {
 		const { Ship } = require('.');
-		Ship.find({ where: { id: instance.shipId } }).then(async ship => {
+		Ship.findOne({ where: { id: instance.shipId } }).then(async ship => {
 			if (!ship) {
 				return;
 			}
-			ship.likes = await ShipVote.sum('vote', {
+			const likes = await ShipVote.sum('vote', {
 				where: {
 					shipId: ship.id
 				}
 			});
+			if (isNaN(likes)) {
+				ship.likes = instance.vote;
+			} else {
+				ship.likes = likes;
+			}
 			ship.save();
 		});
 	}

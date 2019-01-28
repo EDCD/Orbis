@@ -12,6 +12,7 @@
 		"@bugsnag/plugin-vue": "^5.0.1",
 		"coriolis-data": "github:edcd/coriolis-data",
 		"d3": "^5.7.0",
+		"ed-forge": "../../ed-forge/",
 		"lodash": "^4.17.11",
 		"register-service-worker": "^1.0.0",
 		"vue": "^2.5.17",

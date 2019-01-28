@@ -24,7 +24,7 @@ router.post('/', isAuthenticated, (req, res) => {
 		return res.status(400).end();
 	}
 	return ShipVote.upsert({
-		userId: author.keycloakId,
+		userId: author.id,
 		shipId: req.body.shipId,
 		vote: req.body.vote
 	})

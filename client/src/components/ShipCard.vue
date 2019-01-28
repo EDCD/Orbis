@@ -53,6 +53,7 @@
 
 <script>
 import _ from 'lodash';
+import { Ship } from 'ed-forge';
 
 export default {
 	name: 'ShipCard',
@@ -72,8 +73,16 @@ export default {
 	},
 	data() {
 		return {
-			score: this.likes
+			score: this.likes,
+			ship: null
 		};
+	},
+	mounted() {
+		try {
+			this.ship = new Ship(this.forgeShip);
+		} catch (e) {
+			console.error(e);
+		}
 	},
 	methods: {
 		orbisLink(id) {
@@ -108,6 +117,7 @@ export default {
 		imageURL: String,
 		id: String,
 		username: String,
+		forgeShip: String,
 		likes: Number,
 		dbId: String,
 		description: String

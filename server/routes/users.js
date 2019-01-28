@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
 	try {
 		user = await User.create({
 			email: req.body.email,
-			username: req.body.username,
+			nickname: req.body.username,
 			password: req.body.password
 		});
 	} catch (err) {
@@ -66,22 +66,30 @@ router.post('/profile/:name', (req, res) => {
 			'shortid',
 			'title',
 			'description',
-			[sequelize.json('author.username'), 'username'],
-			'author',
+			// [sequelize.json('author.username'), 'username'],
+			// 'author',
 			'Ship',
 			'likes',
 			'url',
 			'proxiedImage'
 		],
+		include: [
+			{
+				model: User,
+				as: 'User',
+				// where: {
+				// 	nickname: username
+				// }
+			}
+		],
 		where: {
-			'author.username': username,
 			[Op.or]: [
 				{
 					privacy: 'public'
 				},
 				{
 					privacy: 'owner',
-					'author.id': id
+					userId: id
 				},
 				{
 					sharedAccounts: {
@@ -111,7 +119,7 @@ router.post('/profile/:name', (req, res) => {
 
 router.get('/list', (req, res) => {
 	return User.findAndCountAll({
-		attributes: ['id', 'username']
+		attributes: ['id', 'nickname']
 	})
 		.then(users => res.json(users))
 		.catch(err => {

@@ -29,6 +29,7 @@
 		"morgan": "^1.9.1",
 		"openid-client": "^2.4.4",
 		"passport": "^0.4.0",
+		"passport-auth0": "^1.1.0",
 		"passport-oauth2-refresh": "^1.1.0",
 		"patreon": "^0.4.1",
 		"pg": "^7.6.0",

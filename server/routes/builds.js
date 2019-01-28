@@ -2,8 +2,8 @@ const express = require('express');
 const models = require('../models');
 const _ = require('lodash');
 const RateLimit = require('express-rate-limit');
-const { keycloak } = require('../app');
-const { Ship, ShipVote, sequelize } = models;
+const { secured, securedAdmin } = require('../app');
+const { Ship, ShipVote, sequelize, User } = models;
 const router = express.Router();
 
 const addLimiter = new RateLimit({
@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
 				},
 				{
 					privacy: 'owner',
-					'author.id': id
+					userId: id
 				},
 				{
 					sharedAccounts: {
@@ -58,13 +58,15 @@ router.post('/', (req, res) => {
 			'shortid',
 			'category',
 			'title',
+			'forgeShip',
 			'description',
-			[sequelize.json('author.username'), 'username'],
-			[sequelize.json('coriolisShip.url'), 'url'],
+			// [sequelize.json('coriolisShip.url'), 'url'],
 			'Ship',
+			'userId',
 			'likes',
 			'proxiedImage'
-		]
+		],
+		include: [{ model: User, as: 'User' }]
 	};
 	if (search && search.key && search.value) {
 		query.where[search.key] = {
@@ -106,7 +108,6 @@ router.get('/featured', (req, res) => {
 			'featured',
 			'title',
 			'description',
-			[sequelize.json('author.username'), 'username'],
 			[sequelize.json('coriolisShip.url'), 'url'],
 			'Ship',
 			'likes',
@@ -199,16 +200,16 @@ router.get('/:id', (req, res) =>
 			'shortid',
 			'title',
 			'description',
+			'forgeShip',
 			'privacy',
 			'sharedAccounts',
 			'sharedAccountUsernames',
-			[sequelize.json('author.username'), 'username'],
-			[sequelize.json('author.id'), 'authorId'],
 			'imageURL',
 			'url',
 			'proxiedImage',
 			'coriolisShip'
-		]
+		],
+		include: [{ model: User, as: 'User' }]
 	})
 		.then(ships => {
 			if (!ships) {
@@ -236,7 +237,7 @@ router.get('/:id', (req, res) =>
 			ships.allowedToEdit = false;
 			if (req.user) {
 				const isadmin = isAdmin(req);
-				if (req.user.id === ships.authorId || isadmin) {
+				if (req.user.id === ships.User.id || isadmin) {
 					ships.allowedToEdit = true;
 				}
 			}
@@ -258,7 +259,7 @@ function isAuthenticated(req, res, next) {
 	});
 }
 
-router.delete('/:id', keycloak.protect(), async (req, res) => {
+router.delete('/:id', secured, async (req, res) => {
 	const data = req.params;
 	const ship = await Ship.find({
 		where: {
@@ -297,7 +298,7 @@ const cats = [
 	'PvP'
 ];
 
-router.post('/update', keycloak.protect(), async (req, res) => {
+router.post('/update', secured, async (req, res) => {
 	if (!req.body || !req.body.updates) {
 		return res.status(400).end();
 	}
@@ -305,11 +306,12 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 	const ship = await Ship.find({
 		where: {
 			id: data.id
-		}
+		},
+		include: [{ model: User, as: 'User' }]
 	});
 	if (req.user && ship) {
 		const isadmin = isAdmin(req);
-		if (req.user.id === ship.author.id || isadmin) {
+		if (req.user.id === ship.User.id || isadmin) {
 			for (const update in data.updates) {
 				if (
 					!Object.prototype.hasOwnProperty.call(data.updates, update)
@@ -348,13 +350,14 @@ router.post('/update', keycloak.protect(), async (req, res) => {
 	return res.status(500).json({});
 });
 
-router.post('/add', keycloak.protect(), addLimiter, async (req, res) => {
+router.post('/add', secured, addLimiter, async (req, res) => {
 	if (!req.body) {
 		return res.status(400).end();
 	}
 	const data = JSON.parse(JSON.stringify(req.body));
-	data.author = req.user === undefined ? { username: 'Anonymous' } : req.user;
-	const ship = await Ship.create(data);
+	console.log(Object.keys(req.user));
+	data.userId = req.user.id;
+	const ship = await Ship.create({ ...data });
 	return res.json({
 		success: true,
 		id: ship.id,
@@ -363,53 +366,48 @@ router.post('/add', keycloak.protect(), addLimiter, async (req, res) => {
 	});
 });
 
-router.post(
-	'/add/batch',
-	keycloak.protect(),
-	batchAddLimiter,
-	async (req, res) => {
-		if (!req.body) {
-			return res.status(400).end();
-		}
-		let promises = [];
-		const data = JSON.parse(JSON.stringify(req.body));
-		for (const build in data) {
-			data[build].author = req.user;
-			promises.push(
-				Ship.findOrCreate({
-					where: {
-						author: {
-							username: req.user.username
-						},
-						title: data[build].title,
-						ShipName: data[build].ShipName,
-						description: data[build].description
-					},
-					defaults: data[build]
-				})
-			);
-		}
-		return Promise.all(promises)
-			.then(datas => {
-				const returnObj = [];
-				for (const s of datas) {
-					returnObj.push({
-						success: true,
-						id: s.id,
-						ship: 'created',
-						link: `https://orbis.zone/build/${s.shortid}`
-					});
-				}
-				return res.json({
-					totalCreated: returnObj.length,
-					data: returnObj
-				});
-			})
-			.catch(err => {
-				console.error(err);
-				return res.status(500).json({ error: err.message });
-			});
+router.post('/add/batch', secured, batchAddLimiter, async (req, res) => {
+	if (!req.body) {
+		return res.status(400).end();
 	}
-);
+	let promises = [];
+	const data = JSON.parse(JSON.stringify(req.body));
+	for (const build in data) {
+		data[build].author = req.user;
+		promises.push(
+			Ship.findOrCreate({
+				where: {
+					author: {
+						username: req.user.username
+					},
+					title: data[build].title,
+					ShipName: data[build].ShipName,
+					description: data[build].description
+				},
+				defaults: data[build]
+			})
+		);
+	}
+	return Promise.all(promises)
+		.then(datas => {
+			const returnObj = [];
+			for (const s of datas) {
+				returnObj.push({
+					success: true,
+					id: s.id,
+					ship: 'created',
+					link: `https://orbis.zone/build/${s.shortid}`
+				});
+			}
+			return res.json({
+				totalCreated: returnObj.length,
+				data: returnObj
+			});
+		})
+		.catch(err => {
+			console.error(err);
+			return res.status(500).json({ error: err.message });
+		});
+});
 
 module.exports = router;

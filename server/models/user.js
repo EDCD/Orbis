@@ -5,41 +5,34 @@ module.exports = (sequelize, DataType) => {
 		'User',
 		{
 			id: {
-				type: DataType.UUID,
-				defaultValue: DataType.UUIDV1,
-				primaryKey: true
-			},
-			keycloakId: {
-				type: DataType.STRING(255),
-				primaryKey: true
+				type: DataType.TEXT,
+				primaryKey: true,
+				unique: true
 			},
 			admin: {
 				type: DataType.BOOLEAN,
 				defaultValue: false
 			},
 			email: {
-				type: DataType.STRING(255),
-				unique: true,
+				type: DataType.TEXT,
 				validate: { isEmail: true }
 			},
 			badges: {
 				type: DataType.JSONB
 			},
-			username: {
-				type: DataType.STRING(255),
+			nickname: {
+				type: DataType.TEXT,
 				unique: true
 			},
-			imageURL: {
-				type: DataType.STRING(255),
-				unique: false
+			picture: {
+				type: DataType.TEXT
 			}
 		},
 		{
 			indexes: [
 				{ fields: ['email'] },
-				{ fields: ['username'] },
+				{ fields: ['nickname'] },
 				{ fields: ['id'] },
-				{ fields: ['keycloakId'] },
 				{ fields: ['badges'] }
 			],
 			freezeTableName: true

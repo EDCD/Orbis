@@ -1,5 +1,6 @@
 <template>
 	<v-container grid-list-md text-xs-center>
+		<add-build-modal></add-build-modal>
 		<search :loading="loading" @searchUpdate="search"></search>
 		<v-pagination
 			v-show="builds"
@@ -35,9 +36,10 @@
 <script>
 import ShipCard from '../components/ShipCard';
 import Search from '../components/Search';
+import AddBuildModal from '../components/AddBuildModal';
 
 export default {
-	components: { Search, ShipCard },
+	components: { AddBuildModal, Search, ShipCard },
 	data: () => {
 		return {
 			loading: false,
