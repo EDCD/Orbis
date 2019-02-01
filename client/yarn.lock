@@ -3746,7 +3746,7 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-ed-forge@../../ed-forge/:
+ed-forge@../../ed-forge:
   version "1.4.0"
   dependencies:
     ajv "^6.5.4"

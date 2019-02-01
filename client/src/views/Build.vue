@@ -327,7 +327,9 @@ export default {
 			if (!this.ship) {
 				return;
 			}
-			return this.ship.getModules();
+			console.log(this.ship.getModules(null, null, true))
+			debugger
+			return this.ship.getModules(null, null, true);
 		}
 	},
 	async beforeMount() {

@@ -68,6 +68,7 @@ router.post('/profile/:name', (req, res) => {
 			'description',
 			// [sequelize.json('author.username'), 'username'],
 			// 'author',
+			'forgeShip',
 			'Ship',
 			'likes',
 			'url',

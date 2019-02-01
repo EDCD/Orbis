@@ -24,7 +24,7 @@
 		<v-card-actions>
 			<v-flex column>
 				<v-btn :to="orbisLink(id)" flat color="orange">View</v-btn>
-				<v-btn flat color="orange" target="_blank" :href="coriolisLink"
+				<v-btn flat color="orange" v-if="coriolisLink" target="_blank" :href="coriolisLink"
 					>View on Coriolis</v-btn
 				>
 			</v-flex>
@@ -53,7 +53,7 @@
 
 <script>
 import _ from 'lodash';
-import { Ship } from 'ed-forge';
+import { Ship } from 'ed-forge/lib';
 
 export default {
 	name: 'ShipCard',
