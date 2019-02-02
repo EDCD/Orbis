@@ -37,6 +37,10 @@ module.exports = {
 	devServer: {
 		proxy: 'http://localhost:3030',
 		disableHostCheck: true,
-		host: '0.0.0.0'
+		host: '0.0.0.0',
+		watchOptions: {
+			aggregateTimeout: 300,
+			poll: 1000
+		}
 	}
 };

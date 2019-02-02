@@ -3,7 +3,7 @@
 		<v-layout row justify-space-around wrap="">
 			<v-snackbar v-model="snackbar" :timeout="6000" :top="true">
 				{{ buildSavedText }}
-				<v-btn color="pink" flat @click="snackbar = false;">
+				<v-btn color="pink" flat @click="snackbar = false">
 					Close
 				</v-btn>
 			</v-snackbar>
@@ -34,9 +34,7 @@
 												forgeShipCode.coriolisShip &&
 													forgeShipCode.url
 											"
-											:href="
-												forgeShipCode.url
-											"
+											:href="forgeShipCode.url"
 										>
 											Edit build on Coriolis.io
 										</v-btn>
@@ -178,9 +176,10 @@
 						<Module
 							:formats="
 								formats.pct1(
-									mod.power /
-										forgeShipCode.coriolisforgeShipCode
-											.powerAvailable
+									mod.get('power') /
+										ship
+											.getPowerPlant()
+											.get('PowerCapacity')
 								)
 							"
 							:mod="mod"
@@ -327,9 +326,21 @@ export default {
 			if (!this.ship) {
 				return;
 			}
-			console.log(this.ship.getModules(null, null, true))
-			debugger
-			return this.ship.getModules(null, null, true);
+
+			console.log(
+				this.ship
+					.getCoreModules()
+					.concat(this.ship.getInternals())
+					.concat(this.ship.getHardpoints())
+					.concat(this.ship.getUtilities())
+					.concat(this.ship.getHardpoints())
+			);
+			return this.ship
+				.getCoreModules()
+				.concat(this.ship.getInternals())
+				.concat(this.ship.getHardpoints())
+				.concat(this.ship.getUtilities())
+				.concat(this.ship.getHardpoints());
 		}
 	},
 	async beforeMount() {

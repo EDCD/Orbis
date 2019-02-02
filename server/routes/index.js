@@ -32,6 +32,10 @@ router.get(
 	}
 );
 
+router.get('/unauthorized', (req, res) => {
+	return res.status(401).json({});
+})
+
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
 router.get(
 	'/callback',

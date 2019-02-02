@@ -134,7 +134,7 @@ function secured(req, res, next) {
 		return next();
 	}
 	req.session.returnTo = req.originalUrl;
-	res.redirect('/login');
+	res.redirect('/api/unauthorized');
 }
 
 function securedAdmin(req, res, next) {

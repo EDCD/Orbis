@@ -1,27 +1,23 @@
 <template>
-	<v-layout v-if="mod && mod.m" row wrap>
+	<v-layout row wrap>
 		<v-flex align-center xs12>
 			<v-card color="blue-grey darken-2" class="white--text">
 				<v-card-title primary-title>
 					<div class="headline">
-						{{ mod.class }}{{ mod.rating }}
-						{{ mod.m.name || translate }}
+						{{ mod.getClass() === 0 ? '' : mod.getClass()
+						}}{{ mod.getRating() }}
+						{{ mod.read('Item') || translate }}
 					</div>
 				</v-card-title>
 				<v-card-title>
 					<div>
 						<span
 							>Enabled:
-							{{
-								mod.enabled === 1 || mod.m.grp === 'bh'
-									? 'Yes'
-									: 'No'
-							}}<br
+							{{ mod.isEnabled() === true ? 'Yes' : 'No' }}<br
 						/></span>
-						<span v-if="mod.power">
-							Power usage: {{ mod.power }} {{ units.MW }} ({{
-								formats
-							}})<br
+						<span v-if="mod.get('power') > 0">
+							Power usage: {{ mod.get('PowerDraw') }}
+							{{ units.MW }} ({{ formats }})<br
 						/></span>
 
 						<span v-if="mod.mass">
@@ -30,14 +26,9 @@
 						<span v-if="mod.priority">
 							Priority: {{ mod.priority }} <br />
 						</span>
-						<span
-							v-if="
-								mod.m.blueprint &&
-									mod.m.blueprint.name &&
-									mod.m.blueprint.grade
-							"
-							>Engineering: {{ mod.m.blueprint.name }} @ grade
-							{{ mod.m.blueprint.grade }} <br />
+						<span v-if="eng && eng.BlueprintName && eng.Level"
+							>Engineering: {{ eng.BlueprintName }} @ grade
+							{{ eng.Level }} <br />
 						</span>
 						<span v-else> No engineering <br /> </span>
 					</div>
@@ -55,6 +46,11 @@ export default {
 		ship: {},
 		translate: {},
 		units: {}
+	},
+	computed: {
+		eng() {
+			return this.mod.read('Engineering');
+		}
 	}
 };
 </script>
