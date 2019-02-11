@@ -78,6 +78,7 @@ router.post('/profile/:name', (req, res) => {
 			{
 				model: User,
 				as: 'User',
+				attributes: ['nickname']
 				// where: {
 				// 	nickname: username
 				// }

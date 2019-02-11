@@ -13,6 +13,7 @@ const swaggerDocument = require('./api-spec.json');
 const SQLiteStore = require('connect-sqlite3')(session);
 const passport = require('passport');
 const Auth0Strategy = require('passport-auth0');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 Auth0Strategy.prototype.authorizationParams = function(options) {
 	var options = options || {};
@@ -101,7 +102,9 @@ app.use(logger('dev'));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const sessionStore = new SQLiteStore();
+const sessionStore = new SequelizeStore({
+	db: models.sequelize
+});
 
 app.use(
 	session({
@@ -117,6 +120,8 @@ app.use(
 		rolling: true
 	})
 );
+
+sessionStore.sync();
 
 passport.serializeUser(function(user, done) {
 	done(null, user);

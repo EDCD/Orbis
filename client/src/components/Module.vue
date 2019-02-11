@@ -1,12 +1,12 @@
 <template>
 	<v-layout row wrap>
-		<v-flex align-center xs12>
+		<v-flex v-if="mod.readMeta('ukName')" align-center xs12>
 			<v-card color="blue-grey darken-2" class="white--text">
 				<v-card-title primary-title>
 					<div class="headline">
 						{{ mod.getClass() === 0 ? '' : mod.getClass()
 						}}{{ mod.getRating() }}
-						{{ mod.read('Item') || translate }}
+						{{ mod.readMeta('ukName') || translate }}
 					</div>
 				</v-card-title>
 				<v-card-title>

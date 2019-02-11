@@ -4,6 +4,7 @@ const _ = require('lodash');
 const RateLimit = require('express-rate-limit');
 const { secured, securedAdmin } = require('../app');
 const { Ship, ShipVote, sequelize, User } = models;
+const Forge = require('ed-forge');
 const router = express.Router();
 
 const addLimiter = new RateLimit({
@@ -81,6 +82,7 @@ router.post('/', (req, res) => {
 	}
 	return Ship.findAndCountAll(query)
 		.then(async ships => {
+			ships.rows.forEach(s => console.log(s.User));
 			return res.json(ships);
 		})
 		.catch(err => {
@@ -351,22 +353,43 @@ router.post('/update', secured, async (req, res) => {
 });
 
 router.post('/add', secured, addLimiter, async (req, res) => {
-	if (!req.body) {
-		return res.status(400).end();
+	let json;
+	let ship;
+	try {
+		json = req.body;
+	} catch (e) {
+		console.error(e);
 	}
-	const data = JSON.parse(JSON.stringify(req.body));
-	console.log(Object.keys(req.user));
+	if (json && json.forgeShip) {
+		console.log(json);
+		try {
+			ship = new Ship(json.forgeShip);
+		} catch (e) {
+			console.error(e);
+		}
+	} else {
+		return res.status(400).json({
+			error:
+				'Missing .forgeShip (either Journal Loadout event or compressed ed-forge build.'
+		});
+	}
+	if (!ship) {
+		return res.status(500).json({ error: 'Failed to create ship' });
+	}
+	const data = req.body;
+	console.log(req.user)
 	data.userId = req.user.id;
-	const ship = await Ship.create({ ...data });
+	const dbShip = await Ship.create({ ...data });
 	return res.json({
 		success: true,
-		id: ship.id,
+		id: dbShip.id,
 		ship: 'created',
-		link: `https://orbis.zone/build/${ship.shortid}`
+		link: `https://orbis.zone/build/${dbShip.shortid}`
 	});
 });
 
 router.post('/add/batch', secured, batchAddLimiter, async (req, res) => {
+	return res.status(404).end();
 	if (!req.body) {
 		return res.status(400).end();
 	}
