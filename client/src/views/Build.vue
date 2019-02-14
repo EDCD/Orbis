@@ -172,22 +172,18 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
-					<v-card :key="idx" v-for="(mod, idx) in modules">
-						<Module
-							:formats="
-								formats.pct1(
-									mod.get('power') /
-										ship
-											.getPowerPlant()
-											.get('PowerCapacity')
-								)
-							"
-							:mod="mod"
-							:ship="ship"
-							:translate="translate(mod.grp)"
-							:units="units"
-						/>
-					</v-card>
+					<v-layout row wrap>
+						<v-flex xs6 :key="idx" v-for="(mod, idx) in modules">
+							<v-card>
+								<Module
+									:mod="mod"
+									:ship="ship"
+									:translate="translate(mod.grp)"
+									:units="units"
+								/>
+							</v-card>
+						</v-flex>
+					</v-layout>
 				</div>
 			</v-flex>
 		</v-layout>
@@ -340,7 +336,8 @@ export default {
 				.concat(this.ship.getInternals())
 				.concat(this.ship.getHardpoints())
 				.concat(this.ship.getUtilities())
-				.concat(this.ship.getHardpoints());
+				.concat(this.ship.getHardpoints())
+				.filter(m => m.readMeta('ukName'));
 		}
 	},
 	async beforeMount() {

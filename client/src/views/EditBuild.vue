@@ -118,7 +118,7 @@ export default {
 	components: {},
 	data: () => {
 		return {
-			formats: lang.formats,
+			powerFormat: lang.powerFormat,
 			units: lang.units,
 			translate: lang.translate,
 			valid: true,
