@@ -46,12 +46,14 @@
 					></v-text-field>
 					<v-text-field
 						v-model="imageURL"
+						v-if="false"
 						:disabled="disabled"
 						label="Build image (Direct image URL)"
 					></v-text-field>
 					<v-select
 						:items="privacyItems"
 						v-model="privacy"
+						v-if="false"
 						:disabled="disabled"
 						label="Build privacy"
 					></v-select>
@@ -62,6 +64,7 @@
 						label="Build category"
 					></v-select>
 					<v-autocomplete
+						v-if="false"
 						v-model="model"
 						:disabled="disabled || sharedWithDisabled"
 						clearable
@@ -108,11 +111,11 @@
 
 <script>
 import { getLanguage } from '../i18n/Language';
-import { Modules } from 'coriolis-data/dist/index';
 import router from '../router';
 import { Ship } from 'ed-forge';
 
 const lang = getLanguage();
+
 export default {
 	name: 'EditBuild',
 	components: {},

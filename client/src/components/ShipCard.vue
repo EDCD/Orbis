@@ -1,11 +1,6 @@
 <template>
 	<v-card>
-		<v-img
-			class="white--text"
-			:lazy-src="lazyLoad(imageURL)"
-			:src="fullUrl(imageURL)"
-		>
-		</v-img>
+		<v-img class="white--text" v-if="image" :src="image.default"></v-img>
 		<v-card-title primary-title>
 			<v-layout column justify-start>
 				<v-flex justify-start align-content-start align-start>
@@ -79,15 +74,17 @@ export default {
 	data() {
 		return {
 			score: this.likes,
-			ship: null
+			ship: null,
+			image: null
 		};
 	},
-	mounted() {
+	async mounted() {
 		try {
 			this.ship = new Ship(this.forgeShip);
 		} catch (e) {
 			console.error(e);
 		}
+		this.image = await import(`../assets/ships/${this.shipImage.toLowerCase()}.jpg`);
 	},
 	methods: {
 		orbisLink(id) {
@@ -119,8 +116,8 @@ export default {
 	props: {
 		title: String,
 		coriolisLink: String,
-		imageURL: String,
 		id: String,
+		shipImage: String,
 		username: String,
 		forgeShip: String,
 		likes: Number,

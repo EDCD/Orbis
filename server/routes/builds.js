@@ -203,6 +203,7 @@ router.get('/:id', (req, res) =>
 			'title',
 			'description',
 			'forgeShip',
+			'Ship',
 			'privacy',
 			'sharedAccounts',
 			'sharedAccountUsernames',
@@ -361,7 +362,6 @@ router.post('/add', secured, addLimiter, async (req, res) => {
 		console.error(e);
 	}
 	if (json && json.forgeShip) {
-		console.log(json);
 		try {
 			ship = new Ship(json.forgeShip);
 		} catch (e) {

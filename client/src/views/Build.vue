@@ -1,5 +1,9 @@
 <template>
-	<v-container v-if="this.forgeShipCode" grid-list-md text-xs-center>
+	<v-container
+		v-if="forgeShipCode && forgeShipCode.User"
+		grid-list-md
+		text-xs-center
+	>
 		<v-layout row justify-space-around wrap="">
 			<v-snackbar v-model="snackbar" :timeout="6000" :top="true">
 				{{ buildSavedText }}
@@ -12,8 +16,8 @@
 					<v-layout>
 						<v-flex xs5>
 							<v-img
-								:lazy-src="lazyLoad(forgeShipCode.proxiedImage)"
-								:src="fullUrl(forgeShipCode.proxiedImage)"
+								:src="image.default"
+								v-if="image"
 								height="256px"
 								contain
 							></v-img>
@@ -24,7 +28,9 @@
 									<div class="headline">
 										{{ forgeShipCode.title }}
 									</div>
-									<div>By {{ forgeShipCode.username }}</div>
+									<div>
+										By {{ forgeShipCode.User.nickname }}
+									</div>
 									<div>
 										<v-btn
 											color="primary"
@@ -65,7 +71,12 @@
 					</v-layout>
 				</v-card>
 			</v-flex>
-			<v-flex v-if="ship">
+			<v-flex>
+				<div class="build">
+					<h1>Stats coming soon!</h1>
+				</div>
+			</v-flex>
+			<v-flex v-if="false">
 				<div class="build">
 					<v-container grid-list-small fluid>
 						<v-layout
@@ -172,7 +183,7 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
-					<v-layout row wrap>
+					<v-layout v-if="false" row wrap>
 						<v-flex xs6 :key="idx" v-for="(mod, idx) in modules">
 							<v-card>
 								<Module
@@ -207,6 +218,7 @@ export default {
 			saving: false,
 			snackbar: false,
 			ship: null,
+			image: null,
 			buildSavedText: 'Build has been saved to coriolis.io',
 			coriolisBuilds: null,
 			translate: lang.translate
@@ -347,6 +359,8 @@ export default {
 		} catch (e) {
 			console.error(e);
 		}
+		this.image = await import(`../assets/ships/${this.forgeShipCode.Ship.toLowerCase()}.jpg`);
+
 		console.log(window.xdLocalStorage);
 		if (window.xdLocalStorage.wasInit()) {
 			console.log('Got iframe ready');
