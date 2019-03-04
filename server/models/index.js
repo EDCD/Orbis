@@ -30,8 +30,8 @@ db['ShipVote'] = ShipVoteModel;
 const AnnouncementModel = sequelize.import('./announcement.js');
 db[AnnouncementModel.name] = AnnouncementModel;
 
+ShipModel.belongsTo(UserModel);
 UserModel.hasMany(ShipModel);
-ShipModel.belongsTo(UserModel, { foreignKey: 'userId', as: 'User' });
 
 Object.keys(db).forEach(modelName => {
 	if (db[modelName].associate) {

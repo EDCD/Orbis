@@ -67,7 +67,7 @@ router.post('/', (req, res) => {
 			'likes',
 			'proxiedImage'
 		],
-		include: [{ model: User, as: 'User' }]
+		include: [{ model: User, as: 'User', attributes: ['nickname'] }]
 	};
 	if (search && search.key && search.value) {
 		query.where[search.key] = {
@@ -377,8 +377,8 @@ router.post('/add', secured, addLimiter, async (req, res) => {
 		return res.status(500).json({ error: 'Failed to create ship' });
 	}
 	const data = req.body;
-	console.log(req.user)
-	data.userId = req.user.id;
+	console.log(req.user);
+	data.UserId = req.user.id;
 	const dbShip = await Ship.create({ ...data });
 	return res.json({
 		success: true,

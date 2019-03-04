@@ -3,7 +3,7 @@
 		<add-build-modal></add-build-modal>
 		<search :loading="loading" @searchUpdate="search"></search>
 		<v-pagination
-			v-show="builds"
+			v-show="builds && builds.length === 0 && !loading"
 			v-model="page"
 			:length="pages"
 			@input="paginate"
@@ -13,7 +13,7 @@
 			<v-flex :key="ship.id" xs12 lg4 xl4 sm6 md6 v-for="ship in builds">
 				<ship-card
 					:description="ship.description"
-					:username="ship.username"
+					:username="ship.User.nickname"
 					:coriolis-link="ship.url"
 					:imageURL="ship.proxiedImage"
 					:title="ship.title"
@@ -22,9 +22,19 @@
 					:likes="ship.likes"
 				></ship-card>
 			</v-flex>
+			<v-flex
+				xs12
+				lg4
+				xl4
+				sm6
+				md6
+				v-if="builds && builds.length === 0 && !loading"
+			>
+				No results. Please try widening your search.
+			</v-flex>
 		</v-layout>
 		<v-pagination
-			v-show="builds"
+			v-show="builds && builds.length === 0 && !loading"
 			v-model="page"
 			:length="pages"
 			@input="paginate"
@@ -64,7 +74,7 @@ export default {
 			);
 		},
 		offset() {
-			return (this.page - 1) * this.pageSize + 1;
+			return (this.page - 1) * this.pageSize;
 		}
 	},
 	methods: {
@@ -101,7 +111,7 @@ export default {
 	async mounted() {
 		await this.$store.dispatch('getProfile', {
 			pageSize: this.pageSize,
-			offset: this.offset,
+			offset: 0,
 			username: this.$route.params.username
 		});
 	}

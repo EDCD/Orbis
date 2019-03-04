@@ -52,8 +52,9 @@ router.post('/profile/:name', (req, res) => {
 		req.body.pageSize = 10;
 	}
 	let id = '';
-	if (req.user && req.user.id) {
-		id = req.user.id;
+	console.log(req.user)
+	if (req.user && req.user.user_id) {
+		id = req.user.user_id;
 	}
 	const query = {
 		order: [[field || 'createdAt', order || 'DESC']],
@@ -66,8 +67,6 @@ router.post('/profile/:name', (req, res) => {
 			'shortid',
 			'title',
 			'description',
-			// [sequelize.json('author.username'), 'username'],
-			// 'author',
 			'forgeShip',
 			'Ship',
 			'likes',
@@ -77,11 +76,7 @@ router.post('/profile/:name', (req, res) => {
 		include: [
 			{
 				model: User,
-				as: 'User',
 				attributes: ['nickname']
-				// where: {
-				// 	nickname: username
-				// }
 			}
 		],
 		where: {

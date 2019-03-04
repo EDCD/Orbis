@@ -69,7 +69,7 @@
 			<v-flex :key="ship.id" xs12 lg4 xl4 sm6 md6 v-for="ship in builds">
 				<ship-card
 					:description="ship.description"
-					:username="ship.User.username"
+					:username="ship.User.nickname"
 					:coriolis-link="ship.url"
 					:forge-ship="ship.forgeShip"
 					:imageURL="ship.proxiedImage"

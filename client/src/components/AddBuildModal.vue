@@ -25,16 +25,16 @@
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn color="blue darken-1" flat @click="show = false"
-					>Close
+				>Close
 				</v-btn>
-				<v-btn color="blue darken-1" flat @click="submit">Save</v-btn>
+				<v-btn color="blue darken-1" flat :loading="submitting" @click="submit">Save</v-btn>
 			</v-card-actions>
 		</v-card>
 	</v-dialog>
 </template>
 
 <script>
-import { Ship } from 'ed-forge';
+import {Ship} from 'ed-forge';
 import _ from 'lodash';
 
 export default {
@@ -54,9 +54,10 @@ export default {
 		return {
 			text: '',
 			shipJson: null,
+			submitting: false,
 			rules: {
 				maxDesc: val => val.length <= 256 || 'Max 256 characters',
-				maxTitle: val => val.length <= 50 || 'Max 50 characters',
+				maxTitle: val => val.length <= 50 || 'Max 50 characters'
 			},
 			title: '',
 			description: '',
@@ -69,6 +70,7 @@ export default {
 	},
 	methods: {
 		async submit() {
+			this.submitting = true;
 			this.ship.setShipName(this.title);
 			const post = {};
 			post.Ship = this.ship._object.Ship;
@@ -77,9 +79,16 @@ export default {
 			post.shipId = this.ship.getShipID();
 			post.forgeShip = this.ship.compress();
 			console.log(post);
-			await this.$axios.post('/api/builds/add', post, {
-				withCredentials: true
-			});
+			try {
+				await this.$axios.post('/api/builds/add', post, {
+					withCredentials: true
+				});
+			} catch (err) {
+				console.error(err);
+				this.submitting = false;
+			}
+
+			this.submitting = false;
 			this.$emit('close');
 		},
 		updateShip() {

@@ -24,7 +24,12 @@
 		<v-card-actions>
 			<v-flex column>
 				<v-btn :to="orbisLink(id)" flat color="orange">View</v-btn>
-				<v-btn flat color="orange" v-if="coriolisLink" target="_blank" :href="coriolisLink"
+				<v-btn
+					flat
+					color="orange"
+					v-if="coriolisLink"
+					target="_blank"
+					:href="coriolisLink"
 					>View on Coriolis</v-btn
 				>
 			</v-flex>
@@ -32,7 +37,7 @@
 				<v-btn
 					:disabled="!loggedIn"
 					flat
-					@click="sendVote({ id: dbId, type: 1 });"
+					@click="sendVote({ id: dbId, type: 1 })"
 					color="orange"
 					>Upvote
 				</v-btn>
@@ -41,7 +46,7 @@
 				>
 				<v-btn
 					:disabled="!loggedIn"
-					@click="sendVote({ id: dbId, type: -1 });"
+					@click="sendVote({ id: dbId, type: -1 })"
 					flat
 					color="blue"
 					>Downvote
