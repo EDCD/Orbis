@@ -53,6 +53,7 @@ router.post('/', (req, res) => {
 		},
 		offset: req.body.offset,
 		attributes: [
+			'id',
 			'shortid',
 			'category',
 			'title',
@@ -272,7 +273,7 @@ router.delete('/:id', secured, async (req, res) => {
 		if (req.user.id === ship.User.id || isadmin) {
 			await ShipVote.destroy({
 				where: {
-					shipId: data.id
+					shipId: ship.id
 				}
 			});
 			await ship.destroy();
