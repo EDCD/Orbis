@@ -79,11 +79,6 @@ export default {
 		};
 	},
 	async mounted() {
-		try {
-			this.ship = new Ship(this.forgeShip);
-		} catch (e) {
-			console.error(e);
-		}
 		if (this.shipImage) {
 			this.image = await import(`../assets/ships/${this.shipImage.toLowerCase()}.jpg`);
 		}
@@ -96,12 +91,6 @@ export default {
 			return str.length > num
 				? str.slice(0, num > 3 ? num - 3 : num) + '...'
 				: str;
-		},
-		lazyLoad(url) {
-			return `${url.replace('{{WIDTH}}', '10')}&height=10`;
-		},
-		fullUrl(url) {
-			return `${url.replace('{{WIDTH}}', '1280')}&height=720`;
 		},
 		getVote(id) {
 			const vote = this.votes[id];
