@@ -30,7 +30,7 @@
 					<v-window-item v-for="(ship, i) in featured" :key="i">
 						<ship-card
 							:description="ship.description"
-							:username="ship.username"
+							:username="ship.User.nickname"
 							:coriolis-link="ship.url"
 							:shipImage="ship.Ship.toLowerCase()"
 							:title="ship.title"

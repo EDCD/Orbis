@@ -53,15 +53,11 @@ router.post('/', (req, res) => {
 		},
 		offset: req.body.offset,
 		attributes: [
-			'id',
-			'updatedAt',
-			'createdAt',
 			'shortid',
 			'category',
 			'title',
 			'forgeShip',
 			'description',
-			// [sequelize.json('coriolisShip.url'), 'url'],
 			'Ship',
 			'userId',
 			'likes',
@@ -101,6 +97,7 @@ router.get('/featured', (req, res) => {
 				).toISOString()
 			}
 		},
+		include: [{ model: User, as: 'User', attributes: ['nickname'] }],
 		attributes: [
 			'id',
 			'updatedAt',
@@ -267,21 +264,18 @@ router.delete('/:id', secured, async (req, res) => {
 	const ship = await Ship.find({
 		where: {
 			id: data.id
-		}
+		},
+		include: [{ model: User, as: 'User' }]
 	});
 	if (req.user && ship) {
 		const isadmin = isAdmin(req);
-		if (req.user.id === ship.author.id || isadmin) {
+		if (req.user.id === ship.User.id || isadmin) {
 			await ShipVote.destroy({
 				where: {
 					shipId: data.id
 				}
 			});
-			await Ship.destroy({
-				where: {
-					id: data.id
-				}
-			});
+			await ship.destroy();
 			return res.json({
 				success: true
 			});

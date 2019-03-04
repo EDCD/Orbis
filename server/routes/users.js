@@ -61,9 +61,6 @@ router.post('/profile/:name', (req, res) => {
 		limit: req.body.pageSize,
 		offset: req.body.offset,
 		attributes: [
-			'id',
-			'updatedAt',
-			'createdAt',
 			'shortid',
 			'title',
 			'description',

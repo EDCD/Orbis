@@ -1,6 +1,6 @@
 <template>
 	<v-dialog v-model="show" persistent max-width="600px">
-		<v-btn slot="activator" color="primary" dark>Open Dialog</v-btn>
+		<v-btn slot="activator" color="primary" dark>Upload a build</v-btn>
 		<v-card>
 			<v-card-title>
 				<span class="headline">Upload Build</span>
