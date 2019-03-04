@@ -15,7 +15,7 @@
 					:description="ship.description"
 					:username="ship.User.nickname"
 					:coriolis-link="ship.url"
-					:imageURL="ship.proxiedImage"
+					:shipImage="ship.Ship.toLowerCase()"
 					:title="ship.title"
 					:id="ship.shortid"
 					:db-id="ship.id"

@@ -52,7 +52,6 @@ router.post('/profile/:name', (req, res) => {
 		req.body.pageSize = 10;
 	}
 	let id = '';
-	console.log(req.user)
 	if (req.user && req.user.user_id) {
 		id = req.user.user_id;
 	}
