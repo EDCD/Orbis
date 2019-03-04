@@ -5,7 +5,9 @@
 				v-model="startFeature"
 				label="Build ID to feature"
 			></v-text-field>
-			<v-btn :loading="loading" @click="startFeaturing"
+			<v-btn
+				:loading="loading"
+				@click="$emit('startFeaturing', startFeature)"
 				>Start feature for 7 days</v-btn
 			>
 		</v-flex>
@@ -14,7 +16,9 @@
 				v-model="stopFeature"
 				label="Build ID to stop featuring"
 			></v-text-field>
-			<v-btn :loading="loading" @click="stopFeaturing"
+			<v-btn
+				:loading="loading"
+				@click="$emit('stopFeaturing', stopFeature)"
 				>Stop feature prematurely</v-btn
 			>
 		</v-flex>
@@ -23,12 +27,14 @@
 <script>
 export default {
 	name: 'AdminFeatureBuilds',
+	data() {
+		return {
+			startFeature: '',
+			stopFeature: ''
+		};
+	},
 	props: {
-		loading: {},
-		startFeature: {},
-		startFeaturing: {},
-		stopFeature: {},
-		stopFeaturing: {}
+		loading: Boolean
 	}
 };
 </script>

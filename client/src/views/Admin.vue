@@ -23,15 +23,13 @@
 		>
 			<v-alert type="success" :value="true">
 				{{ announce.message }}
-				<v-btn @click="deleteAnnouncement(announce);">Delete</v-btn>
+				<v-btn @click="deleteAnnouncement(announce)">Delete</v-btn>
 			</v-alert>
 		</v-flex>
 		<AdminFeatureBuilds
 			:loading="loading"
-			:start-feature="startFeature"
-			:start-featuring="startFeaturing"
-			:stop-feature="stopFeature"
-			:stop-featuring="stopFeaturing"
+			@stopFeaturing="stopFeaturing"
+			@startFeaturing="startFeaturing"
 		/>
 		<!-- <v-pagination -->
 		<!-- v-show="builds" -->
@@ -58,8 +56,6 @@ export default {
 			announcementPickerVisible: false,
 			announcementText: '',
 			date: null,
-			stopFeature: '',
-			startFeature: '',
 			searchData: {},
 			loading: false
 		};
@@ -94,14 +90,14 @@ export default {
 			});
 			this.loading = false;
 		},
-		async stopFeaturing() {
+		async stopFeaturing(id) {
 			this.loading = true;
-			await this.$store.dispatch('stopFeatureBuild', this.stopFeature);
+			await this.$store.dispatch('stopFeatureBuild', id);
 			this.loading = false;
 		},
-		async startFeaturing() {
+		async startFeaturing(id) {
 			this.loading = true;
-			await this.$store.dispatch('featureBuild', this.startFeature);
+			await this.$store.dispatch('featureBuild', id);
 			this.loading = false;
 		},
 		async deleteAnnouncement(item) {

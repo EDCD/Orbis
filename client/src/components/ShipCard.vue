@@ -84,7 +84,9 @@ export default {
 		} catch (e) {
 			console.error(e);
 		}
-		this.image = await import(`../assets/ships/${this.shipImage.toLowerCase()}.jpg`);
+		if (this.shipImage) {
+			this.image = await import(`../assets/ships/${this.shipImage.toLowerCase()}.jpg`);
+		}
 	},
 	methods: {
 		orbisLink(id) {

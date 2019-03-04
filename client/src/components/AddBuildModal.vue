@@ -25,16 +25,28 @@
 			<v-card-actions>
 				<v-spacer></v-spacer>
 				<v-btn color="blue darken-1" flat @click="show = false"
-				>Close
+					>Close
 				</v-btn>
-				<v-btn color="blue darken-1" flat :loading="submitting" @click="submit">Save</v-btn>
+				<v-btn
+					color="blue darken-1"
+					flat
+					:loading="submitting"
+					@click="submit"
+					>Save</v-btn
+				>
 			</v-card-actions>
+			<v-alert type="success" v-model="urlGotten"
+				>Your new ship:
+				<router-link :to="`/build/${this.url}`"
+					>https://orbis.zone/build/{{ url }}</router-link
+				></v-alert
+			>
 		</v-card>
 	</v-dialog>
 </template>
 
 <script>
-import {Ship} from 'ed-forge';
+import { Ship } from 'ed-forge';
 import _ from 'lodash';
 
 export default {
@@ -54,6 +66,8 @@ export default {
 		return {
 			text: '',
 			shipJson: null,
+			url: '',
+			urlGotten: false,
 			submitting: false,
 			rules: {
 				maxDesc: val => val.length <= 256 || 'Max 256 characters',
@@ -79,17 +93,21 @@ export default {
 			post.shipId = this.ship.getShipID();
 			post.forgeShip = this.ship.compress();
 			console.log(post);
+			let res;
 			try {
-				await this.$axios.post('/api/builds/add', post, {
+				res = await this.$axios.post('/api/builds/add', post, {
 					withCredentials: true
 				});
 			} catch (err) {
 				console.error(err);
 				this.submitting = false;
 			}
-
+			if (res && res.data) {
+				console.log(res);
+				this.url = res.data.id;
+				this.urlGotten = true;
+			}
 			this.submitting = false;
-			this.$emit('close');
 		},
 		updateShip() {
 			this.title = this.ship.getShipName();

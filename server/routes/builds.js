@@ -382,7 +382,7 @@ router.post('/add', secured, addLimiter, async (req, res) => {
 	const dbShip = await Ship.create({ ...data });
 	return res.json({
 		success: true,
-		id: dbShip.id,
+		id: dbShip.shortid,
 		ship: 'created',
 		link: `https://orbis.zone/build/${dbShip.shortid}`
 	});
