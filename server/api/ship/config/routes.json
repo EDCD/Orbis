@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/ships",
+      "handler": "Ship.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/ships/count",
+      "handler": "Ship.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/ships/:id",
+      "handler": "Ship.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/ships",
+      "handler": "Ship.create",
+      "config": {
+        "policies": ["setOwner"]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/ships/:id",
+      "handler": "Ship.update",
+      "config": {
+        "policies": ["isOwner"]
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/ships/:id",
+      "handler": "Ship.delete",
+      "config": {
+        "policies": ["isOwner"]
+      }
+    }
+  ]
+}
