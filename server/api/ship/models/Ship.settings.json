@@ -27,6 +27,12 @@
       "model": "user",
       "via": "ships",
       "plugin": "users-permissions"
+    },
+    "url": {
+      "type": "text"
+    },
+    "type": {
+      "type": "string"
     }
   }
 }
