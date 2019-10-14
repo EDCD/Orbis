@@ -6,10 +6,12 @@
 
 module.exports = async (ctx, next) => {
   const { role, id } = ctx.state.user;
-  // console.log("id", id);
-  // console.log("role", role);
   const fieldId = ctx.params.id;
-  // console.log("fieldId", fieldId);
+
+  if (role === "administrator") {
+    return await next();
+  }
+
   if (typeof fieldId !== "undefined") {
     return strapi
       .query("ship")
