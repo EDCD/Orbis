@@ -3,10 +3,10 @@
     "enabled": false
   },
   "responseTime": {
-    "enabled": false
+    "enabled": true
   },
   "poweredBy": {
-    "enabled": true,
+    "enabled": false,
     "value": "Strapi <strapi.io>"
   }
 }
