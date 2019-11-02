@@ -36,7 +36,7 @@
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.5",
 		"response-time": "^2.3.2",
-		"sequelize": "^4.41.0",
+		"sequelize": "^5.15.1",
 		"sequelize-cli": "^5.2.0",
 		"serve-favicon": "~2.5.0",
 		"shortid": "^2.2.13",
