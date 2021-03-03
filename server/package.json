@@ -32,7 +32,7 @@
 		"passport-oauth2-refresh": "^1.1.0",
 		"patreon": "^0.4.1",
 		"pg": "^7.6.0",
-		"pug": "^2.0.3",
+		"pug": "^3.0.1",
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.5",
 		"response-time": "^2.3.2",
